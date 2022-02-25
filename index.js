@@ -15,26 +15,20 @@
 */
 
 const express = require('express');
-const path = require('path');
-const { startAuthentication, answerChallenge, startPoll } = require('@cyberark/identity-js-sdk');
+const { startAuthentication, answerChallenge } = require('@cyberark/identity-js-sdk');
 
 const PORT = 2200;
 const API_VER = '/api';
-const TENAT_URL = 'https://abc0123-chetan.my.localdev.idaptive.app';
-const TENANT_ID = 'ABC0123';
+const TENANT_URL = 'YOUR_TENANT_URL';
+const TENANT_ID = 'YOUR_TENANT_ID';
 
 const app = express();
-app.use(express.static(path.join(__dirname, 'client/build')));
 
 app.use(express.json());
 
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'client', 'build', 'index.html'));
-});
-
 app.post(`${API_VER}/auth/beginAuth`, async (req, res) => {
     try {
-        const result = await startAuthentication(TENAT_URL, TENANT_ID, req.body.username);
+        const result = await startAuthentication(TENANT_URL, TENANT_ID, req.body.username);
         res.send(result);        
     } catch (error) {
         res.send(error);
