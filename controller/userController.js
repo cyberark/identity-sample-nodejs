@@ -14,24 +14,16 @@
 * limitations under the License.
 */
 
-const express = require('express');
-const swaggerUi = require('swagger-ui-express');
-const swaggerDocument = require('./swagger.json');
+const userController = require('express').Router();
+const { changeUserPassword } = require('@cyberark/identity-js-sdk');
 
-const authController = require('./controller/authController');
-const userController = require('./controller/userController');
+userController.post('/changePassword', async (req, res) => {
+    try {
+        const result = await changeUserPassword(req.body.oldPassword, req.body.newPassword);
+        res.send(result);
+    } catch (error) {
+        res.send(error);
+    }
+});
 
-const PORT = 2200;
-const API_VER = '/api';
-
-const app = express();
-
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
-app.use(express.json());
-
-app.use(`${API_VER}/auth`, authController);
-app.use(`${API_VER}/user`, userController);
-
-app.listen(PORT, () => {
-    console.log('listening on port ', PORT);
-})
+module.exports = userController;

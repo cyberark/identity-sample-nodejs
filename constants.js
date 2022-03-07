@@ -14,24 +14,10 @@
 * limitations under the License.
 */
 
-const express = require('express');
-const swaggerUi = require('swagger-ui-express');
-const swaggerDocument = require('./swagger.json');
+const TENANT_URL = 'YOUR_TENANT_URL';
+const TENANT_ID = 'YOUR_TENANT_ID';
 
-const authController = require('./controller/authController');
-const userController = require('./controller/userController');
-
-const PORT = 2200;
-const API_VER = '/api';
-
-const app = express();
-
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
-app.use(express.json());
-
-app.use(`${API_VER}/auth`, authController);
-app.use(`${API_VER}/user`, userController);
-
-app.listen(PORT, () => {
-    console.log('listening on port ', PORT);
-})
+module.exports = {
+    TENANT_URL,
+    TENANT_ID
+}
