@@ -20,6 +20,7 @@ const swaggerDocument = require('./swagger.json');
 
 const authController = require('./controller/authController');
 const userController = require('./controller/userController');
+const authorizationController = require('./controller/authorizationController');
 
 const PORT = 2200;
 const API_VER = '/api';
@@ -31,6 +32,7 @@ app.use(express.json());
 
 app.use(`${API_VER}/auth`, authController);
 app.use(`${API_VER}/user`, userController);
+app.use(`${API_VER}`, authorizationController);
 
 app.listen(PORT, () => {
     console.log('listening on port ', PORT);

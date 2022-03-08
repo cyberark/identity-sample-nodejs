@@ -16,8 +16,13 @@
 
 const TENANT_URL = 'YOUR_TENANT_URL';
 const TENANT_ID = 'YOUR_TENANT_ID';
+const AUTH_FLOW = {
+    OAUTH: "OAUTH",
+    OIDC: "OIDC"
+}
 
 module.exports = {
     TENANT_URL,
-    TENANT_ID
+    TENANT_ID,
+    AUTH_FLOW
 }
