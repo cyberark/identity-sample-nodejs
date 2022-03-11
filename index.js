@@ -19,7 +19,7 @@ const swaggerUi = require('swagger-ui-express');
 const swaggerDocument = require('./swagger.json');
 
 const authController = require('./controller/authController');
-const userController = require('./controller/userController');
+const usersController = require('./controller/usersController');
 const authorizationController = require('./controller/authorizationController');
 
 const PORT = 2200;
@@ -31,7 +31,7 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use(express.json());
 
 app.use(`${API_VER}/auth`, authController);
-app.use(`${API_VER}/user`, userController);
+app.use(`${API_VER}/users`, usersController);
 app.use(`${API_VER}`, authorizationController);
 
 app.listen(PORT, () => {

@@ -154,10 +154,10 @@
                 }
             }
         },
-        "/user/changePassword": {
+        "/users/changePassword": {
             "post": {
                 "tags": [
-                    "User"
+                    "Users"
                 ],
                 "summary": "Changes the logged in user's password",
                 "description": "Changes the logged in user's password",
@@ -178,6 +178,35 @@
                                     "type": "string"
                                 }
                             }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/restResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/users/attributes/{id}": {
+            "get": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Get user's attributes based on user's UUID or username",
+                "description": "Get user's attributes based on user's UUID or username",
+                "consumes": ["application/json"],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "description": "username or user's UUID",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
                         }
                     }
                 ],
@@ -501,7 +530,6 @@
                             }
                         }
                     }
-                    
                 }
             }
         },

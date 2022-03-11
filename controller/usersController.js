@@ -14,10 +14,10 @@
 * limitations under the License.
 */
 
-const userController = require('express').Router();
-const { changeUserPassword } = require('@cyberark/identity-js-sdk');
+const usersController = require('express').Router();
+const { changeUserPassword, userAttributes } = require('@cyberark/identity-js-sdk');
 
-userController.post('/changePassword', async (req, res) => {
+usersController.post('/changePassword', async (req, res) => {
     try {
         const result = await changeUserPassword(req.body.oldPassword, req.body.newPassword);
         res.send(result);
@@ -25,5 +25,13 @@ userController.post('/changePassword', async (req, res) => {
         res.send(error);
     }
 });
+usersController.get('/attributes/:id', async (req, res) => {
+    try {
+        const result = await userAttributes(req.params.id);
+        res.send(result);
+    } catch (error) {
+        res.send(error);
+    }
+});
 
-module.exports = userController;
+module.exports = usersController;
