@@ -82,8 +82,21 @@ authorizationController.post('/refreshToken', async (req, res) => {
 
 authorizationController.post('/revokeToken', async (req, res) => {
     try {
-        const clientObj = new CyberarkIdentityOIDCClient(TENANT_URL, req.body.appId, req.body.clientId, req.body.clientSecret);
+        const clientObj = new CyberArkIdentityOAuthClient(TENANT_URL, req.body.appId, req.body.clientId, req.body.clientSecret);
         const result = await clientObj.revokeToken(req.body.authResponseAccessToken);
+        res.send(result);
+    } catch (error) {
+        res.send(error);
+    }
+});
+
+authorizationController.post('/endSession', async (req, res) => {
+    try {
+        const clientObj = new CyberArkIdentityOAuthClient(TENANT_URL, req.body.appId, req.body.clientId, req.body.clientSecret);
+        const result = await clientObj.endSession();
+        if(result.success)
+        res.redirect(req.body.postLogoutURL);
+        else
         res.send(result);
     } catch (error) {
         res.send(error);

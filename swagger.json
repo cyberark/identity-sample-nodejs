@@ -478,13 +478,61 @@
                 }
             }
         },
+        "/endSession": {
+            "post": {
+                "tags": [
+                    "Authorization"
+                ],
+                "summary": "Terminates an OIDC app session",
+                "description": "Terminates  an OIDC app session",
+                "consumes": ["application/json"],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "appId": {
+                                    "type": "string"
+                                },
+                                "clientId": {
+                                    "type": "string"
+                                },
+                                "clientSecret": {
+                                    "type": "string"
+                                },
+                                "postLogoutURL": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "success": {
+                                    "type": "boolean"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/claims/{token}": {
             "get": {
                 "tags": [
                     "Authorization"
                 ],
-                "summary": "Revokes the access token",
-                "description": "Revokes the access token",
+                "summary": "Decodes the access token",
+                "description": "Decodes the access token",
                 "produces": ["application/json"],
                 "parameters": [
                     {
