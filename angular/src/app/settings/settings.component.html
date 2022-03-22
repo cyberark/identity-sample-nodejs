@@ -1,0 +1,173 @@
+<div class="container-fluid">
+  <div *ngIf="loading" class="loader-screen">
+    <img alt="spinner" class="loader" src="../../assets/images/Spinner.svg">
+  </div>
+  <app-header isHomeVisible=true></app-header>
+  <div #divToScroll class="app-page">
+    <div class="container my-3">
+      <h3 class="text-center p-3">Settings</h3>
+      <h5 class="p-3">Note: Settings in this page are utilized to demonstrate the functionalities using this app. The
+        settings must match exactly to the configured applications on the tenant. Incorrect configuration will lead to
+        inappropriate behavior of the functionalities.</h5>
+      <div *ngIf="errorMessage != ''" class="user-error">
+        <div class="error-image"><img alt="successfailicon"
+            [src]="checkMessageType() ? '../../assets/images/green_check.png' : '../../assets/images/issue_icon.png'" />
+        </div>
+        <p [style.color]="checkMessageType() ? '#000' : '#cc3300'">{{errorMessage}}</p>
+      </div>
+      <form [formGroup]="settingsForm" class="row" autocomplete="off">
+        <div class="container p-3 mb-1 mx-3">
+          <div class="row align-items-center">
+            <label class="label col">Application Logo <br> (Supports: png, jpg, gif, ico, bmp)</label>
+            <input type="file" class="form-control col" accept=".png,.jpg,.gif,.ico,.bmp" formControlName="appImage"
+              (change)="onImageUpload($event)">
+            <img [attr.src]="imagePreview" alt="default-logo" width="28px" height="28px" class="col-2">
+            <span *ngIf="hasAppLogoError">Invalid file extension or file size has exceeded max limit of 1 MB</span>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="border border-primary p-3 mb-3">
+            <div class="d-flex justify-content-between">
+              <h5>CyberArk Tenant</h5>
+              <img src="../../assets/images/cyberark-logo.png" alt="cyberark-logo" style="width: 28px;height: 28px;">
+            </div>
+            <div class="form-group">
+              <label class="required label">URL</label>
+              <input class="form-control" formControlName="tenantUrl" required placeholder="https://YOUR_TENANT.idaptive.app">
+              <span *ngIf="hasError('tenantUrl', 'required')">Required</span>
+              <span *ngIf="hasError('tenantUrl', 'maxlength')">URL should not be longer than 80 characters</span>
+              <span *ngIf="hasError('tenantUrl', 'pattern')">Invalid URL</span>
+            </div>
+            <div class="form-group">
+              <label class="required label">Role Name</label>
+              <input class="form-control" formControlName="roleName" required placeholder="MFA Role Name">
+              <span *ngIf="hasError('roleName', 'required')">Required</span>
+            </div>
+            <div class="form-group">
+              <label class="required label">Login Widget ID</label>
+              <input class="form-control" formControlName="loginWidgetId" required placeholder="Login Widget ID">
+              <span *ngIf="hasError('loginWidgetId', 'required')">Required</span>
+              <span *ngIf="hasError('loginWidgetId', 'pattern')">Incorrect Login Widget ID</span>
+            </div>
+            <div class="form-group">
+              <label class="required label">MFA Widget ID</label>
+              <input class="form-control" formControlName="mfaWidgetId" required placeholder="MFA Widget ID">
+              <span *ngIf="hasError('mfaWidgetId', 'required')">Required</span>
+              <span *ngIf="hasError('mfaWidgetId', 'pattern')">Incorrect MFA Widget ID</span>
+            </div>
+
+          </div>
+          <div class="border border-primary p-3 mb-3">
+            <div class="d-flex justify-content-between">
+              <h5>OAuth 2.0</h5>
+              <img src="../../assets/images/oauth_logo28x28.png" alt="oauth_logo" style="height: 28px;">
+            </div>
+            <div class="form-group">
+              <label class="required label">Application ID</label>
+              <input class="form-control" formControlName="oauthAppId" required
+                placeholder="OAuth Client Application ID">
+              <span *ngIf="hasError('oauthAppId', 'required')">Required</span>
+            </div>
+            <div class="form-group">
+              <label class="required label">Username</label>
+              <input class="form-control" formControlName="oauthServiceUserName" required
+                placeholder="Service Username">
+              <span *ngIf="hasError('oauthServiceUserName', 'required')">Required</span>
+            </div>
+            <div class="form-group">
+              <label class="required label">Password</label>
+              <input class="form-control" formControlName="oauthServiceUserPassword" required
+                placeholder="Service User Password">
+              <span *ngIf="hasError('oauthServiceUserPassword', 'required')">Required</span>
+              <span *ngIf="hasError('oauthServiceUserPassword', 'minlength')">Password must be at least 8 characters
+                long</span>
+              <span *ngIf="hasError('oauthServiceUserPassword', 'maxlength')">Password should not be longer than 64
+                characters</span>
+            </div>
+            <div class="form-group">
+              <label class="required label">Scopes</label>
+              <input class="customTagStyle" name="basic" formControlName="oauthScopesSupported" required
+                placeholder="Space Separated OAuth Scopes" (change)="onOAuthScopeChange($event.target.value)">
+              <span *ngIf="hasError('oauthScopesSupported', 'required')">Required</span>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="border border-primary p-3 mb-3">
+            <div class="d-flex justify-content-between">
+              <h5>OpenID Connect</h5>
+              <img src="../../assets/images/openid-icon-28x28.png" alt="openid-icon" style="height: 28px;">
+            </div>
+            <div class="form-group">
+              <label class="required label">Application ID</label>
+              <input class="form-control" formControlName="oidcAppId" required
+                placeholder="OpenID Connect Application ID">
+              <span *ngIf="hasError('oidcAppId', 'required')">Required</span>
+            </div>
+            <div class="form-group">
+              <label class="required label">Client ID</label>
+              <input class="form-control" formControlName="oidcClientId" required
+                placeholder="OpenID Connect Client ID">
+              <span *ngIf="hasError('oidcClientId', 'required')">Required</span>
+              <span *ngIf="hasError('oidcClientId', 'pattern')">Incorrect Client ID</span>
+            </div>
+            <div class="form-group">
+              <label class="required label">Client Secret</label>
+              <input class="form-control" formControlName="oidcClientPassword" required
+                placeholder="OpenID Connect Client Secret">
+              <span *ngIf="hasError('oidcClientPassword', 'required')">Required</span>
+            </div>
+            <div class="form-group">
+              <label class="required label">Scopes</label>
+              <input class="customTagStyle" name="basic" formControlName="oidcScopesSupported" required
+                placeholder="openid email profile" (change)="onOIDCScopeChange($event.target.value)">
+              <span *ngIf="hasError('oidcScopesSupported', 'required')">Required</span>
+            </div>
+          </div>
+          <div class="border border-primary p-3 mb-3">
+            <div class="d-flex justify-content-between">
+              <h5>Session Management</h5>
+            </div>
+            <div class="form-group">
+              <label class="required label">Session Timeout (sec)</label>
+              <input class="form-control" formControlName="sessionTimeout" required placeholder="120" max="500"
+                type="number">
+              <span *ngIf="hasError('sessionTimeout', 'required')">Required</span>
+              <span *ngIf="hasError('sessionTimeout', 'max')">Value should not be greater than 500 seconds.</span>
+            </div>
+            <div class="form-group">
+              <label class="required label">Mobile Background Timeout (sec)</label>
+              <input class="form-control" formControlName="mobileTimeout" required placeholder="60" max="500"
+                type="number">
+              <span *ngIf="hasError('mobileTimeout', 'required')">Required</span>
+              <span *ngIf="hasError('mobileTimeout', 'max')">Value should not be greater than 500 seconds.</span>
+            </div>
+          </div>
+          <div class="border border-primary p-3 mb-3">
+            <div class="d-flex justify-content-between">
+              <h5>ReCaptcha Settings</h5>
+            </div>
+            <div class="form-group">
+              <div class="form-check form-check-inline">
+                <input type="checkbox" class="form-check-input" formControlName="isCaptchaEnabledInSettings" 
+                (change)="onCheckCaptchaEnabled($event.target.checked)" checked="isCaptchaEnabledInSettings">
+                <label class="form-check-label">Enable Captcha for sign-up flow&nbsp;&nbsp;</label>
+                <span data-toggle="tooltip" data-html="true" data-placement="right" title="Make sure the captcha settings are in sync <br/> with the captcha settings on admin portal."><i class="fa fa-info-circle" style="font-size:20px;color:gray"></i></span>
+              </div>
+            </div>
+            <div class="form-group" *ngIf="isCaptchaEnabled">
+              <label class="required label">Site Key</label>
+              <input class="form-control" formControlName="siteKey" required placeholder="Enter ReCaptcha Site Key">
+              <span *ngIf="hasError('siteKey', 'required')">Required</span>
+            </div>
+          </div>
+        </div>
+      </form>
+      <div class="d-flex justify-content-center p-3">
+        <div class="container btn btn-secondary mr-5 w-25" (click)="onCancel()">Cancel</div>
+        <div class="container btn btn-secondary w-25" (click)="onSave()">Save</div>
+      </div>
+    </div>
+  </div>
+  <app-error [body]="popUpBody" [btnClick]="onRetry" title="Unauthorized"></app-error>
+</div>

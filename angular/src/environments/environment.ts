@@ -14,18 +14,17 @@
 * limitations under the License.
 */
 
-//TODO: remove tenant url and tenant id - read from settings.json
-const TENANT_URL = 'YOUR_TENANT_URL';
-const TENANT_ID = 'YOUR_TENANT_ID';
-const AUTH_FLOW = {
-    OAUTH: "OAUTH",
-    OIDC: "OIDC"
-}
-const SYS_ADMIN_ROLE = 'System Administrator';
+export const environment = {
+  production: false,
+  baseUrl:"http://localhost",
+  serverPort: 2200
+};
 
-module.exports = {
-    TENANT_URL,
-    TENANT_ID,
-    AUTH_FLOW,
-    SYS_ADMIN_ROLE
-}
+/*
+ * For easier debugging in development mode, you can import the following file
+ * to ignore zone related error stack frames such as `zone.run`, `zoneDelegate.invokeTask`.
+ *
+ * This import should be commented out in production mode because it will have a negative impact
+ * on performance if an error is thrown.
+ */
+// import 'zone.js/dist/zone-error';  // Included with Angular CLI.

@@ -1,0 +1,288 @@
+.login-page {
+  margin-bottom: 30px !important;
+  margin-top: 85px !important;
+  max-height: calc(100vh - 105px) !important;
+  overflow: auto;
+  padding-left: 30px;
+  padding-right: 30px;
+  height: calc(100vh - 105px);
+}
+
+.page-title {
+  color: #4a4a4a;
+  font-family: "Roboto";
+  font-weight: 700;
+  font-size: 20px;
+  margin-top: 2%;
+}
+
+.page-info {
+  display: flex;
+  justify-content: flex-start;
+  margin-top: 18px;
+  opacity: 1;
+  border: 1px #e9e5e5;
+  box-shadow: 0px 2px 4px;
+  color: #4a4a4a;
+  font-family: "Roboto";
+  font-weight: 400;
+  font-size: 16px;
+}
+
+.page-info-icon p:before {
+  font-family: Icon-Set;
+  font-size: 25px;
+  margin-right: 10px;
+  vertical-align: middle;
+  content: "I";
+}
+
+.page-info-icon p {
+  margin: 28px 0 0 11px;
+}
+
+.page-info-icon {
+  width: 50px;
+  color: #fff;
+  background: #0078d4;
+}
+
+.page-info-content {
+  width: 100%;
+  padding: 20px;
+}
+
+.login-form {
+  font-family: "Roboto";
+  font-weight: 400;
+  font-size: 14px;
+  width: calc(100% - 60px);
+  display: inline-block;
+  vertical-align: top;
+}
+
+.login-form .form-control,
+.login-button-section {
+  width: 90%;
+  height: 100%;
+}
+
+.login-error {
+  display: flex;
+  align-items: flex-start;
+  font-family: "Roboto";
+  font-weight: 400;
+  font-size: 14px;
+  color: #cc3300;
+}
+
+.error-image {
+  width: 20px;
+  height: 20px;
+  margin-right: 5px;
+}
+
+.message-info-icon {
+  background-image: '../../assets/images/green_check.png';
+}
+
+.message-error-icon {
+  background-image: '../../assets/images/issue_icon.png';
+}
+
+.username-block {
+  display: flex;
+  justify-content: space-between;
+  width: 90%;
+}
+
+.username-label {
+  order: 1;
+}
+
+.start-over {
+  order: 2;
+}
+
+.login-button-section {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 12px;
+}
+
+.login-button-section button {
+  width: 80px;
+}
+
+.forgot-password-anchor {
+  margin-top: 5px;
+  color: #0381e4;
+}
+
+.forgot-password-color {
+  margin-top: 5px;
+  color: #4DB7F2;
+}
+
+.login-partition {
+  text-align: center;
+  width: 80%;
+  height: 60px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.vertical-line {
+  border-left: 2px solid #cccccc;
+  height: 250px;
+  margin-left: 28px;
+  top: 30px;
+}
+
+.horizontal-line {
+  border-bottom: 2px solid #cccccc;
+  width: 100%;
+}
+
+.circle {
+  height: 60px;
+  width: 60px;
+  background-color: #fff;
+  border: 2px solid #ccc;
+  border-radius: 100%;
+  display: inline-block;
+  line-height: 60px;
+  color: #aaa;
+  font-family: "Roboto";
+  font-weight: 400;
+  font-size: 20px;
+  position: absolute;
+}
+
+.social-login-block {
+  width: 100%;
+}
+
+button.social-login-button {
+  width: 230px;
+  height: 52px;
+  cursor: pointer;
+  border-radius: 8px;
+  border: none;
+  color: #fff;
+  font-family: "Source Sans Pro";
+  font-size: 15px;
+  margin: 5px;
+}
+
+button.social-login-button:before {
+  font-family: Icon-Set;
+  font-size: 30px;
+  margin: 0 30px 0 -20px;
+  vertical-align: middle;
+}
+
+button.facebook {
+  background: #3c5a99;
+}
+
+button.facebook:before {
+  content: 'z';
+}
+
+button.google {
+  background: #db4437;
+}
+
+button.google:before {
+  content: '+';
+  margin: 0 35px 0 -25px !important;
+}
+
+button.linkedin {
+  background: #006192;
+}
+
+button.linkedin:before {
+  content: 'l';
+}
+
+button.microsoft {
+  background: #00a4ef;
+}
+
+button.microsoft:before {
+  content: 'M';
+}
+
+@media screen and (max-width: 767px) {
+  .page-info-content {
+    padding: 15px;
+    font-size: 14px;
+  }
+
+  .social-login-block {
+    width: 100%;
+  }
+
+  button.social-login-button {
+    width: 64px;
+  }
+
+  button.social-login-button:before,
+  button.google:before {
+    margin: 0 !important;
+  }
+
+  .vertical-line {
+    border-left: 2px solid #cccccc;
+    height: 250px;
+    top: 30px;
+  }
+
+  .hideonly-sm {
+    display: none;
+  }
+}
+
+@media screen and (max-width: 576px) {
+  .login-form {
+    width: 100%;
+  }
+
+  .login-partition {
+    width: 100%;
+    height: 30px;
+    margin-top: 35px;
+  }
+
+  .vertical-line {
+    border-bottom: 2px solid #cccccc;
+    height: 2px;
+    margin-left: 0;
+    top: 30px;
+  }
+
+  .circle {
+    margin-top: -32px;
+    left: 40%;
+  }
+
+  .page-info-icon p {
+    margin: 55px 0 0 11px;
+  }
+
+  .visbleonly-xs {
+    display: inline-block;
+  }
+
+  button.social-login-button {
+    width: 230px;
+  }
+
+  button.social-login-button:before,
+  button.google:before {
+    margin: 0 30px 0 -20px !important;
+  }
+}

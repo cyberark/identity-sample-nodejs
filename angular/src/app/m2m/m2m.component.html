@@ -1,0 +1,46 @@
+<div class="container-fluid">
+    <div *ngIf="loading" class="loader-screen">
+        <img alt="spinner" class="loader" src="../../assets/images/Spinner.svg">
+    </div>
+    <app-header isLogoutVisible=true></app-header>
+    <div class="app-page">
+        <div class="container card mt-3 w-50 bg-primary text-white p-3">
+            <div class="d-flex flex-column align-items-center w-50 mx-auto">
+                <h3 class="m-3">OAuth Flow - M2M</h3>
+                <select name="m2m" id="m2m" class="form-control w-100"
+                    (change)="onSelect($event.target.value)">
+                    <option value="clientCreds">Client Creds</option>
+                    <option value="resourceOwner">Resource Owner</option>
+                </select>
+                <form [formGroup]="loginForm" autocomplete="off" *ngIf="isFormVisible">
+                    <div class="form-group d-flex align-items-center mt-3">
+                        <label class="required label mr-3">Username:</label>
+                        <input class="form-control" disabled [value]="username">
+                    </div>
+                    <div class="form-group d-flex align-items-center">
+                        <label class="required label mr-3">Password:</label>
+                        <input class="form-control" formControlName="password" type="password" required>
+                        <span *ngIf="hasError('password', 'required')">Required</span>
+                    </div>
+                </form>
+                <button class="container btn btn-secondary m-3" (click)="onBuildTokenUrl()">Build Token URL</button>
+            </div>
+            <div class="container p-3">
+                <div class="d-flex flex-column">
+                    <h5>Selected flow + Token URL</h5>
+                    <div class="border rounded p-3 text-break preline">
+                        <pre class="text-white">{{tokenPostCall}}</pre>
+                        <div *ngIf= "tokenPostCallBody !==''">
+                            <pre class="mt-3 text-white">Content-Type: application/x-www-form-urlencoded</pre>
+                            <pre class="mt-3 text-white">{{tokenPostCallBody | json}}</pre>
+                        </div>
+                    </div>
+                    <div class="d-flex mt-3">
+                        <button class="container btn btn-secondary mr-5" (click)="onBack()">Back</button>
+                        <button #submitBtn class="container btn btn-secondary" disabled (click)="onSubmit()">Submit</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

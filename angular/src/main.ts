@@ -14,18 +14,15 @@
 * limitations under the License.
 */
 
-//TODO: remove tenant url and tenant id - read from settings.json
-const TENANT_URL = 'YOUR_TENANT_URL';
-const TENANT_ID = 'YOUR_TENANT_ID';
-const AUTH_FLOW = {
-    OAUTH: "OAUTH",
-    OIDC: "OIDC"
-}
-const SYS_ADMIN_ROLE = 'System Administrator';
+import { enableProdMode } from '@angular/core';
+import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 
-module.exports = {
-    TENANT_URL,
-    TENANT_ID,
-    AUTH_FLOW,
-    SYS_ADMIN_ROLE
+import { AppModule } from './app/app.module';
+import { environment } from './environments/environment';
+
+if (environment.production) {
+  enableProdMode();
 }
+
+platformBrowserDynamic().bootstrapModule(AppModule)
+  .catch(err => console.error(err));

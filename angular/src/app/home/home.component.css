@@ -1,0 +1,132 @@
+.home-title {
+  color: #363a40;
+  font-family: "Roboto";
+  font-weight: 300;
+  font-size: 60px;
+  width: 100%;
+  margin-top: 26px;
+}
+
+.home-page {
+  margin-bottom: 30px !important;
+  margin-top: 85px !important;
+  max-height: calc(100vh - 105px) !important;
+  overflow: auto;
+  padding-left: 30px;
+  padding-right: 30px;
+}
+
+.home-page .home-tagline {
+  color: #26e5c2;
+  font-family: "Roboto";
+  font-weight: 300;
+  font-size: 30px;
+  text-align: left;
+  line-height: 1.2;
+}
+
+.home-main-content {
+  margin-top: 40px;
+}
+
+.home-main-content ul {
+  margin-left: 20px;
+}
+
+.home-main-content a {
+  color: #0381e4 !important;
+  text-decoration: none;
+}
+
+.home-contact {
+  margin: 20px 5% 30px 5%;
+  padding: 35px;
+  box-shadow: 0 4px 10px 0 #dfdfdf;
+}
+
+.home-contact-heading:before {
+  font-family: Icon-Set;
+  font-size: 20px;
+  margin-right: 10px;
+  vertical-align: top;
+  color: #26e5c2;
+  content: "ª";
+}
+
+.home-contact-heading {
+  color: #4a4a4a;
+  font-family: "Lato";
+  font-size: 20px;
+}
+
+.home-contact-content {
+  color: #363a40;
+  font-family: "Lato";
+  font-weight: 400;
+  font-size: 16px;
+}
+
+.home-contact-content a {
+  color: #0381e4 !important;
+  text-decoration: none;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  word-break: break-word;
+  -moz-hyphens: auto;
+  hyphens: auto;
+}
+
+.home-contact-content p {
+  margin-top: 15px;
+}
+
+/* media queries */
+
+@media screen and (max-width: 992px) {
+  .home-page {
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+
+  .home-title {
+    font-size: 55px;
+  }
+
+  .home-page .home-tagline {
+    font-size: 25px;
+  }
+
+  .home-contact {
+    padding: 20px;
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .home-page {
+    padding-left: 0px;
+    padding-right: 0px;
+  }
+
+  .home-title {
+    font-size: 35px;
+  }
+
+  .home-page .home-tagline {
+    font-size: 20px;
+  }
+
+  .home-main-content p,
+  .home-contact-content p {
+    font-size: 14px;
+  }
+
+  .home-contact {
+    margin-top: 80px;
+  }
+}
+
+@media screen and (max-width: 576px) {
+  .home-contact {
+    margin-top: 35px;
+  }
+}

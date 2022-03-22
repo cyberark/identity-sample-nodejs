@@ -1,0 +1,98 @@
+<div class="container-fluid">
+  <div *ngIf="loading" class="loader-screen">
+    <img alt="spinner" class="loader" src="../../assets/images/Spinner.svg">
+  </div>
+  <app-header isHomeVisible=true [isSignUpVisible]="isSignUpVisible"></app-header>
+  <app-error [btnClick]="onOk" [body]="errorMessage" [btnLabel]="popupBtnLabel"></app-error>
+  <div class="app-page">
+    <div class="container p-0 h-100">
+      <div class="row p-3 h-100 align-items-center justify-content-center">
+        <div class="col text-center">
+          <h3>
+            Acme designs the login form based on the <a target="_blank"
+              href="https://identity-developer.cyberark.com/reference/post_security-startauthentication">“/StartAuthentication”</a>
+            and <a target="_blank"
+              href="https://identity-developer.cyberark.com/reference/post_security-advanceauthentication">“/AdvanceAuthentication”</a>
+            APIs of CyberArk Identity.
+          </h3>
+          <h5 class="mt-5">
+            To <a target="_blank"
+              href="https://docs.cyberark.com/Product-Doc/OnlineHelp/Idaptive/Latest/en/Content/GetStarted/Setup.htm">get
+              started,</a> the user should be present in the CyberArk Identity directory and should be assigned to a
+            role and a policy. The policy will dictate the MFA challenges posed to the user. The user will be asked for
+            “Username” and “Password” by default.
+          </h5>
+          <h5 class="my-3">
+            The user should <a target="_blank"
+              href="https://docs.cyberark.com/Product-Doc/OnlineHelp/Idaptive/Latest/en/Content/UserPortal/MultiAuth.htm">enroll
+              in the MFA</a> for a successful login. Else the user would not be allowed to log in.
+          </h5>
+          <h5 class="mt-3">
+            For more information on these APIs, please check the documentation <a target="_blank"
+              href="https://identity-developer.cyberark.com/docs/overview">here</a>.
+          </h5>
+        </div>
+        <div class="col m-5">
+          <div class="card bg-primary text-white">
+            <div class="card-body">
+              <div class="row justify-content-center">
+                <img [src]="appImage" alt="appImage" class="img-responsive p-4">
+              </div>
+              <h4 class="text-center mb-3">{{loginHeader}}</h4>
+              <div type="button" *ngIf="!showLoginComponent('username')" class="btn btn-link px-3"
+                (click)="startOver()">
+                < Start Over </div>
+                  <form [formGroup]="loginForm" class="p-3" autocomplete="off">
+                    <div *ngIf="authMessage != ''" class="login-error my-3">
+                      <div><img class="error-image" alt="successfailicon"
+                          [src]="checkMessageType() ? '../../assets/images/green_check.png' : '../../assets/images/issue_icon.png'" />
+                      </div>
+                      <div style="order:2;" [style.color]="checkMessageType() ? '#fff' : '#cc3300'"
+                        [innerHTML]="authMessage"></div>
+                    </div>
+                    <div class="form-group">
+                      <label class="required label">Enter your username:</label>
+                      <input class="form-control" formControlName="username" required>
+                      <span *ngIf="hasError('username', 'required')">Required</span>
+                      <span *ngIf="hasError('username', 'email')">Username pattern does not match</span>
+                    </div>
+                    <div *ngIf="showLoginComponent('challenge')" class="form-group">
+                      <label class="required label">Authentication Method</label>
+                      <select class="form-control" formControlName="authMethod" (change)="authMethodChange()"
+                        [value]="0" required>
+                        <option *ngFor="let mechanism of mechanisms; let i = index" [value]="i">
+                          {{mechanism.PromptSelectMech}}
+                        </option>
+                      </select>
+                      <span *ngIf="hasError('authMethod', 'required')">Required</span>
+                    </div>
+                    <div *ngIf="textAnswer" class="form-group">
+                      <label class="required label">{{answerLabel}}:</label>
+                      <input *ngIf="!showQRCode && !isPhoneCall" class="form-control" formControlName="answer"
+                        type="password" required>
+                      <div *ngIf="showQRCode" id="idQRCode"><img class="mx-auto d-block" [attr.src]="QRImageSource"
+                          alt="QR Code"></div>
+                      <span *ngIf="hasError('answer', 'required')">{{answerErrorText}} is required</span>
+                    </div>
+                    <div *ngIf="showLoginComponent('reset')" class="form-group">
+                      <label class="required label">Confirm New Password</label>
+                      <input class="form-control" formControlName="confirmPassword" (blur)="matchPasswords()"
+                        type="password" required>
+                      <span *ngIf="hasError('confirmPassword', 'required')">Required</span>
+                      <span *ngIf="!matchPasswordsCheck">Confirm Password must match with the Password</span>
+                    </div>
+                    <div *ngIf="showForgotPassword('password')" class="forgot-password-anchor">
+                      <a href="/login" class = "forgot-password-color" (click)="forgotPassword() ">Forgot Password?</a>
+                    </div>
+                    <div class="d-flex mt-4">
+                      <button *ngIf="isNextBtnVisible()" class="container btn btn-secondary w-25" type="submit"
+                        (click)="loginUser()">{{loginButtonText}}</button>
+                    </div>
+                  </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

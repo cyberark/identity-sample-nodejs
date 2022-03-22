@@ -18,7 +18,9 @@ const authorizationController = require('express').Router();
 const { CyberArkIdentityOAuthClient, CyberarkIdentityOIDCClient, getWidgetAssociatedApp, getOIDCAppDetails } = require('@cyberark/identity-js-sdk');
 const crypto = require('crypto');
 
-const { TENANT_URL, AUTH_FLOW } = require('../constants');
+const { AUTH_FLOW } = require('../constants');
+const settings = require('../settings.json');
+const TENANT_URL = settings.tenantUrl;
 
 authorizationController.get('/pkceMetaData', async (req, res) => {
     try {

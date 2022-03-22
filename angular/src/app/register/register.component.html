@@ -1,0 +1,147 @@
+<div class="container-fluid" (click)="onClick($event)">
+  <div *ngIf="loading" class="loader-screen">
+    <img alt="spinner" class="loader" src="../../assets/images/Spinner.svg">
+  </div>
+  <app-header *ngIf="update" isLogoutVisible=true isTOTPVisible=true isUserProfileVisible=true></app-header>
+  <app-header *ngIf="!update" isLoginVisible=true isHomeVisible=true></app-header>
+  <div #divToScroll class="app-page">
+    <div class="container h-100">
+      <div class="h-100 row align-items-center justify-content-center">
+        <div class="col text-center">
+          <div *ngIf="!update && !checkScenario3()">
+            <h3 class="mt-5">
+              Acme’s signup form uses the <a target="_blank"
+                href="https://identity-developer.cyberark.com/reference/post_cdirectoryservice-signup">“/SignUp”</a> API
+              of CyberArk Identity.
+            </h3>
+            <h5 class="mt-5">
+              The user can enter the details and click on signup to register to Acme Inc. The Acme will internally
+              invoke the “/Signup” API. The API creates the user in CyberArk Identity.
+            </h5>
+            <h5 class="mt-3">
+              We can either use a bearer token (or) captcha to invoke this API. The bearer token can be generated with
+              the client credential flow. Use captcha if you want to anonymously call the signup API.
+            </h5>
+            <h5 class="mt-3">
+              The signup API can be used along with <a target="_blank"
+                href="https://docs.cyberark.com/Product-Doc/OnlineHelp/Idaptive/Latest/en/Content/Integrations/Identity-Verification-Integration.htm">Identity
+                verification</a> to prevent identity theft and consent management to get implicit consent of the user.
+            </h5>
+            <h5 class="mt-3">
+              For more information on this API, please check the documentation <a target="_blank"
+                href="https://identity-developer.cyberark.com/docs/create-and-manage-cloud-directory-users-_new">here</a>.
+            </h5>
+          </div>
+          <div *ngIf="checkScenario3()">
+            <h3 class="mt-5">
+              Acme’s signup form uses the <a target="_blank"
+                href="https://identity-developer.cyberark.com/reference/post_cdirectoryservice-signup">“/SignUp”</a> API
+              of CyberArk Identity. When the user signs up, the user is added to Acme Inc. database and CyberArk
+              Identity simultaneously.
+            </h3>
+            <h5 class="mt-5">
+              The user can enter the details and click on signup to register to Acme Inc. The Acme will internally call
+              the “/Signup” API. The API creates the user in CyberArk Identity. Simultaneously the user will also be
+              created in Acme database.
+            </h5>
+            <h5 class="mt-3">
+              We can either use a bearer token (or) captcha to call this API. The bearer token can be generated with the
+              client credential flow. Use captcha if you want to anonymously call the signup API.
+            </h5>
+            <h5 class="mt-3">
+              The signup API can be used along with <a target="_blank"
+                href="https://docs.cyberark.com/Product-Doc/OnlineHelp/Idaptive/Latest/en/Content/Integrations/Identity-Verification-Integration.htm">Identity
+                verification</a> to prevent identity theft and consent management to get implicit consent of the user.
+            </h5>
+            <h5 class="mt-3">
+              For more information on this API, please check the documentation <a target="_blank"
+                href="https://identity-developer.cyberark.com/docs/create-and-manage-cloud-directory-users-_new">here</a>.
+            </h5>
+          </div>
+          <div *ngIf="update">
+            <h3 class="mt-5">
+              The update profile form is designed by Acme based on the <a target="_blank"
+                href="https://identity-developer.cyberark.com/reference/post_user-updateprofile">“/updateProfile”</a>
+              API of CyberArk Identity.
+            </h3>
+            <h5 class="mt-5">
+              The user can edit the details entered at the time of registration using the “/updateProfile” API.
+            </h5>
+            <h5 class="mt-3">
+              For more information on this API, please check the documentation <a target="_blank"
+                href="https://identity-developer.cyberark.com/docs/create-and-manage-cloud-directory-users-_new">here</a>.
+            </h5>
+          </div>
+        </div>
+        <div class="col m-5">
+          <div class="card bg-primary text-white">
+            <div class="row justify-content-center">
+              <img [src]="appImage" alt="appImage" class="img-responsive p-4">
+            </div>
+            <div class="mb-3" *ngIf="!update">
+              <h5 class="text-center">Signup to Acme Inc</h5>
+            </div>
+            <h5 class="mb-3 text-center" *ngIf="update">Update your profile</h5>
+            <form [formGroup]="registerForm" autocomplete="off" class="m-4">
+              <div *ngIf="errorMessage != ''" class="user-error">
+                <div class="error-image"><img alt="successfailicon"
+                    [src]="checkMessageType() ? '../../assets/images/green_check.png' : '../../assets/images/issue_icon.png'" />
+                </div>
+                <p [style.color]="checkMessageType() ? '#fff' : '#cc3300'">{{errorMessage}}</p>
+              </div>
+              <div class="form-group">
+                <label class="label required">Username:</label>
+                <input class="form-control" formControlName="Name" required>
+                <div class="label"></div>
+                <span style="display:block;" *ngIf="hasError('Name', 'required')">Required</span>
+              </div>
+              <div class="form-group">
+                <label class="label required">Email Address:</label>
+                <input class="form-control" formControlName="Mail" type="email" required>
+                <span *ngIf="hasError('Mail', 'required')">Required</span>
+                <span *ngIf="hasError('Mail', 'pattern')">Must be valid email. EXAMPLE@YOURDOMAIN.COM</span>
+              </div>
+              <div class="form-group">
+                <label class="label required">Display Name:</label>
+                <input class="form-control" formControlName="DisplayName" required>
+                <span *ngIf="hasError('DisplayName', 'required')">Required</span>
+              </div>
+              <div *ngIf="!update" class="form-group">
+                <label class="label required">Password:</label>
+                <input class="form-control" formControlName="Password" type="password" (blur)="matchPasswords()"
+                  required>
+                <span *ngIf="hasError('Password', 'required')">Required</span>
+                <span *ngIf="hasError('Password', 'pattern')">
+                  Password must be at least 8 character long with a combination of at least 1 uppercase, 1 lowercase and
+                  1 number
+                </span>
+              </div>
+              <div *ngIf="!update" class="form-group">
+                <label class="label required">Confirm Password:</label>
+                <input class="form-control" formControlName="ConfirmPassword" type="password" (blur)="matchPasswords()"
+                  required>
+                <span *ngIf="hasError('ConfirmPassword', 'required')">Required</span>
+                <span *ngIf="!matchPasswordsCheck">Confirm Password must match with the Password</span>
+              </div>
+              <div class="form-group">
+                <label class="label">Phone Number:</label>
+                <input class="form-control" formControlName="MobileNumber" name="mobileNumber">
+                <span *ngIf="hasError('MobileNumber', 'pattern')">Must be valid phonenumber(+CCNNNNNNNNNN)</span>
+              </div>
+              <div class="form-group text-center" *ngIf="isCaptchaEnabled && !update">
+                <re-captcha (resolved)="resolved($event)" style="display: inline-block;" (error)="errored($event)"
+                  errorMode="handled" siteKey="{{siteKey}}">
+                </re-captcha>
+              </div>
+              <div class="d-flex">
+                <button [disabled]="disableSignUp" class="container btn btn-secondary w-50 submit "
+                  data-target="#userConsent" type="submit"
+                  (click)="validateRegisterForm(registerForm.value)">{{submitButtonText}}</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

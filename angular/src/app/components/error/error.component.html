@@ -1,0 +1,18 @@
+<div class="modal fade" id="errorPopup" tabindex="-1" role="dialog" aria-labelledby="errorPopupTitle"
+    aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="errorPopupTitle">{{title}}</h5>
+            </div>
+            <div class="modal-body">
+                <img *ngIf="iconSrc !== ''" alt="successfailicon" class="error-image" [src]="iconSrc"/>
+                {{body}}
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="container btn btn-secondary w-50 align-self-center" data-dismiss="modal"
+                    (click)="btnClick()">{{btnLabel}}</button>
+            </div>
+        </div>
+    </div>
+</div>

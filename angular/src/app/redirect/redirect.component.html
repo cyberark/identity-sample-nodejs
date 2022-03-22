@@ -1,0 +1,59 @@
+<div class="container-fluid">
+    <div *ngIf="loading" class="loader-screen">
+        <img alt="spinner" class="loader" src="../../assets/images/Spinner.svg">
+    </div>
+    <app-header isLogoutVisible=true></app-header>
+    <div class="app-page">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="accordian card w-75 mt-5 bg-primary text-white" id="accordionExample">
+                    <div>
+                        <div class="card-header" id="headingFour">
+                            <h2 class="mb-0">
+                                <button class="btn btn-link" type="button" data-toggle="collapse"
+                                    data-target="#collapseFour" aria-expanded="true" aria-controls="collapseFour">
+                                    Authorize Response
+                                </button>
+                            </h2>
+                        </div>
+                        <div id="collapseFour" class="collapse show" aria-labelledby="headingFour"
+                            data-parent="#accordionExample">
+                            <div class="card-body">
+                                <table class="table table-sm text-white">
+                                    <tbody>
+                                        <tr *ngFor="let key of dataKeys(authResponse)">
+                                            <th class="col-sm-3" scope="row">{{key}}</th>
+                                            <td #userinput>
+                                                <div class="text-break text-truncate myDIV col-sm-10 horizontalDiv" [title]="authResponse[key]">{{authResponse[key]}}</div>
+                                                <div class="hide col-sm-2 horizontalDiv">
+                                                    <i class="fa fa-clone btn btn-link"  title="copy" (click)="copyToClipboard(userinput.textContent)"></i>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-4">
+                        <div *ngIf="isTokenReqVisible">
+                            <h5 class="mb-3">Token Endpoint API Request</h5>
+                            <div class="border rounded p-3 text-break">
+                                <pre class="text-white">{{tokenPostCall}}</pre>
+                                <div *ngIf= "tokenPostCallBody !==''">
+                                    <pre class="mt-3 text-white">Content-Type: application/x-www-form-urlencoded</pre>
+                                    <pre class="mt-3 text-white">{{tokenPostCallBody | json}}</pre>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="d-flex mt-3">
+                            <div class="container btn btn-secondary mr-5" (click)="goBack()">Cancel</div>
+                            <div class="container btn btn-secondary" (click)="onProceed()">Proceed</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <app-error [btnClick]="goBack" [body]="errorBody"></app-error>
+        </div>
+    </div>
+</div>

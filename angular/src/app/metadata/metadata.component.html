@@ -1,0 +1,171 @@
+<div class="container-fluid">
+  <div *ngIf="loading" class="loader-screen">
+    <img alt="spinner" class="loader" src="../../assets/images/Spinner.svg">
+  </div>
+  <app-header isLogoutVisible=true></app-header>
+  <div class="app-page">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="accordion w-75 bg-primary text-white mt-5 card" id="accordionExample">
+          <div>
+            <h3 class="text-center m-3">{{heading}}</h3>
+          </div>
+          <div *ngIf="!(hideAccordian || hideTokensAccordian)">
+            <div class="card-header" id="headingOne">
+              <h2 class="mb-0">
+                <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne"
+                  aria-expanded="true" aria-controls="collapseOne">
+                  Token Set (/Token Endpoint)
+                </button>
+              </h2>
+            </div>
+            <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
+              <div class="card-body">
+                <table class="table table-sm text-white">
+                  <tbody>
+                    <tr *ngFor="let key of dataKeys(tokenSet)">
+                      <th class="col-sm-3" scope="row">{{key}}</th>
+                      <td #userinput>
+                        <div class="text-break text-truncate myDIV col-sm-10 horizontalDiv">{{tokenSet[key]}}</div>
+                        <div class="hide col-sm-2 horizontalDiv">
+                          <i class="fa fa-clone btn btn-link" title="copy"
+                            (click)="copyToClipboard(userinput.textContent)"></i>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <div *ngIf="!hideAccordian">
+            <div class="card-header" id="headingTwo">
+              <h2 class="mb-0">
+                <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseTwo"
+                  aria-expanded="true" aria-controls="collapseTwo">
+                  Claims (Base64 Decoded id_token)
+                </button>
+              </h2>
+            </div>
+            <div id="collapseTwo" class="collapse" [ngClass]="{'show': hideTokensAccordian}"
+              aria-labelledby="headingTwo" data-parent="#accordionExample">
+              <div class="card-body">
+                <table class="table table-sm text-white">
+                  <tbody>
+                    <tr *ngFor="let key of dataKeys(claims)">
+                      <th class="col-sm-3" scope="row">{{key}}</th>
+                      <td #userinput>
+                        <div class="text-break text-truncate myDIV col-sm-10 horizontalDiv">{{claims[key]}}</div>
+                        <div class="hide col-sm-2 horizontalDiv">
+                          <i class="fa fa-clone btn btn-link" title="copy"
+                            (click)="copyToClipboard(userinput.textContent)"></i>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <div *ngIf="!hideAccordian && !isOauthFlow">
+            <div class="card-header" id="headingThree">
+              <h2 class="mb-0">
+                <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseThree"
+                  aria-expanded="true" aria-controls="collapseThree">
+                  User Info (/UserInfo Endpoint)
+                </button>
+              </h2>
+            </div>
+            <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
+              <div class="card-body">
+                <table class="table table-sm text-white">
+                  <tbody>
+                    <tr *ngFor="let key of dataKeys(userInfo)">
+                      <th class="col-sm-3" scope="row">{{key}}</th>
+                      <td #userinput>
+                        <div class="text-break text-truncate myDIV col-sm-10 horizontalDiv">{{userInfo[key]}}</div>
+                        <div class="hide col-sm-2 horizontalDiv">
+                          <i class="fa fa-clone btn btn-link" title="copy"
+                            (click)="copyToClipboard(userinput.textContent)"></i>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <div class="d-flex p-4">
+            <button class="container btn btn-secondary align-self-center w-50" (click)="onTryAnotherFlow()">Try
+              Another
+              Flow</button>
+            <button *ngIf="showAccessTokenBtn()" class="container btn btn-secondary align-self-center ml-5 w-50"
+              (click)="onIssueNewAccessToken()">Issue New Access
+              Token</button>
+              <button *ngIf="isOauthFlow" class="container btn btn-secondary align-self-center ml-5 w-50"
+              (click)="onIntrospect()">Introspect</button>
+          </div>
+        </div>
+      </div>
+      <app-error [btnClick]="onOk" [body]="errorMessage"></app-error>
+      <div class="modal fade" id="refreshTokenPopup" tabindex="-1" role="dialog" aria-labelledby="refreshTokenTitle"
+        aria-hidden="true" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="refreshTokenTitle">Refresh Token</h5>
+            </div>
+            <div class="modal-body">
+              <form [formGroup]="refreshTokenForm" autocomplete="off">
+                <div class="form-group">
+                  <label class="required label">Password</label>
+                  <input class="form-control" formControlName="password" type="password" required>
+                  <span *ngIf="hasError('password', 'required')">Required</span>
+                </div>
+                <div class="row justify-content-center">
+                  <button type="submit" class="container btn btn-secondary w-50" (click)="onShowPreview()">Preview</button>
+                </div>
+              </form>
+              <h5 class="mt-3">API Endpoint Request</h5>
+              <div class="border p-3 text-break preline">
+                <pre>{{refreshTokenPostCall}}</pre>
+                <div *ngIf="refreshTokenPostCallBody !==''">
+                  <pre class="mt-3">Content-Type: application/x-www-form-urlencoded</pre>
+                  <pre class="mt-3">{{refreshTokenPostCallBody | json}}</pre>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="container btn btn-secondary mr-5"
+                data-dismiss="modal">Cancel</button>
+              <button #proceedBtn type="button" class="container btn btn-secondary" (click)="onProceed()"
+                data-dismiss="modal" disabled>Proceed</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <app-error [btnClick]="onOk" [body]="errorMessage"></app-error>
+      <div class="modal fade" id="introspectpopup" tabindex="-1" role="dialog" aria-labelledby="introspectTitle"
+        aria-hidden="true" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="introspectTitle">Introspect Response</h5>
+            </div>
+            <div class="modal-body">
+              <div class="border p-3 text-break preline">
+                <div *ngIf="introspectPostCallBody !==''">
+                  <pre class="mt-3">{{introspectPostCallBody | json}}</pre>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="container btn btn-secondary w-25" 
+                data-dismiss="modal">Cancel</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,44 @@
+<div class="container-fluid">
+  <app-header isHomeVisible=true></app-header>
+  <div class="app-page">
+    <div class="container h-100">
+      <div class="h-100 row justify-content-center align-items-center">
+        <div class="col">
+          <div class="text-center" *ngIf="!isStepUp">
+            <h3>
+              The admin of Acme Inc. creates the MFA widget on the CyberArk Identity portal and downloads the HTML from
+              the portal to embed the MFA widget.
+            </h3>
+            <h5 class="mt-5">
+              Acme In. uses the MFA widget for second-factor authentication, where the widget prompts the user with the
+              MFA as per the user policy/app policy.
+            </h5>
+            <h5 class="my-4">
+              The login widget’s fields and look and feel dynamically change based on the widget ID
+            </h5>
+            <h5 class="mt-4">
+              You can integrate the widget with authentication and authorization protocols such as OIDC/SAML to generate
+              tokens for the user. The widget returns a one-time authentication token by default. If Ame Inc. registers
+              its domain with CyberArk Identity, the widget automatically generates cookies for the Acme Inc domain.
+            </h5>
+          </div>
+          <div class="text-center" *ngIf="isStepUp">
+            <h3>
+              The MFA widget should be created on the CyberArk Identity portal and the HTML should be downloaded from
+              the portal to embed the MFA widget
+            </h3>
+            <h5 class="mt-5">
+              The MFA widget is used by Acme Inc for step-up authentication when user tries to transfer the funds. The
+              user will be prompted with the rules configured at the user policy/app policy.
+            </h5>
+            <h5 class="my-4">
+              The look and feel of the widget can be dynamically changed from the CyberArk Identity portal and the
+              properties get rendered based on the widget ID.
+            </h5>
+          </div>
+        </div>
+        <div class="col m-5" id="cyberark-login"></div>
+      </div>
+    </div>
+  </div>
+</div>

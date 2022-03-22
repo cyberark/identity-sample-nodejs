@@ -1,0 +1,59 @@
+<div class="container-fluid">
+  <div *ngIf="loading" class="loader-screen">
+    <img alt="spinner" class="loader" src="../../assets/images/Spinner.svg">
+  </div>
+  <app-header isHomeVisible=true isSignUpVisible="true"></app-header>
+  <div class="app-page">
+    <div class="container h-100">
+      <div class="row justify-content-center align-items-center h-100">
+        <div class="col text-center">
+          <h3>
+            The login form is designed by Acme to authenticate the users to Acme Inc.
+          </h3>
+          <h5 class="mt-5">
+            In this scenario, the primary authentication is performed by Acme Inc. Once the user enters the username and
+            password the user is authenticated against the Acme Inc database.
+          </h5>
+          <h5 class="my-3">
+            This form is a simulation of the real life scenario where primary authentication would be handled by
+            customers.
+          </h5>
+        </div>
+        <div class="col m-5">
+          <div class="card bg-primary text-white">
+            <div class="card-body">
+              <div class="row justify-content-center">
+                <img [src]="appImage" alt="appImage" class="img-responsive p-4">
+              </div>
+              <h3 class="text-center mb-3">Login to Acme</h3>
+              <form [formGroup]="loginForm" class="p-3" autocomplete="off">
+                <div *ngIf="authMessage != ''" class="login-error">
+                  <div><img class="error-image" alt="successfailicon"
+                      [src]="checkMessageType() ? '../../assets/images/green_check.png' : '../../assets/images/issue_icon.png'" />
+                  </div>
+                  <p class="breaktext_now" style="order:2;" [style.color]="checkMessageType() ? '#fff' : '#cc3300'">
+                    {{authMessage}}</p>
+                </div>
+                <div class="form-group">
+                  <label class="required label">Enter your username:</label>
+                  <input class="form-control" formControlName="username" required>
+                  <span *ngIf="hasError('username', 'required')">Required</span>
+                  <span *ngIf="hasError('username', 'email')">Username pattern does not match</span>
+                </div>
+                <div class="form-group">
+                  <label class="required label">Enter Password:</label>
+                  <input class="form-control" formControlName="password" type="password" required>
+                  <span *ngIf="hasError('password', 'required')">Required</span>
+                </div>
+                <div class="row justify-content-center">
+                  <button class="container btn btn-secondary w-25" data-target="#userConsent" type="submit"
+                    (click)="loginUser(loginForm.value)">Login</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

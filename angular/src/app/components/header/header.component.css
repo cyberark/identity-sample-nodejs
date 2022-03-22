@@ -1,0 +1,103 @@
+.apidemo-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  padding: 15px;
+  z-index: 1;
+}
+
+.apidemo-header img {
+  width: 100%;
+  height: 48px;
+}
+
+.apidemo-header .nav-link,
+.apidemo-header .navbar-expand-md .navbar-nav .nav-link {
+  padding: .4rem .5rem;
+  font-size: 0.90rem;
+  line-height: 2.5;
+  font-family: "Roboto";
+  color: #363a40;
+  font-weight: 600;
+}
+
+.apidemo-header .navbar {
+  height: 52px;
+}
+
+.apidemo-header .navbar-expand-md .navbar-nav .nav-item .btn {
+  font-family: "Roboto";
+  border-radius: 0;
+  margin-top: 8px;
+}
+
+.apidemo-header .navbar-dark .navbar-nav .active>.nav-link,
+.apidemo-header .navbar-dark .navbar-nav .nav-link.active,
+.apidemo-header .navbar-dark .navbar-nav .nav-link.show,
+.apidemo-header .navbar-dark .navbar-nav .show>.nav-link,
+.apidemo-header .navbar-dark .navbar-nav .nav-item .btn.register-btn.active {
+  border-bottom: 4px solid #26e5c2;
+}
+
+.apidemo-header .navbar-expand-md .navbar-nav .nav-item .btn.register-btn {
+  background: none;
+  font-family: "Roboto";
+  color: #363a40;
+  font-weight: 600;
+  border-radius: 4px;
+  box-shadow: none;
+}
+
+.apidemo-header .navbar-expand-md .navbar-nav .nav-item .btn.register-btn.active {
+  border-bottom: 4px solid #26e5c2;
+  background: none;
+  font-family: "Roboto";
+  color: #363a40;
+  font-weight: 600;
+}
+
+.apidemo-header .navbar-expand-md .navbar-nav .nav-item .btn.register-btn.dropdown-toggle {
+  font-size: 20px;
+  margin-top: -2px;
+  margin-left: 8px;
+  line-height: 36px;
+}
+
+.apidemo-header .dropdown-menu.show {
+  padding-left: 10px;
+  right: 0px;
+  left: auto;
+}
+
+@media screen and (max-width: 767px) {
+  .apidemo-header {
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .apidemo-header .navbar-collapse.show {
+    background: #000;
+    border: 1px solid #ccc;
+    margin-right: 0px;
+    margin-left: 50%;
+    margin-top: -8px;
+    border-color: rgba(0, 0, 0, .1);
+  }
+
+  .apidemo-header .navbar-nav {
+    margin-top: 0px;
+  }
+
+  .apidemo-header .navbar-expand-md .navbar-nav .nav-item .btn.register-btn {
+    margin-left: 5px;
+    margin-bottom: 5px;
+  }
+}
+
+@media screen and (max-width: 576px) {
+  .apidemo-header img {
+    width: 100%;
+    height: 48px;
+  }
+}

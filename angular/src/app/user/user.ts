@@ -14,18 +14,21 @@
 * limitations under the License.
 */
 
-//TODO: remove tenant url and tenant id - read from settings.json
-const TENANT_URL = 'YOUR_TENANT_URL';
-const TENANT_ID = 'YOUR_TENANT_ID';
-const AUTH_FLOW = {
-    OAUTH: "OAUTH",
-    OIDC: "OIDC"
+export class User {
+    "id" = '';
+    "Name" = '';
+    "Mail" = '';
+    "DisplayName" = '';
+    "Password" = '';
+    "MobileNumber" = '';
+    "MFA" = false;
+    "ForcePasswordChangeNext" = false;
+    "Description" = '';
+    "OfficeNumber" = '';
+    "HomeNumber" = '';
 }
-const SYS_ADMIN_ROLE = 'System Administrator';
 
-module.exports = {
-    TENANT_URL,
-    TENANT_ID,
-    AUTH_FLOW,
-    SYS_ADMIN_ROLE
+export class verifyTotpReq {
+    uuid: string = "";
+    otpCode: string = "";
 }
