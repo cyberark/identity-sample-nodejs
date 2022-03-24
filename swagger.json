@@ -294,6 +294,9 @@
                                 },
                                 "codeChallenge": {
                                     "type": "string"
+                                },
+                                "params": {
+                                    "type": "object"
                                 }
                             }
                         }

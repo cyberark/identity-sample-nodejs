@@ -53,7 +53,7 @@ authorizationController.post('/buildAuthorizeURL', async (req, res) => {
         }else {
             clientObj = new CyberarkIdentityOIDCClient(TENANT_URL, req.body.appId, req.body.clientId, req.body.clientSecret);
         }
-        const authURL = await clientObj.authorizeURL(req.body.redirect_uri, req.body.scope, req.body.responseType, req.body.codeChallenge);
+        const authURL = await clientObj.authorizeURL(req.body.redirect_uri, req.body.scope, req.body.responseType, req.body.codeChallenge,req.body.params);
         res.send({authorizeUrl: authURL});
     } catch (error) {
         res.send(error);
