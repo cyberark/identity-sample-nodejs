@@ -17,7 +17,7 @@
 const authController = require('express').Router();
 const { startAuthentication, answerChallenge } = require('@cyberark/identity-js-sdk');
 
-const { TENANT_URL, TENANT_ID} = require('../constants');
+const { TENANT_URL, TENANT_ID } = require('../constants');
 
 authController.post('/beginAuth', async (req, res) => {
     try {
@@ -31,6 +31,15 @@ authController.post('/beginAuth', async (req, res) => {
 authController.post('/advanceAuth', async (req, res) => {
     try {
         const result = await answerChallenge(req.body.mechanismId, req.body.answer);
+        res.send(result);
+    } catch (error) {
+        res.send(error);
+    }
+});
+
+authController.post('/logout/:accessToken', async (req, res) => {
+    try {
+        const result = await logout(req.params.accessToken);
         res.send(result);
     } catch (error) {
         res.send(error);

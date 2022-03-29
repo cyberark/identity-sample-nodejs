@@ -15,7 +15,7 @@
 */
 
 const authorizationController = require('express').Router();
-const { CyberArkIdentityOAuthClient, CyberarkIdentityOIDCClient, getWidgetAssociatedApp, getOIDCAppDetails } = require('@cyberark/identity-js-sdk');
+const { CyberArkIdentityOAuthClient, CyberArkIdentityOIDCClient, getWidgetAssociatedApp, getOIDCAppDetails } = require('@cyberark/identity-js-sdk');
 const crypto = require('crypto');
 
 const { AUTH_FLOW } = require('../constants');
@@ -53,7 +53,7 @@ authorizationController.post('/buildAuthorizeURL', async (req, res) => {
         if(req.body.authFlow === AUTH_FLOW.OAUTH) {
             clientObj = new CyberArkIdentityOAuthClient(TENANT_URL, req.body.appId, req.body.clientId, req.body.clientSecret);
         }else {
-            clientObj = new CyberarkIdentityOIDCClient(TENANT_URL, req.body.appId, req.body.clientId, req.body.clientSecret);
+            clientObj = new CyberArkIdentityOIDCClient(TENANT_URL, req.body.appId, req.body.clientId, req.body.clientSecret);
         }
         const authURL = await clientObj.authorizeURL(req.body.redirect_uri, req.body.scope, req.body.responseType, req.body.codeChallenge,req.body.params);
         res.send({authorizeUrl: authURL});
@@ -117,7 +117,7 @@ authorizationController.get('/claims/:token', async (req, res) => {
 
 authorizationController.get('/oidc/userInfo/:appId/:accessToken', async (req, res)=> {
     try {
-        const clientObj = new CyberarkIdentityOIDCClient(TENANT_URL, req.params.appId, req.body.clientId, req.body.clientSecret);
+        const clientObj = new CyberArkIdentityOIDCClient(TENANT_URL, req.params.appId, req.body.clientId, req.body.clientSecret);
         const userInfo = await clientObj.getUserInfo(req.params.accessToken);
         res.send(userInfo);
     } catch (error) {

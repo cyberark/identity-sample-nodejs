@@ -154,6 +154,35 @@
                 }
             }
         },
+        "/logout/{accessToken}": {
+            "get": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Logout current authenticated user from the application",
+                "description": "Logout current authenticated user from the application",
+                "produces": ["application/json"],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "accessToken",
+                        "description": "One time auth token",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    }
+                }
+            }
+        },
         "/users/changePassword": {
             "post": {
                 "tags": [
