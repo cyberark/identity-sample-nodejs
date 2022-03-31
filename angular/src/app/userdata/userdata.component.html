@@ -1,0 +1,33 @@
+<div class="container-fluid">
+    <app-header isLogoutVisible=true isUserinfoVisible=true ></app-header>
+    <div class="app-page">
+        <div class="container py-3">
+            <div class="card-deck">
+                <div class="card bg-primary text-white">
+                    <div class="card-body">
+                        <p class="card-title text-center">UserInfo</p>
+                        <div>
+                            <div class="card-body">
+                                <table class="table table-sm text-white">
+                                    <tbody>
+                                        <tr *ngFor="let key of dataKeys(decoded)">
+                                            <th class="col-sm-3" scope="row">{{key}}</th>
+                                            <td #userinput>
+                                                <div class="text-break text-truncate myDIV col-sm-10 horizontalDiv">
+                                                    {{decoded[key]}}</div>
+                                                <div class="hide col-sm-2 horizontalDiv">
+                                                    <i class="fa fa-clone btn btn-link" title="copy"
+                                                        (click)="copyToClipboard(userinput.textContent)"></i>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

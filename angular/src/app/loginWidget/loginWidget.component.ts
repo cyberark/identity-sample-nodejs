@@ -77,7 +77,6 @@ export class LoginWidgetComponent implements OnInit {
       "signUpLinkText": "Sign Up",
       "apiFqdn": settings.tenantUrl.split("/")[2],
       "widgetId": settings.loginWidgetId,
-      success: function (AuthData) { me.loginSuccessHandler(AuthData, me) },
     };
 
     if (this.showSignUpWidget) {

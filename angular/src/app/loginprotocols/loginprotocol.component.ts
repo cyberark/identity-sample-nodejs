@@ -74,4 +74,11 @@ export class LoginProtocolComponent implements OnInit {
   checkMessageType() {
     return this.messageType == "info";
   }
+
+  onAuthLogin() {
+    document.cookie = 'flow=flow2';
+    setStorage("showSignUpWidget", "false");
+    this.router.navigate(['loginWidget'])
+  }
+
 }

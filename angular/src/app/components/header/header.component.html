@@ -35,6 +35,10 @@
           <a class="nav-link text-white" [class.active]="this.checkSelectedTab('/fundtransfer')" href="fundtransfer"
             (click)="onTabClick('fundtransfer')">Fund Transfer</a>
         </li>
+        <li class="nav-item" *ngIf="isUserinfoVisible">
+          <a class="nav-link text-white" [class.active]="this.checkSelectedTab('/userdata')" href="userdata"
+            (click)="onTabClick('userdata')">Userinfo</a>
+        </li>
         <li class="nav-item" *ngIf="isUserProfileVisible">
           <a class="nav-link text-white" [class.active]="this.checkSelectedTab('/user')" href="user"
             (click)="onTabClick('user')">User Profile</a>

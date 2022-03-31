@@ -37,7 +37,7 @@ export class HeaderComponent implements OnInit {
   @Input() isLogoutVisible: boolean = false;
   @Input() isTOTPVisible: boolean = false;
   @Input() isUserProfileVisible: boolean = false;
-
+  @Input() isUserinfoVisible: boolean = false;
   page = "home";
   name = "";
   signOutMenu = false;
@@ -93,6 +93,7 @@ export class HeaderComponent implements OnInit {
       case "/loginWidget?fromFundTransfer=true":
       case "/user":
       case "/custom":
+      case "/userdata":
       case "/totpregister":
         this.page = "user";
         break;

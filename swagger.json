@@ -613,7 +613,7 @@
                 }
             }
         },
-        "/oidc/userInfo/{appId}/{accessToken}": {
+        "/oidc/userInfo": {
             "get": {
                 "tags": [
                     "Authorization"
@@ -623,16 +623,7 @@
                 "produces": ["application/json"],
                 "parameters": [
                     {
-                        "in": "path",
-                        "name": "appId",
-                        "description": "OIDC application ID",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "in": "path",
+                        "in": "query",
                         "name": "accessToken",
                         "description": "Access token",
                         "required": true,
@@ -865,6 +856,30 @@
                         }
                     }
                 }
+            }
+        },
+        "/Resource": {
+            "get": {
+                "tags": [
+                    "Authorization"
+                ],
+                "summary": "Resource application URL",
+                "description": "The endpoint is added in the OIDC application as Resource application URL which redirects to Authurl.",
+                "produces": ["application/json"],            
+                "responses": {                   
+                }     
+            }
+        },
+        "/RedirectResource": {
+            "get": {
+                "tags": [
+                    "Authorization"
+                ],
+                "summary": "Authorized Redirect URI",
+                "description": "This endpoint provides the access token & id token.",
+                "produces": ["application/json"],            
+                "responses": {                    
+                }        
             }
         },
         "/settings/{uuid}": {

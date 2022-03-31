@@ -18,6 +18,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule, HttpClientXsrfModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { CookieService } from 'ngx-cookie-service';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -42,6 +43,7 @@ import { M2MComponent } from './m2m/m2m.component';
 import { ErrorComponent } from './components/error/error.component';
 import { TOTPRegisterComponent } from './totpregister/totpregister.component';
 import { RecaptchaModule } from 'ng-recaptcha';
+import { UserdataComponent } from './userdata/userdata.component';
 
 @NgModule({
   declarations: [
@@ -64,6 +66,7 @@ import { RecaptchaModule } from 'ng-recaptcha';
     OAuthFlowComponent,
     M2MComponent,
     TOTPRegisterComponent,
+    UserdataComponent,
   ],
   imports: [
     BrowserModule,
@@ -73,7 +76,7 @@ import { RecaptchaModule } from 'ng-recaptcha';
     HttpClientModule,
     HttpClientXsrfModule.withOptions({headerName: 'X-XSRF-TOKEN', cookieName: 'XSRF-TOKEN'})
   ],
-  providers: [{provide: HTTP_INTERCEPTORS, useClass: HttpXsrfInterceptor, multi: true}],
+  providers: [{provide: HTTP_INTERCEPTORS, useClass: HttpXsrfInterceptor, multi: true}, CookieService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

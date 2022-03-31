@@ -18,29 +18,14 @@ const authorizationController = require('express').Router();
 const { CyberArkIdentityOAuthClient, CyberArkIdentityOIDCClient, getWidgetAssociatedApp, getOIDCAppDetails } = require('@cyberark/identity-js-sdk');
 const crypto = require('crypto');
 
-const { AUTH_FLOW } = require('../constants');
+const { AUTH_FLOW, OIDC_REDIRECT_URI, POSSIBLE_STR, USERDATA_URL } = require('../constants');
 const settings = require('../settings.json');
 const TENANT_URL = settings.tenantUrl;
+let pkce;
 
 authorizationController.get('/pkceMetaData', async (req, res) => {
-    try {
-        let metadata = {
-            code_verifier: "",
-            codeChallenge: ""
-        };
-        
-        let text = "";
-        const possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-
-        for (let index = 0; index < 48; index++) {
-            text += possible.charAt(Math.floor(Math.random() * possible.length));
-        }
-
-        metadata.code_verifier = text;
-        
-        const digest = crypto.createHash('sha256').update(text, 'ascii').digest();
-        metadata.codeChallenge = Buffer.from(digest).toString('base64url');
-
+    try {  
+        const metadata = generatePKCEMetadata(); 
         res.send(metadata);
     } catch (error) {
         res.send(error);
@@ -115,10 +100,10 @@ authorizationController.get('/claims/:token', async (req, res) => {
     }
 });
 
-authorizationController.get('/oidc/userInfo/:appId/:accessToken', async (req, res)=> {
+authorizationController.get('/oidc/userInfo', async (req, res)=> {
     try {
-        const clientObj = new CyberArkIdentityOIDCClient(TENANT_URL, req.params.appId, req.body.clientId, req.body.clientSecret);
-        const userInfo = await clientObj.getUserInfo(req.params.accessToken);
+        const clientObj = new CyberArkIdentityOIDCClient(TENANT_URL, settings.oidcAppId, settings.oidcClientId, settings.oidcClientPassword);
+        const userInfo = await clientObj.getUserInfo(req.query.accessToken);
         res.send(userInfo);
     } catch (error) {
         res.send(error);
@@ -152,5 +137,46 @@ authorizationController.get('/appDetails/:appKey/:accessToken', async (req, res)
         res.send(error);
     }
 });
+
+authorizationController.get('/Resource', async (req, res) => {
+    try {
+        pkce = generatePKCEMetadata();
+        const clientObj = new CyberArkIdentityOIDCClient(TENANT_URL, settings.oidcAppId, settings.oidcClientId, settings.oidcClientPassword);
+        const authURL = await clientObj.authorizeURL(OIDC_REDIRECT_URI, ['openid','email','profile'], ['code'], pkce.codeChallenge);
+        res.redirect(authURL);
+    } catch (error) {
+        res.send(error);
+    }
+});
+    
+    
+    
+authorizationController.get('/RedirectResource', async (req, res) => {
+    try {
+        const code = req.query.code;
+        const clientObj = new CyberArkIdentityOIDCClient(TENANT_URL, settings.oidcAppId, settings.oidcClientId);
+        const tokens = await clientObj.requestToken('authorization_code', pkce.code_verifier, OIDC_REDIRECT_URI, code, null, null, ['openid','email','profile']);
+        res.cookie('sampleapp', tokens.access_token);
+        res.redirect(302, USERDATA_URL);
+    } catch (error) {
+        res.send(error);
+    }
+});
+
+function generatePKCEMetadata() {
+    let metadata = {
+        code_verifier: "",
+        codeChallenge: ""
+    };     
+    let text = "";
+
+    for (let index = 0; index < 48; index++) {
+        text += POSSIBLE_STR.charAt(Math.floor(Math.random() * POSSIBLE_STR.length));
+    }   
+    metadata.code_verifier = text;
+    const digest = crypto.createHash('sha256').update(text, 'ascii').digest();
+    metadata.codeChallenge = Buffer.from(digest).toString('base64url');
+    return metadata;
+}
 
 module.exports = authorizationController;

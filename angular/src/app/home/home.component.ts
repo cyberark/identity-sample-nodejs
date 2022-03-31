@@ -67,4 +67,8 @@ export class HomeComponent implements OnInit {
     this.router.navigate(['register'])
   }
 
+  onGetStarted() {
+    this.router.navigate(['loginprotocols'])
+  }
+
 }
