@@ -19,11 +19,11 @@ import { Router } from '@angular/router';
 import { LoginService } from '../../login/login.service';
 import { UserService } from 'src/app/user/user.service';
 import { DomSanitizer } from '@angular/platform-browser';
-import { AuthorizationFlow, getStorage, revokeToken, setStorage } from '../../utils';
+import { AuthorizationFlow, getStorage, OIDCTokens, revokeToken, setStorage } from '../../utils';
 import { AuthorizationService } from 'src/app/metadata/authorizationservice';
+import { CookieService } from 'ngx-cookie-service';
 
 const imgSrc = "../../../assets/images/acme_logo.png";
-
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
@@ -50,7 +50,8 @@ export class HeaderComponent implements OnInit {
     private userService: UserService,
     private sanitizer: DomSanitizer,
     private router: Router,
-    private authorizationService: AuthorizationService
+    private authorizationService: AuthorizationService,
+    private cookieService: CookieService
   ) { }
 
   ngOnInit() {
@@ -139,11 +140,31 @@ export class HeaderComponent implements OnInit {
   }
 
   logout() {
-    if (getStorage('oidcTokens') && getStorage('authFlow') === AuthorizationFlow.OIDC) {
-      revokeToken(JSON.parse(getStorage('oidcTokens')), this);
+    const token = this.cookieService.get('sampleapp');
+    if (token != null) {
+      this.endSessionOIDC(token);
     }
+    else {
+      this.loginService.logout().subscribe({
+        next: data => {
+          if (data.success) {
+            localStorage.clear();
+            this.router.navigate(['home']);
+          }
+        },
+        error: error => {
+          console.error(error);
+        }
+      });
+    }
+  }
 
-    this.loginService.logout().subscribe({
+  endSessionOIDC(token: string) {
+    const oidcTokens = new OIDCTokens();
+    oidcTokens.authResponseAccessToken = token;
+    revokeToken(oidcTokens, this);
+
+    this.loginService.endSession().subscribe({
       next: data => {
         if (data.success) {
           localStorage.clear();

@@ -19,8 +19,7 @@ const { CyberArkIdentityOAuthClient, CyberArkIdentityOIDCClient, getWidgetAssoci
 const crypto = require('crypto');
 
 const { AUTH_FLOW, OIDC_REDIRECT_URI, POSSIBLE_STR, USERDATA_URL } = require('../constants');
-const settings = require('../settings.json');
-const TENANT_URL = settings.tenantUrl;
+const {tenantUrl: TENANT_URL, oidcAppId: OIDC_APP_ID, oidcClientId: OIDC_CLIENT_ID, oidcClientPassword: OIDC_CLIENT_SECRET} = require('../settings.json');
 let pkce;
 
 authorizationController.get('/pkceMetaData', async (req, res) => {
@@ -69,7 +68,7 @@ authorizationController.post('/refreshToken', async (req, res) => {
 
 authorizationController.post('/revokeToken', async (req, res) => {
     try {
-        const clientObj = new CyberArkIdentityOAuthClient(TENANT_URL, req.body.appId, req.body.clientId, req.body.clientSecret);
+        const clientObj = new CyberArkIdentityOAuthClient(TENANT_URL, OIDC_APP_ID, OIDC_CLIENT_ID, OIDC_CLIENT_SECRET);
         const result = await clientObj.revokeToken(req.body.authResponseAccessToken);
         res.send(result);
     } catch (error) {
@@ -79,11 +78,9 @@ authorizationController.post('/revokeToken', async (req, res) => {
 
 authorizationController.post('/endSession', async (req, res) => {
     try {
-        const clientObj = new CyberArkIdentityOAuthClient(TENANT_URL, req.body.appId, req.body.clientId, req.body.clientSecret);
+        const clientObj = new CyberArkIdentityOAuthClient(TENANT_URL, OIDC_APP_ID, OIDC_CLIENT_ID, OIDC_CLIENT_SECRET);
         const result = await clientObj.endSession();
-        if(result.success)
-        res.redirect(req.body.postLogoutURL);
-        else
+        res.clearCookie('sampleapp');
         res.send(result);
     } catch (error) {
         res.send(error);
@@ -102,7 +99,7 @@ authorizationController.get('/claims/:token', async (req, res) => {
 
 authorizationController.get('/oidc/userInfo', async (req, res)=> {
     try {
-        const clientObj = new CyberArkIdentityOIDCClient(TENANT_URL, settings.oidcAppId, settings.oidcClientId, settings.oidcClientPassword);
+        const clientObj = new CyberArkIdentityOIDCClient(TENANT_URL, OIDC_APP_ID, OIDC_CLIENT_ID, OIDC_CLIENT_SECRET);
         const userInfo = await clientObj.getUserInfo(req.query.accessToken);
         res.send(userInfo);
     } catch (error) {
@@ -141,7 +138,7 @@ authorizationController.get('/appDetails/:appKey/:accessToken', async (req, res)
 authorizationController.get('/Resource', async (req, res) => {
     try {
         pkce = generatePKCEMetadata();
-        const clientObj = new CyberArkIdentityOIDCClient(TENANT_URL, settings.oidcAppId, settings.oidcClientId, settings.oidcClientPassword);
+        const clientObj = new CyberArkIdentityOIDCClient(TENANT_URL, OIDC_APP_ID, OIDC_CLIENT_ID, OIDC_CLIENT_SECRET);
         const authURL = await clientObj.authorizeURL(OIDC_REDIRECT_URI, ['openid','email','profile'], ['code'], pkce.codeChallenge);
         res.redirect(authURL);
     } catch (error) {
@@ -154,7 +151,7 @@ authorizationController.get('/Resource', async (req, res) => {
 authorizationController.get('/RedirectResource', async (req, res) => {
     try {
         const code = req.query.code;
-        const clientObj = new CyberArkIdentityOIDCClient(TENANT_URL, settings.oidcAppId, settings.oidcClientId);
+        const clientObj = new CyberArkIdentityOIDCClient(TENANT_URL, OIDC_APP_ID, OIDC_CLIENT_ID);
         const tokens = await clientObj.requestToken('authorization_code', pkce.code_verifier, OIDC_REDIRECT_URI, code, null, null, ['openid','email','profile']);
         res.cookie('sampleapp', tokens.access_token);
         res.redirect(302, USERDATA_URL);

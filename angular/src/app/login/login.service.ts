@@ -78,6 +78,14 @@ export class LoginService {
       }));
   }
 
+  endSession() {
+    let head = new HttpHeaders().set('Content-Type', 'application/json');
+    return this.http.post<any>(EndpointsConnector.EndSessionEndPoint, {}, { headers: head, withCredentials: true, })
+      .pipe(map(user => {
+        return user;
+      }));
+  }
+
   beginChallenge(User: string, ChallengeStateId: string) {
     let head = new HttpHeaders().set('Content-Type', 'application/json');
     return this.http.post<any>(EndpointsConnector.BeginChallengeEndPoint, { User, Version: "1.0", ChallengeStateId }, { headers: head, withCredentials: true })

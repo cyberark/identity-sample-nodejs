@@ -23,7 +23,7 @@ export const EndpointsConnector = {
     CompleteLoginEndPoint : `${baseUrl}/CompleteLogin`,
     BeginAuthEndPoint : `${baseUrl}/auth/beginAuth`,
     AdvanceAuthEndPoint : `${baseUrl}/auth/advanceAuth`,
-    LogOutEndPoint : `${baseUrl}/auth/out`,
+    LogOutEndPoint : `${baseUrl}/auth/logout`,
     PkceMetaDataEndPoint : `${baseUrl}/pkceMetaData`,
     BuildAuthorizeURLEndPoint : `${baseUrl}/buildAuthorizeURL`,
     TokenSetEndPoint : `${baseUrl}/tokenSet`,
@@ -43,5 +43,6 @@ export const EndpointsConnector = {
     SetAuthCookie: `${baseUrl}/setAuthCookie`,
     GetChallengeIDEndPoint : `${baseUrl}/userops/challengeID`,
     BeginChallengeEndPoint : `${baseUrl}/auth/beginChallenge`,
-    HeartBeat: `${baseUrl}/HeartBeat`
+    HeartBeat: `${baseUrl}/HeartBeat`,
+    EndSessionEndPoint : `${baseUrl}/endSession`,
   }
