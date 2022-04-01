@@ -45,4 +45,5 @@ export const EndpointsConnector = {
     BeginChallengeEndPoint : `${baseUrl}/auth/beginChallenge`,
     HeartBeat: `${baseUrl}/HeartBeat`,
     EndSessionEndPoint : `${baseUrl}/endSession`,
+    ChangePassword: `${baseUrl}/users/changePassword`
   }

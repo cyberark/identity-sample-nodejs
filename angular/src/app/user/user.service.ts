@@ -67,6 +67,11 @@ export class UserService {
     return this.http.get<any>(EndpointsConnector.getTotpQR, { headers: head, withCredentials: true });
   }
 
+  changePassword(oldPassword: string, newPassword: string) {
+    let head = new HttpHeaders().set('Content-Type', 'application/json');
+    return this.http.post<any>(EndpointsConnector.ChangePassword, { oldPassword, newPassword }, { headers: head, withCredentials: true })
+  }
+    
   verifyTotp(body: verifyTotpReq) {
     let head = new HttpHeaders().set('Content-Type', 'application/json');
     return this.http.post<any>(EndpointsConnector.verifyTotp, body, { headers: head, withCredentials: true });

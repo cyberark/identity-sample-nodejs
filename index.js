@@ -17,6 +17,7 @@
 const express = require('express');
 const swaggerUi = require('swagger-ui-express');
 const swaggerDocument = require('./swagger.json');
+const cookieParser = require('cookie-parser');
 
 const authController = require('./controller/authController');
 const usersController = require('./controller/usersController');
@@ -30,6 +31,7 @@ const app = express();
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use(express.json());
+app.use(cookieParser());
 
 app.use(`${API_VER}/auth`, authController);
 app.use(`${API_VER}/users`, usersController);

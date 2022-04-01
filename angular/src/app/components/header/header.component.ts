@@ -38,6 +38,9 @@ export class HeaderComponent implements OnInit {
   @Input() isTOTPVisible: boolean = false;
   @Input() isUserProfileVisible: boolean = false;
   @Input() isUserinfoVisible: boolean = false;
+  @Input() isChangePasswordVisible: boolean = false;
+  @Input() isBackVisible: boolean = false;
+
   page = "home";
   name = "";
   signOutMenu = false;
@@ -95,6 +98,8 @@ export class HeaderComponent implements OnInit {
       case "/user":
       case "/custom":
       case "/userdata":
+      case "/changepassword":
+      case "/Back":
       case "/totpregister":
         this.page = "user";
         break;

@@ -15,11 +15,12 @@
 */
 
 const usersController = require('express').Router();
+const {tenantUrl: TENANT_URL} = require('../settings.json');
 const { changeUserPassword, userAttributes } = require('@cyberark/identity-js-sdk');
 
 usersController.post('/changePassword', async (req, res) => {
     try {
-        const result = await changeUserPassword(req.body.oldPassword, req.body.newPassword);
+        const result = await changeUserPassword(TENANT_URL, req.cookies.sampleapp, req.body.oldPassword, req.body.newPassword);
         res.send(result);
     } catch (error) {
         res.send(error);

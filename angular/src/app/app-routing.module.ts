@@ -34,6 +34,7 @@ import { M2MComponent } from './m2m/m2m.component';
 import { TOTPRegisterComponent } from './totpregister/totpregister.component';
 import { IntroComponent } from './intro/intro.component';
 import { UserdataComponent } from './userdata/userdata.component';
+import { ChangepasswordComponent } from './changepassword/changepassword.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/', pathMatch: 'full' },
@@ -56,6 +57,7 @@ const routes: Routes = [
   { path: 'm2m', component: M2MComponent },
   { path: 'totpregister', component: TOTPRegisterComponent },
   { path: 'userdata', component: UserdataComponent},
+  { path: 'changepassword', component: ChangepasswordComponent }, 
 ];
 
 @NgModule({

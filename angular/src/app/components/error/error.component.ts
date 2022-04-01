@@ -16,16 +16,16 @@
 
 import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { defaultErrStr } from 'src/app/utils';
+import { defaultErrStr, defaultLabel, defaultTitle } from 'src/app/utils';
 
 @Component({
     selector: 'app-error',
     templateUrl: './error.component.html',
 })
 export class ErrorComponent implements OnInit {
-    @Input() title: string = 'Error';
+    @Input() title: string = defaultTitle;
     @Input() body: string = defaultErrStr;
-    @Input() btnLabel: string = 'Retry';
+    @Input() btnLabel: string = defaultLabel;
     @Input() btnClick: () => void;
     @Input() iconSrc: string = '';
 

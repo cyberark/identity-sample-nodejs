@@ -19,7 +19,8 @@ import { FormControl, FormGroup } from "@angular/forms";
 export const authURLStr = "Authorize URL";
 export const defaultErrStr = "Oops, something went wrong. Please try again later.";
 export const APIErrStr = "Oops, Something went wrong. Verify App configuration and user permissions.";
-
+export const defaultTitle = "Error";
+export const defaultLabel = "Retry";
 export enum AuthorizationFlow {
   OAUTH = "OAUTH",
   OIDC = "OIDC"

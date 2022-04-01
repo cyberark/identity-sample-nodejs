@@ -44,6 +44,7 @@ import { ErrorComponent } from './components/error/error.component';
 import { TOTPRegisterComponent } from './totpregister/totpregister.component';
 import { RecaptchaModule } from 'ng-recaptcha';
 import { UserdataComponent } from './userdata/userdata.component';
+import { ChangepasswordComponent } from './changepassword/changepassword.component';
 
 @NgModule({
   declarations: [
@@ -67,6 +68,7 @@ import { UserdataComponent } from './userdata/userdata.component';
     M2MComponent,
     TOTPRegisterComponent,
     UserdataComponent,
+    ChangepasswordComponent,
   ],
   imports: [
     BrowserModule,

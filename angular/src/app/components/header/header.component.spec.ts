@@ -16,10 +16,10 @@
 
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-
 import { HeaderComponent } from './header.component';
 import { UserService } from 'src/app/user/user.service';
 import { RouterTestingModule } from '@angular/router/testing';
+import { CookieService } from 'ngx-cookie-service';
 
 describe('HeaderComponent', () => {
   let component: HeaderComponent;
@@ -28,10 +28,10 @@ describe('HeaderComponent', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule, RouterTestingModule],
-      providers: [UserService],
-      declarations: [ HeaderComponent ]
+      providers: [UserService, CookieService],
+      declarations: [HeaderComponent]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

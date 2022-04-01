@@ -27,6 +27,14 @@
           <a class="nav-link text-white" [class.active]="this.checkSelectedTab('/login')" href="login"
             (click)="onTabClick('login')">Login</a>
         </li>
+        <li class="nav-item" *ngIf="isBackVisible">
+          <a class="nav-link text-white" [class.active]="this.checkSelectedTab('/user')" href="Back"
+            (click)="onTabClick('userdata')">Back</a>
+        </li>
+        <li class="nav-item" *ngIf="isChangePasswordVisible">
+          <a class="nav-link text-white" [class.active]="this.checkSelectedTab('/changepassword')" href="changepassword"
+            (click)="onTabClick('changepassword')">Change Password</a>
+        </li>
         <li class="nav-item" *ngIf="isTOTPVisible">
           <a class="nav-link text-white" [class.active]="this.checkSelectedTab('/totpregister')" href="totpregister"
             (click)="onTabClick('totpregister')">Register TOTP</a>
@@ -37,7 +45,7 @@
         </li>
         <li class="nav-item" *ngIf="isUserinfoVisible">
           <a class="nav-link text-white" [class.active]="this.checkSelectedTab('/userdata')" href="userdata"
-            (click)="onTabClick('userdata')">Userinfo</a>
+            (click)="onTabClick('userdata')">User Info</a>
         </li>
         <li class="nav-item" *ngIf="isUserProfileVisible">
           <a class="nav-link text-white" [class.active]="this.checkSelectedTab('/user')" href="user"
