@@ -47,19 +47,14 @@ export class UserService {
     return this.http.put<any>(EndpointsConnector.UserOpsURL + `${id}`, user, { headers: head, withCredentials: true });
   }
 
-  getSettings(userId: string) {
+  getSettings() {
     let head = new HttpHeaders().set('Content-Type', 'application/json');
-    return this.http.get<any>(EndpointsConnector.GetSettingsEndpoint + `${userId}`, { headers: head, withCredentials: true });
+    return this.http.get<any>(EndpointsConnector.GetSettingsEndpoint, { headers: head, withCredentials: true });
   }
 
-  getUISettings() {
+  setSettings(settings: {}) {
     let head = new HttpHeaders().set('Content-Type', 'application/json');
-    return this.http.get<any>(EndpointsConnector.GetUISettingsEndpoint, { headers: head, withCredentials: true });
-  }
-
-  setSettings(settings: {}, userId: string) {
-    let head = new HttpHeaders().set('Content-Type', 'application/json');
-    return this.http.put<any>(EndpointsConnector.UpdateSettingsEndpoint + `${userId}`, settings, { headers: head, withCredentials: true });
+    return this.http.put<any>(EndpointsConnector.UpdateSettingsEndpoint, settings, { headers: head, withCredentials: true });
   }
 
   getTotpQR() {

@@ -107,8 +107,7 @@ export class SettingsComponent implements OnInit {
     });
 
     this.loading = true;
-    const userId = getStorage("loginUserId");
-    this.userService.getSettings(userId).subscribe({
+    this.userService.getSettings().subscribe({
       next: data => {
         this.loading = false;
         this.settings = data.Result;
@@ -185,11 +184,10 @@ export class SettingsComponent implements OnInit {
     this.loading = true;
     let data = this.settingsForm.value;
     data.appImage = this.imagePreview;
-    const userId = getStorage("loginUserId");
-    this.userService.setSettings(data, userId).subscribe({
+    this.userService.setSettings(data).subscribe({
       next: d => {
         this.loading = false;
-        this.updateUISettingsData();
+        this.updateUISettingsData(data);
         this.messageType = "info";
         this.errorMessage = d.Result;
         this.divToScroll.nativeElement.scrollTop = 0;
@@ -213,16 +211,8 @@ export class SettingsComponent implements OnInit {
     this.router.navigateByUrl('/login', { state: {gotoSettingsAfterLogin: true}});
   }
 
-  updateUISettingsData() {
-    this.userService.getUISettings().subscribe({
-      next: data => {
-        setStorage("settings", JSON.stringify(data.Result));
-        setStorage("loginUserId", null);
-      }, 
-      error: error => {
-        console.error(error);
-      }
-    });
+  updateUISettingsData(data: {}) {
+    setStorage("settings", JSON.stringify(data));
   }
 
   public hasError = (controlName: string, errorName: string) => {

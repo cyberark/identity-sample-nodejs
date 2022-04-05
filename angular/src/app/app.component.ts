@@ -43,19 +43,5 @@ export class AppComponent {
       flow = 'flow=flow3';
     }
     document.cookie = flow;
-
-    this.userService.getUISettings().subscribe({
-      next: data => {
-        if (!data.Result.tenantUrl) {
-          this.router.navigate(["settings"]);
-        } else {
-          setStorage("isSettingsLocked", (data.Result.tenantUrl) != "" ? "true" : "false");
-          setStorage("settings", JSON.stringify(data.Result));
-        }
-      }, 
-      error: error => {
-        console.error(error);
-      }
-    });
   }
 }

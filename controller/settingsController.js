@@ -33,18 +33,10 @@ const isSystemAdmin = async (uuid, bearerToken) => {
     }
 }
 
-settingsController.put('/settings/:uuid', async (req, res) => {
+settingsController.put('/settings', async (req, res) => {
     try {
-        await isSysAdminCheck(res, req);
         fs.writeFileSync('settings.json', JSON.stringify(req.body));
         res.send({Result: 'Settings updated successfully'});
-    } catch (error) {
-        res.status(500).send({Success: false, ErrorMessage: error.message});
-    }
-}).get('/settings/:uuid', async (req, res) => {
-    try {
-        await isSysAdminCheck(res, req);
-        res.send({Result: settings});
     } catch (error) {
         res.status(500).send({Success: false, ErrorMessage: error.message});
     }
@@ -53,16 +45,7 @@ settingsController.put('/settings/:uuid', async (req, res) => {
 settingsController.get('/settings', async (req, res) => {
     try {
         res.send({
-            Result: {
-                appImage: settings.appImage,
-                tenantUrl: settings.tenantUrl,
-                loginWidgetId: settings.loginWidgetId,
-                mfaWidgetId: settings.mfaWidgetId,
-                oauthAppId: settings.oauthAppId,
-                oauthScopesSupported: settings.oauthScopesSupported,
-                isCaptchaEnabledInSettings: settings.isCaptchaEnabledInSettings,
-                siteKey: settings.siteKey
-            }
+            Result: settings
         });
     } catch (error) {
         res.status(500).send({Success: false, ErrorMessage: 'Failed to fetch UI settings.'});

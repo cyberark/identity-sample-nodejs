@@ -882,24 +882,31 @@
                 }        
             }
         },
-        "/settings/{uuid}": {
+        "/settings": {
+            "get": {
+                "tags": [
+                    "Settings"
+                ],
+                "summary": "UI settings",
+                "description": "UI settings",
+                "produces": ["application/json"],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/settings"
+                        }
+                    }
+                }
+            },
             "put": {
                 "tags": [
                     "Settings"
                 ],
-                "summary": "Updates the settings json file based on user",
-                "description": "Updates the settings json file based on user",
+                "summary": "Updates the settings json file",
+                "description": "Updates the settings json file",
                 "produces": ["application/json"],
                 "parameters": [
-                    {
-                        "in": "path",
-                        "name": "uuid",
-                        "description": "Logged in user's uuid",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
                     {
                         "in": "body",
                         "name": "body",
@@ -917,129 +924,6 @@
                             "type": "object",
                             "properties": {
                                 "Result": {
-                                    "type": "string"
-                                }
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "Settings update failed",
-                        "schema": {
-                            "type": "object",
-                            "properties": {
-                                "Success": {
-                                    "type": "boolean"
-                                },
-                                "ErrorMessage": {
-                                    "type": "string"
-                                }
-                            }
-                        }
-                    }
-                }
-            },
-            "get": {
-                "tags": [
-                    "Settings"
-                ],
-                "summary": "Get the settings based on logged in user",
-                "description": "Get the settings based on logged in user",
-                "produces": ["application/json"],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "uuid",
-                        "description": "Logged in user's uuid",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "type": "object",
-                            "properties": {
-                                "Result": {
-                                    "$ref": "#/definitions/settings"
-                                }
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "Settings update failed",
-                        "schema": {
-                            "type": "object",
-                            "properties": {
-                                "Success": {
-                                    "type": "boolean"
-                                },
-                                "ErrorMessage": {
-                                    "type": "string"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/settings": {
-            "get": {
-                "tags": [
-                    "Settings"
-                ],
-                "summary": "UI settings",
-                "description": "UI settings",
-                "produces": ["application/json"],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "type": "object",
-                            "properties": {
-                                "Result": {
-                                    "type": "object",
-                                    "properties": {
-                                        "appImage": {
-                                            "type": "string"
-                                        },
-                                        "tenantUrl": {
-                                            "type": "string"
-                                        },
-                                        "loginWidgetId": {
-                                            "type": "string"
-                                        },
-                                        "mfaWidgetId": {
-                                            "type": "string"
-                                        },
-                                        "oauthAppId": {
-                                            "type": "string"
-                                        },
-                                        "oauthScopesSupported": {
-                                            "type": "string"
-                                        },
-                                        "isCaptchaEnabledInSettings": {
-                                            "type": "boolean"
-                                        },
-                                        "siteKey": {
-                                            "type": "string"
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "Settings update failed",
-                        "schema": {
-                            "type": "object",
-                            "properties": {
-                                "Success": {
-                                    "type": "boolean"
-                                },
-                                "ErrorMessage": {
                                     "type": "string"
                                 }
                             }

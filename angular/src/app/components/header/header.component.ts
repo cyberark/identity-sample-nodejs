@@ -62,12 +62,11 @@ export class HeaderComponent implements OnInit {
       this.imageSource = JSON.parse(getStorage("settings")).appImage;
 
     this.loading = true;
-    this.userService.getUISettings().subscribe({
+    this.userService.getSettings().subscribe({
       next: data => {
         this.loading = false;
         if (data.Result.appImage) {
           this.imageSource = data.Result.appImage;
-          setStorage("isSettingsLocked", (data.Result.tenantUrl) != "" ? "true" : "false");
           setStorage("settings", JSON.stringify(data.Result));
         } else {
           console.log("Incorrect data response");
@@ -131,10 +130,6 @@ export class HeaderComponent implements OnInit {
 
   onTabClick(href: string) {
     if (href === 'login' && document.cookie.includes('flow3')) href = 'basiclogin';
-    else if (href === 'settings' && getStorage("isSettingsLocked") === "true") {
-      this.router.navigateByUrl('/login', { state: { gotoSettingsAfterLogin: true } })
-      return false;
-    }
 
     this.router.navigate([href]);
     return false;
