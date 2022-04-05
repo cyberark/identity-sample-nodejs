@@ -18,6 +18,7 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
+import { CookieService } from 'ngx-cookie-service';
 import { HeaderComponent } from '../components/header/header.component';
 import { FundTransferComponent } from './fundtransfer.component';
 
@@ -28,7 +29,8 @@ describe('FundTransferComponent', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ FundTransferComponent, HeaderComponent ],
-      imports: [RouterTestingModule, HttpClientTestingModule, ReactiveFormsModule]
+      imports: [RouterTestingModule, HttpClientTestingModule, ReactiveFormsModule],
+      providers: [CookieService]
     })
     .compileComponents();
   }));

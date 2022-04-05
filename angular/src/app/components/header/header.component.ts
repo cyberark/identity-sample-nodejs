@@ -40,6 +40,7 @@ export class HeaderComponent implements OnInit {
   @Input() isUserinfoVisible: boolean = false;
   @Input() isChangePasswordVisible: boolean = false;
   @Input() isBackVisible: boolean = false;
+  @Input() isFundTransferVisible: boolean = false;
 
   page = "home";
   name = "";

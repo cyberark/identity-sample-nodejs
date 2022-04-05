@@ -16,9 +16,10 @@
 
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { CookieService } from 'ngx-cookie-service';
 import { HeaderComponent } from '../components/header/header.component';
 import { FormGroup, NgForm, FormControl, Validators } from '@angular/forms';
-import { getStorage, validateAllFormFields } from '../utils';
+import { validateAllFormFields } from '../utils';
 import { HeartBeatService } from '../heartbeat/heartbeat.service'; 
 
 @Component({
@@ -42,17 +43,20 @@ export class FundTransferComponent implements OnInit {
     constructor(
         private router: Router,
         private route: ActivatedRoute,
-        private heartBeatService: HeartBeatService
+        private heartBeatService: HeartBeatService,
+        private cookieService: CookieService
     ) { }
 
     ngOnInit() {
+        if (!this.cookieService.check('sampleapp')) {
+            this.router.navigate(['/home']);
+        }
+
         this.fundTransferForm = new FormGroup({
-            'amount': new FormControl(null, Validators.min(1))
+            'amount': new FormControl(null, Validators.min(1)),
+            'remarks': new FormControl(null)
           });
 
-        if (getStorage("userId") == null) {
-            this.router.navigate(['/login']);
-        }
         this.heartBeatService.checkHeartBeat(this);
 
         this.isFundTransferSuccessful = JSON.parse(this.route.snapshot.queryParamMap.get('isFundTransferSuccessful'));
@@ -67,7 +71,7 @@ export class FundTransferComponent implements OnInit {
             return;
         }
         this.heartBeatService.checkHeartBeat(this);
-        document.cookie.includes('flow3') ? this.router.navigate(['mfawidget'], { queryParams: { fromFundTransfer: true } }) : this.router.navigate(['loginWidget'], { queryParams: { fromFundTransfer: true } }); 
+        this.router.navigate(['mfawidget'], { queryParams: { fromFundTransfer: true } });
     }
 
     numberOnly(event): boolean {

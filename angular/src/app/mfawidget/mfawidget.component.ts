@@ -15,11 +15,9 @@
 */
 
 import { Component, OnInit } from '@angular/core';
-import { BasicLoginService } from '../basiclogin/basiclogin.service';
-import { AuthorizationService } from '../metadata/authorizationservice';
 declare let LaunchLoginView: any;
-import { ActivatedRoute, Router } from '@angular/router';
-import { getStorage, setStorage, APIErrStr, Settings, addChildNodes, setUserDetails } from '../utils';
+import { Router } from '@angular/router';
+import { getStorage, Settings, addChildNodes } from '../utils';
 
 @Component({
   selector: 'app-mfawidget',
@@ -33,9 +31,6 @@ export class MFAWidgetComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private route: ActivatedRoute,
-    private loginService: BasicLoginService,
-    private authorizationService: AuthorizationService
   ) { }
 
   ngOnInit() {
@@ -47,7 +42,7 @@ export class MFAWidgetComponent implements OnInit {
         "containerSelector": "#cyberark-login",
         "widgetId": settings.mfaWidgetId,
         "apiFqdn": settings.tenantUrl.split("/")[2],
-        "username": getStorage('mfaUsername'),
+        "username": getStorage('preferred_username'),
         autoSubmitUsername: true,
         success: function (AuthData) { me.loginSuccessHandler(AuthData, me) },
       });
@@ -56,52 +51,10 @@ export class MFAWidgetComponent implements OnInit {
     this.isStepUp = this.router.url.includes('fromFundTransfer');
   }
   loginSuccessHandler(AuthData, context) {
-
-    this.authorizationService.getPKCEMetadata().subscribe({
-      next: pkceMetadata => {
-        this.loginService.authorize(AuthData.Auth, getStorage('mfaUsername'), pkceMetadata.Result.codeChallenge).subscribe({
-          next: data => {
-            this.loginService.completeLoginUser(getStorage("sessionUuid"), data.Result.AuthorizationCode, getStorage('mfaUsername'), pkceMetadata.Result.code_verifier).subscribe({
-              next: data => {
-                if (data && data.Success == true) {
-                  setUserDetails(AuthData);
-                  context.fromFundTransfer = JSON.parse(context.route.snapshot.queryParamMap.get('fromFundTransfer'));
-
-                  if (context.fromFundTransfer) {
-                    context.router.navigate(['fundtransfer'], { queryParams: { isFundTransferSuccessful: true } });
-                  } else {
-                    context.router.navigate(['user']);
-                  }
-
-                } else {
-                  context.router.navigate(['basiclogin']);
-                }
-              },
-              error: error => {
-                let errorMessage = APIErrStr;
-                if (error.error.Success == false) {
-                  errorMessage = error.error.ErrorMessage;
-                }
-                localStorage.clear();
-                setStorage("registerMessageType", "error");
-                setStorage("registerMessage", errorMessage);
-                console.error(error);
-                context.router.navigate(['basiclogin']);
-              }
-            });
-          },
-          error: error => {
-            let errorMessage = APIErrStr;
-            if (error.error.Success == false) {
-              errorMessage = error.error.ErrorMessage;
-            }
-            setStorage("registerMessageType", "error");
-            setStorage("registerMessage", errorMessage);
-            console.error(error);
-            context.router.navigate(['basiclogin']);
-          }
-        })
-      }
-    });
+    if (context.isStepUp) {
+      context.router.navigate(['fundtransfer'], { queryParams: { isFundTransferSuccessful: true }});
+    } else {
+      context.router.navigate(['userdata']);
+    }
   }
 }

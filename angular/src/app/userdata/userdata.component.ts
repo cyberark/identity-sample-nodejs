@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthorizationService } from '../metadata/authorizationservice';
 import { CookieService } from 'ngx-cookie-service';
+import { setStorage } from '../utils';
 
 @Component({
   selector: 'app-userdata',
@@ -23,6 +24,7 @@ export class UserdataComponent implements OnInit {
       this.authorizationService.getUserInfo(token).subscribe({
         next: data => {
           this.decoded = data;
+          setStorage('preferred_username', data.preferred_username);
         },
         error: error => {
           console.error(error);

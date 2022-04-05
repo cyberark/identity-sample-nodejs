@@ -2,7 +2,7 @@
   <div *ngIf="loading" class="loader-screen">
     <img alt="spinner" class="loader" src="../../assets/images/Spinner.svg">
   </div>
-  <app-header isLogoutVisible=true isUserProfileVisible=true isTOTPVisible=true></app-header>
+  <app-header isLogoutVisible=true isBackVisible=true isFundTransferVisible=true></app-header>
   <div class="app-page">
     <div *ngIf="showPage()" class="container h-100">
       <div class="h-100 row justify-content-center align-items-center">
@@ -22,9 +22,13 @@
                 <form [formGroup]="fundTransferForm" class="col-8" autocomplete="off">
                   <div class="form-group m-3">
                     <label class="required label">Amount</label>
-                    <input class="form-control " placeholder="Enter Transfer Amount" formControlName="amount" required (keypress)="numberOnly($event)">
+                    <input class="form-control" placeholder="Enter Transfer Amount" formControlName="amount" required (keypress)="numberOnly($event)">
                     <span *ngIf="hasError('amount', 'required')">Required</span>
                     <span *ngIf="hasError('amount', 'min')">Invalid</span>
+                  </div>
+                  <div class="form-group m-3">
+                    <label class="label">Remarks</label>
+                    <input class="form-control" placeholder="Remarks" formControlName="remarks" type="text">
                   </div>
                   <div class="d-flex align-items-center justify-content-end mt-4">
                     <button class="btn btn-secondary w-50" type="submit"
