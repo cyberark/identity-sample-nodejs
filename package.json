@@ -12,7 +12,8 @@
   "author": "",
   "license": "Apache-2.0",
   "dependencies": {
-    "@cyberark/identity-js-sdk": "^1.0.1",
+    "@cyberark/identity-js-sdk": "^1.1.0",
+    "cookie-parser": "^1.4.6",
     "express": "^4.17.3",
     "swagger-ui-express": "^4.3.0"
   },
