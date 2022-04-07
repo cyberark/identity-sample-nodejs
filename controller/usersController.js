@@ -16,7 +16,7 @@
 
 const usersController = require('express').Router();
 const {tenantUrl: TENANT_URL} = require('../settings.json');
-const { changeUserPassword, userAttributes } = require('@cyberark/identity-js-sdk');
+const { changeUserPassword, userAttributes, getTotpQr, validateTotp } = require('@cyberark/identity-js-sdk');
 
 usersController.post('/changePassword', async (req, res) => {
     try {
@@ -26,9 +26,28 @@ usersController.post('/changePassword', async (req, res) => {
         res.send(error);
     }
 });
+
 usersController.get('/attributes/:id', async (req, res) => {
     try {
         const result = await userAttributes(req.params.id);
+        res.send(result);
+    } catch (error) {
+        res.send(error);
+    }
+});
+
+usersController.get('/getTotpQr', async (req, res) => {
+    try {
+        const result = await getTotpQr(TENANT_URL, req.cookies.sampleapp);
+        res.send(result);
+    } catch (error) {
+        res.send(error);
+    }
+});
+
+usersController.post('/verifyTotp', async (req, res) => {
+    try {
+        const result = await validateTotp(TENANT_URL, req.cookies.sampleapp, req.body);
         res.send(result);
     } catch (error) {
         res.send(error);

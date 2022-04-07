@@ -17,11 +17,11 @@
 import { Component, OnInit } from '@angular/core';
 import { BasicLoginService } from '../basiclogin/basiclogin.service';
 import { AuthorizationService } from '../metadata/authorizationservice';
-declare let LaunchLoginView: any;
 import { ActivatedRoute, Router } from '@angular/router';
-import { getStorage, setStorage, APIErrStr, TokenMetadataRequest, GrantType, AuthorizationFlow, Settings, addChildNodes, setUserDetails } from '../utils';
+import { getStorage, APIErrStr, Settings, addChildNodes } from '../utils';
 import { ajax, css } from "jquery";
 import { UserService } from '../user/user.service';
+declare let LaunchLoginView: any;
 
 @Component({
   selector: 'app-loginWidget',
@@ -31,9 +31,7 @@ import { UserService } from '../user/user.service';
 
 export class LoginWidgetComponent implements OnInit {
 
-  tokenReq = new TokenMetadataRequest();
-  errorMessage: string = APIErrStr;
-  tokenSet = {};
+  errorMessage: string = APIErrStr;;
   showSignUpWidget = false;
 
   constructor(
@@ -48,29 +46,10 @@ export class LoginWidgetComponent implements OnInit {
     var me = this;
     const settings: Settings = JSON.parse(getStorage('settings'));
     this.showSignUpWidget = getStorage("showSignUpWidget") === "true";
-
-    if (this.showSignUpWidget) {
-      this.tokenReq.authFlow = AuthorizationFlow.OAUTH;
-      this.tokenReq.grant_type = GrantType.client_credentials;
-      this.authorizationService.getTokenSet(this.tokenReq).subscribe({
-        next: data => {
-          this.tokenSet = data.Result;
-        },
-        error: error => {
-          this.showError(me, error);
-        },
-        complete: () => {
-          this.loginView(me, settings);
-        }
-      });
-    }
-    else {
-      this.loginView(me, settings);
-    }
-
+    this.loginView(settings);
   }
 
-  loginView(me, settings) {
+  loginView(settings) {
     let config = {
       "containerSelector": "#cyberark-login",
       "showSignup": this.showSignUpWidget,
@@ -79,10 +58,7 @@ export class LoginWidgetComponent implements OnInit {
       "widgetId": settings.loginWidgetId,
     };
 
-    if (this.showSignUpWidget) {
-      config["bearerToken"] = this.tokenSet['access_token'];
-    }
-    else {
+    if (!this.showSignUpWidget) {
       const username = getStorage('username');
       config["username"] = username;
       config["autoSubmitUsername"] = username ? true : false;
@@ -100,41 +76,5 @@ export class LoginWidgetComponent implements OnInit {
   showError(context, error) {
     context.errorMessage = error.error.ErrorMessage || error.error.error_description;
     (<any>$('#errorPopup')).modal();
-  }
-
-  loginSuccessHandler(AuthData, context) {
-
-    this.authorizationService.getPKCEMetadata().subscribe({
-      next: pkceMetadata => {
-        this.loginService.authorize(AuthData.Auth, AuthData.User, pkceMetadata.Result.codeChallenge).subscribe({
-          next: data => {
-            this.loginService.setAuthCookie("", data.Result.AuthorizationCode, AuthData.User, pkceMetadata.Result.code_verifier).subscribe({
-              next: data => {
-                if (data && data.Success == true) {
-                  setUserDetails(AuthData);
-                  context.fromFundTransfer = JSON.parse(context.route.snapshot.queryParamMap.get('fromFundTransfer'));
-                  setStorage("showSignUpWidget", "false");
-                  if (context.fromFundTransfer) {
-                    context.router.navigate(['fundtransfer'], { queryParams: { isFundTransferSuccessful: true } });
-                  } else {
-                    context.router.navigate(['user']);
-                  }
-
-                } else {
-                  context.router.navigate(['loginWidget']);
-                }
-              },
-              error: error => {
-                this.showError(context, error);
-                context.router.navigate(['loginWidget']);
-              }
-            });
-          },
-          error: error => {
-            this.showError(context, error);
-          }
-        })
-      }
-    });
   }
 }

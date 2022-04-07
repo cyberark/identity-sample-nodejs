@@ -15,7 +15,7 @@
 */
 
 const authController = require('express').Router();
-const { startAuthentication, answerChallenge } = require('@cyberark/identity-js-sdk');
+const { startAuthentication, answerChallenge, logout } = require('@cyberark/identity-js-sdk');
 
 const { TENANT_URL, TENANT_ID } = require('../constants');
 
@@ -37,10 +37,10 @@ authController.post('/advanceAuth', async (req, res) => {
     }
 });
 
-authController.post('/logout/:accessToken', async (req, res) => {
+authController.post('/logout', async (req, res) => {
     try {
-        const result = await logout(req.params.accessToken);
-        res.send(result);
+        const result = await logout(TENANT_URL, req.cookies.sampleapp);
+        res.send({ "success": result });
     } catch (error) {
         res.send(error);
     }

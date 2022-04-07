@@ -128,7 +128,7 @@ authorizationController.get('/widgetAssociatedApp/:widgetId', async (req, res) =
 
 authorizationController.get('/appDetails/:appKey/:accessToken', async (req, res) => {
     try {
-        const result = await getOIDCAppDetails(req.params.appKey, req.params.accessToken);
+        const result = await getOIDCAppDetails(TENANT_URL, req.params.appKey, req.params.accessToken);
         res.send(result);
     } catch (error) {
         res.send(error);
