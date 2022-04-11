@@ -4,8 +4,7 @@ import { FormGroup, FormBuilder, Validators, FormControl, NgForm, AbstractContro
 import { validateAllFormFields, APIErrStr, defaultTitle, defaultLabel } from '../utils';
 @Component({
   selector: 'app-changepassword',
-  templateUrl: './changepassword.component.html',
-  styleUrls: ['./changepassword.component.css']
+  templateUrl: './changepassword.component.html'
 })
 export class ChangepasswordComponent implements OnInit {
   changePasswordForm: FormGroup;

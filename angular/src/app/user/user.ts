@@ -15,7 +15,7 @@
 */
 
 export class User {
-    "id" = '';
+    "ID" = '';
     "Name" = '';
     "Mail" = '';
     "DisplayName" = '';

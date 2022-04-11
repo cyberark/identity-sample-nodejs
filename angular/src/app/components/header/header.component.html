@@ -47,9 +47,13 @@
           <a class="nav-link text-white" [class.active]="this.checkSelectedTab('/userdata')" href="userdata"
             (click)="onTabClick('userdata')">User Info</a>
         </li>
+        <li class="nav-item" *ngIf="isEnrollFactorsVisible">
+          <a class="nav-link text-white" [class.active]="this.checkSelectedTab('/changepassword')" href="changepassword"
+            (click)="onTabClick('changepassword')">Enroll Factors</a>
+        </li>
         <li class="nav-item" *ngIf="isUserProfileVisible">
-          <a class="nav-link text-white" [class.active]="this.checkSelectedTab('/user')" href="user"
-            (click)="onTabClick('user')">User Profile</a>
+          <a class="nav-link text-white" [class.active]="this.checkSelectedTab('/updateprofile')" href="updateprofile"
+            (click)="onTabClick('updateprofile')">User Profile</a>
         </li>
         <li class="nav-item" *ngIf="isLogoutVisible">
           <div class="nav-link text-white" (click)="logout()" style="cursor: pointer;">Logout</div>

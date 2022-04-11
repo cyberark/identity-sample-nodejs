@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthorizationService } from '../metadata/authorizationservice';
 import { CookieService } from 'ngx-cookie-service';
-import { setStorage } from '../utils';
+import { getStorage, setStorage } from '../utils';
 
 @Component({
   selector: 'app-userdata',
@@ -11,8 +11,8 @@ import { setStorage } from '../utils';
 })
 export class UserdataComponent implements OnInit {
   public decoded: any = {};
- 
-  constructor( 
+
+  constructor(
     private router: Router,
     private authorizationService: AuthorizationService,
     private cookieService: CookieService
@@ -25,6 +25,7 @@ export class UserdataComponent implements OnInit {
         next: data => {
           this.decoded = data;
           setStorage('preferred_username', data.preferred_username);
+          setStorage("userId", data.sub);
         },
         error: error => {
           console.error(error);
@@ -38,8 +39,8 @@ export class UserdataComponent implements OnInit {
   * Copies string content clipboard
   * @param form string to copy
   */
-   copyToClipboard = (val: string) => {
+  copyToClipboard = (val: string) => {
     navigator.clipboard.writeText(val);
   }
- 
+
 }

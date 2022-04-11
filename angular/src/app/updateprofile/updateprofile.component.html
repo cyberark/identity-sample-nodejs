@@ -1,0 +1,59 @@
+<div class="container-fluid">
+  <app-header isBackVisible=true isChangePasswordVisible=true isTOTPVisible=true isLogoutVisible=true isUserinfoVisible=true isUserProfileVisible=true></app-header>
+    <div class="app-page">
+      <div class="container h-100">
+        <div class="row justify-content-center align-items-center h-100">
+          <div class="col text-center">
+            <h3>
+              The update profile form is designed by Acme based on the "/updateProfile" API of CyberArk Identity.
+            </h3>
+            <h5 class="mt-5">
+             The user can edit the details that the user enters at the time of registration using the "/updateProfile" API
+            </h5>
+            <h5 class="my-3">
+              The CyberArk Identity login API generates an authentication cookie. The "/updateProfile" API request contains this cookie in the request header.
+            </h5>
+            <h5 class="mt-3">
+              For more information on these APIs, please check the documentation <a target="_blank"
+                href="https://identity-developer.cyberark.com/docs/overview">here</a>.
+            </h5>
+          </div>
+          <div class="col m-5">
+            <div class="card bg-primary text-white">
+              <div class="card-body">
+                <h3 class="text-center mb-3">Update your profile</h3>
+                <form [formGroup]="updateProfileForm" class="p-3" autocomplete="off">
+                  <div class="form-group">
+                    <label class="required label">Username:</label>
+                    <input class="form-control input" type="text" formControlName="Name" required>
+                    <span *ngIf="hasError('Name', 'required')">Required</span>
+                  </div>
+                  <div class="form-group">
+                    <label class="required label">Email Address:</label>
+                    <input class="form-control input" formControlName="Mail" type="text" required>
+                    <span *ngIf="hasError('Mail', 'required')">Required</span>
+                    <span *ngIf="hasError('Mail', 'pattern')">Must be valid email. EXAMPLE@YOURDOMAIN.COM</span>
+                  </div>
+                  <div class="form-group">
+                    <label class="required label">Display Name:</label>
+                    <input class="form-control input" formControlName="DisplayName" type="text" required>
+                    <span *ngIf="hasError('DisplayName', 'required')">Required</span>
+                  </div>
+                  <div class="form-group">
+                    <label class="required label">Phone Number:</label>
+                    <input class="form-control input" formControlName="MobileNumber" type="text" required>
+                    <span *ngIf="hasError('MobileNumber', 'required')">Required</span>
+                    <span *ngIf="hasError('MobileNumber', 'pattern')">Must be valid phonenumber(+CCNNNNNNNNNN)</span>
+                  </div>
+                  <div class="row justify-content-center">
+                    <button class="container btn btn-secondary w-25" data-target="#userConsent" (click)="updateUserProfile(updateProfileForm.value)">Update</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <app-error [btnClick]="onOk" [body]="popUpMessage" [title]="popUptitle" [btnLabel]="popUpLabel"></app-error>
+  </div>

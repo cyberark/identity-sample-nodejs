@@ -223,3 +223,15 @@ label.required::after {
 ::-webkit-scrollbar-thumb:hover {
   background: #555; 
 }
+
+/*input field customization */
+.input[type="text"],.input[type="password"] {
+  width: 100%;
+  padding: 10px 10px;
+  margin: 8px 0;
+  color: white;
+  box-sizing: border-box;
+  border: none;
+  background-color: #192436 !important;
+  border-bottom: 2px solid white;
+}

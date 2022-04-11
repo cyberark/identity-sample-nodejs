@@ -64,7 +64,7 @@ export class UserService {
 
   changePassword(oldPassword: string, newPassword: string) {
     let head = new HttpHeaders().set('Content-Type', 'application/json');
-    return this.http.post<any>(EndpointsConnector.ChangePassword, { oldPassword, newPassword }, { headers: head, withCredentials: true })
+    return this.http.post<any>(EndpointsConnector.ChangePassword, { oldPassword, newPassword }, { headers: head, withCredentials: true });
   }
     
   verifyTotp(body: verifyTotpReq) {
@@ -75,5 +75,15 @@ export class UserService {
   getChallengeID() {
     let head = new HttpHeaders().set('Content-Type', 'application/json');
     return this.http.get<any>(EndpointsConnector.GetChallengeIDEndPoint, { headers: head, withCredentials: true });
+  }
+
+  getAttributes(id: string) {
+    let head = new HttpHeaders().set('Content-Type', 'application/json');
+    return this.http.get<any>(EndpointsConnector.UserAttributes+`${id}`, { headers: head, withCredentials: true });
+  }
+
+  updateProfile(body: User) {
+    let head = new HttpHeaders().set('Content-Type', 'application/json');
+    return this.http.put<any>(EndpointsConnector.UpdateProfile, body, { headers: head, withCredentials: true });
   }
 }

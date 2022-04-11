@@ -16,972 +16,978 @@
     "host": "localhost:2200",
     "basePath": "/api",
     "paths" : {
-        "/auth/beginAuth" : {
-            "post" : {
-                "tags": [
-                    "Auth"
-                ],
-                "summary" : "Begin's authentication",
-                "description": "Begin's authentication",
-                "produces": ["application/json"],
-                "consumes": ["application/json"],
-                "parameters": [
-                    {
-                        "in": "body",
-                        "name": "body",
-                        "description": "body",
-                        "required": true,
-                        "schema": {
-                            "type": "object",
-                            "properties": {
-                                "username": {
-                                    "type": "string"
-                                }
-                            }
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "type": "object",
-                            "properties": {
-                                "success": {
-                                    "type": "boolean"
-                                },
-                                "state": {
-                                    "type": "string"
-                                },
-                                "mechanisms": {
-                                    "type": "array",
-                                    "items": {
-                                        "type": "object",
-                                        "properties": {
-                                            "AnswerType": {
-                                                "type": "string"
-                                            },
-                                            "Name": {
-                                                "type": "string"
-                                            },
-                                            "PromptMechChosen": {
-                                                "type": "string"
-                                            },
-                                            "PromptSelectMech": {
-                                                "type": "string"
-                                            },
-                                            "MechanismId": {
-                                                "type": "string"
-                                            }
-                                        }
-                                    }
-                                },
-                                "message": {
-                                    "type": "string"
-                                }
-                            }
-                        }
-                    }
+      "/auth/beginAuth": {
+        "post": {
+          "tags": ["Auth"],
+          "summary": "Begin's authentication",
+          "description": "Begin's authentication",
+          "produces": ["application/json"],
+          "consumes": ["application/json"],
+          "parameters": [
+            {
+              "in": "body",
+              "name": "body",
+              "description": "body",
+              "required": true,
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "username": {
+                    "type": "string"
+                  }
                 }
+              }
             }
-        },
-        "/auth/advanceAuth" : {
-            "post" : {
-                "tags": [
-                    "Auth"
-                ],
-                "summary" : "For simple text answer mechanisms",
-                "description": "For simple text answer mechanisms",
-                "produces": ["application/json"],
-                "consumes": ["application/json"],
-                "parameters": [
-                    {
-                        "in": "body",
-                        "name": "body",
-                        "description": "body",
-                        "required": true,
-                        "schema": {
-                            "type": "object",
-                            "properties": {
-                                "mechanismId" : {
-                                    "type": "string"
-                                },
-                                "answer" : {
-                                    "type": "string"
-                                }
-                            }
+          ],
+          "responses": {
+            "200": {
+              "description": "successful operation",
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "success": {
+                    "type": "boolean"
+                  },
+                  "state": {
+                    "type": "string"
+                  },
+                  "mechanisms": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "AnswerType": {
+                          "type": "string"
+                        },
+                        "Name": {
+                          "type": "string"
+                        },
+                        "PromptMechChosen": {
+                          "type": "string"
+                        },
+                        "PromptSelectMech": {
+                          "type": "string"
+                        },
+                        "MechanismId": {
+                          "type": "string"
                         }
+                      }
                     }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "type": "object",
-                            "properties": {
-                                "success": {
-                                    "type": "boolean"
-                                },
-                                "state": {
-                                    "type": "string"
-                                },
-                                "mechanisms": {
-                                    "type": "array",
-                                    "items": {
-                                        "type": "object"
-                                    }
-                                },
-                                "message": {
-                                    "type": "string"
-                                },
-                                "userInfo": {
-                                    "type": "object",
-                                    "properties": {
-                                        "email": {
-                                            "type": "string"
-                                        },
-                                        "name": {
-                                            "type": "string"
-                                        },
-                                        "authToken": {
-                                            "type": "string"
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
+                  },
+                  "message": {
+                    "type": "string"
+                  }
                 }
+              }
             }
-        },
-        "/logout": {
-            "post": {
-                "tags": [
-                    "Auth"
-                ],
-                "summary": "Logout current authenticated user from the application",
-                "description": "Logout current authenticated user from the application",
-                "produces": ["application/json"],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "type": "object",
-                            "properties": {
-                                "success": {
-                                    "type": "boolean"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/users/changePassword": {
-            "post": {
-                "tags": [
-                    "Users"
-                ],
-                "summary": "Changes the logged in user's password",
-                "description": "Changes the logged in user's password",
-                "consumes": ["application/json"],
-                "parameters": [
-                    {
-                        "in": "body",
-                        "name": "body",
-                        "description": "body",
-                        "required": true,
-                        "schema": {
-                            "type": "object",
-                            "properties": {
-                                "oldPassword": {
-                                    "type": "string"
-                                },
-                                "newPassword": {
-                                    "type": "string"
-                                }
-                            }
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "$ref": "#/definitions/restResponse"
-                        }
-                    }
-                }
-            }
-        },
-        "/users/attributes/{id}": {
-            "get": {
-                "tags": [
-                    "Users"
-                ],
-                "summary": "Get user's attributes based on user's UUID or username",
-                "description": "Get user's attributes based on user's UUID or username",
-                "consumes": ["application/json"],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "id",
-                        "description": "username or user's UUID",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "$ref": "#/definitions/restResponse"
-                        }
-                    }
-                }
-            }
-        },
-        "/users/getTotpQr": {
-            "get": {
-                "tags": [
-                    "Users"
-                ],
-                "summary": "Generates a TOTP QR",
-                "description": "Generates a TOTP QR",
-                "produces": ["application/json"],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "$ref": "#/definitions/restResponse"
-                        }
-                    }
-                }
-            }
-        },
-        "/users/verifyTotp": {
-            "post": {
-                "tags": [
-                    "Users"
-                ],
-                "summary": "Verifies the TOTP provided by the user",
-                "description": "Verifies the TOTP provided by the user",
-                "consumes": ["application/json"],
-                "produces": ["application/json"],
-                "parameters": [
-                    {
-                        "in": "body",
-                        "name": "body",
-                        "description": "body",
-                        "required": true,
-                        "schema": {
-                            "type": "object",
-                            "properties": {
-                                "uuid": {
-                                    "type": "string"
-                                },
-                                "otpCode": {
-                                    "type": "string"
-                                }
-                            }
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "$ref": "#/definitions/restResponse"
-                        }
-                    }
-                }
-            }
-        },
-        "/pkceMetaData": {
-            "get": {
-                "tags": [
-                    "Authorization"
-                ],
-                "summary": "Generates a new code verifier and challenge pair",
-                "description": "Generates a new code verifier and challenge pair",
-                "produces": ["application/json"],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "type": "object",
-                            "properties": {
-                                "code_verifier": {
-                                    "type": "string"
-                                },
-                                "codeChallenge": {
-                                    "type": "string"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/buildAuthorizeURL": {
-            "post": {
-                "tags": [
-                    "Authorization"
-                ],
-                "summary": "Build's the authorization URL",
-                "description": "Build's the authorization URL",
-                "consumes": ["application/json"],
-                "produces": ["application/json"],
-                "parameters": [
-                    {
-                        "in": "body",
-                        "name": "body",
-                        "description": "body",
-                        "required": true,
-                        "schema": {
-                            "type": "object",
-                            "properties": {
-                                "authFlow": {
-                                    "type": "string",
-                                    "enum": ["OIDC", "OAUTH"]
-                                },
-                                "appId": {
-                                    "type": "string"
-                                },
-                                "clientId": {
-                                    "type": "string"
-                                },
-                                "clientSecret": {
-                                    "type": "string"
-                                },
-                                "redirect_uri": {
-                                    "type": "string"
-                                },
-                                "scope": {
-                                    "type": "array",
-                                    "items": {
-                                        "type": "string"
-                                    }
-                                },
-                                "responseType": {
-                                    "type": "array",
-                                    "items": {
-                                        "type": "string"
-                                    }
-                                },
-                                "codeChallenge": {
-                                    "type": "string"
-                                },
-                                "params": {
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "type": "object",
-                            "properties": {
-                                "authorizeUrl": {
-                                    "type": "string"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/tokenSet": {
-            "post": {
-                "tags": [
-                    "Authorization"
-                ],
-                "summary": "Returns token set",
-                "description": "Returns token set",
-                "consumes": ["application/json"],
-                "produces": ["application/json"],
-                "parameters": [
-                    {
-                        "in": "body",
-                        "name": "body",
-                        "description": "body",
-                        "required": true,
-                        "schema": {
-                            "type": "object",
-                            "properties": {
-                                "appId": {
-                                    "type": "string"
-                                },
-                                "client_id": {
-                                    "type": "string"
-                                },
-                                "client_secret": {
-                                    "type": "string"
-                                },
-                                "grant_type": {
-                                    "type": "string",
-                                    "enum": ["authorization_code","client_credentials","password"]
-                                },
-                                "code_verifier": {
-                                    "type": "string"
-                                },
-                                "redirect_uri": {
-                                    "type": "string"
-                                },
-                                "code": {
-                                    "type": "string"
-                                },
-                                "user_name": {
-                                    "type": "string"
-                                },
-                                "password": {
-                                    "type": "string"
-                                },
-                                "scope": {
-                                    "type": "array",
-                                    "items": {
-                                        "type": "string"
-                                    }
-                                }
-                            }
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "$ref": "#/definitions/tokenSet"
-                        }
-                    }
-                }
-            }
-        },
-        "/refreshToken": {
-            "post": {
-                "tags": [
-                    "Authorization"
-                ],
-                "summary": "Returns a fresh token set",
-                "description": "Returns a fresh token set",
-                "consumes": ["application/json"],
-                "produces": ["application/json"],
-                "parameters": [
-                    {
-                        "in": "body",
-                        "name": "body",
-                        "description": "body",
-                        "required": true,
-                        "schema": {
-                            "type": "object",
-                            "properties": {
-                                "appId": {
-                                    "type": "string"
-                                },
-                                "clientId": {
-                                    "type": "string"
-                                },
-                                "clientSecret": {
-                                    "type": "string"
-                                },
-                                "refresh_token": {
-                                    "type": "string"
-                                }
-                            }
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "type": "object",
-                            "properties": {
-                                "access_token": {
-                                    "type": "string"
-                                },
-                                "token_type": {
-                                    "type": "string"
-                                },
-                                "expires_in": {
-                                    "type": "integer"
-                                },
-                                "scope": {
-                                    "type": "string"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/revokeToken": {
-            "post": {
-                "tags": [
-                    "Authorization"
-                ],
-                "summary": "Revokes the access token",
-                "description": "Revokes the access token",
-                "consumes": ["application/json"],
-                "parameters": [
-                    {
-                        "in": "body",
-                        "name": "body",
-                        "description": "body",
-                        "required": true,
-                        "schema": {
-                            "type": "object",
-                            "properties": {
-                                "appId": {
-                                    "type": "string"
-                                },
-                                "clientId": {
-                                    "type": "string"
-                                },
-                                "clientSecret": {
-                                    "type": "string"
-                                },
-                                "authResponseAccessToken": {
-                                    "type": "string"
-                                }
-                            }
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation"
-                    }
-                }
-            }
-        },
-        "/endSession": {
-            "post": {
-                "tags": [
-                    "Authorization"
-                ],
-                "summary": "Terminates an OIDC app session",
-                "description": "Terminates  an OIDC app session",
-                "consumes": ["application/json"],
-                "parameters": [
-                    {
-                        "in": "body",
-                        "name": "body",
-                        "description": "body",
-                        "required": true,
-                        "schema": {
-                            "type": "object",
-                            "properties": {
-                                "appId": {
-                                    "type": "string"
-                                },
-                                "clientId": {
-                                    "type": "string"
-                                },
-                                "clientSecret": {
-                                    "type": "string"
-                                },
-                                "postLogoutURL": {
-                                    "type": "string"
-                                }
-                            }
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "type": "object",
-                            "properties": {
-                                "success": {
-                                    "type": "boolean"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/claims/{token}": {
-            "get": {
-                "tags": [
-                    "Authorization"
-                ],
-                "summary": "Decodes the access token",
-                "description": "Decodes the access token",
-                "produces": ["application/json"],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "token",
-                        "description": "Token to decode for claims",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "type": "object",
-                            "properties": {
-                                "auth_time": {
-                                    "type": "integer"
-                                },
-                                "iss": {
-                                    "type": "string"
-                                },
-                                "iat": {
-                                    "type": "integer"
-                                },
-                                "aud": {
-                                    "type": "string"
-                                },
-                                "unique_name": {
-                                    "type": "string"
-                                },
-                                "exp": {
-                                    "type": "integer"
-                                },
-                                "sub": {
-                                    "type": "string"
-                                },
-                                "scope": {
-                                    "type": "string"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/oidc/userInfo": {
-            "get": {
-                "tags": [
-                    "Authorization"
-                ],
-                "summary": "Gets the user information",
-                "description": "Gets the user information",
-                "produces": ["application/json"],
-                "parameters": [
-                    {
-                        "in": "query",
-                        "name": "accessToken",
-                        "description": "Access token",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "type": "object",
-                            "properties": {
-                                "aud": {
-                                    "type": "string"
-                                },
-                                "sub": {
-                                    "type": "string"
-                                },
-                                "unique_name": {
-                                    "type": "string"
-                                },
-                                "email_verified": {
-                                    "type": "boolean"
-                                },
-                                "auth_time": {
-                                    "type": "integer"
-                                },
-                                "name": {
-                                    "type": "string"
-                                },
-                                "preferred_username": {
-                                    "type": "string"
-                                },
-                                "given_name": {
-                                    "type": "string"
-                                },
-                                "family_name": {
-                                    "type": "string"
-                                },
-                                "email": {
-                                    "type": "string"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/introspect/{accessToken}": {
-            "post": {
-                "tags": [
-                    "Authorization"
-                ],
-                "summary": "Checks the validity of access token",
-                "description": "Checks the validity of access token",
-                "consumes": ["application/json"],
-                "produces": ["application/json"],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "accessToken",
-                        "description": "Access token",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "in": "body",
-                        "name": "body",
-                        "description": "Application ID",
-                        "required": true,
-                        "schema": {
-                            "type": "object",
-                            "properties": {
-                                "appId": {
-                                    "type": "string"
-                                },
-                                "clientId": {
-                                    "type": "string"
-                                },
-                                "clientSecret": {
-                                    "type": "string"
-                                }
-                            }
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "type": "object",
-                            "properties": {
-                                "active": {
-                                    "type": "boolean"
-                                },
-                                "exp": {
-                                    "type": "integer"
-                                },
-                                "auth_time": {
-                                    "type": "integer"
-                                },
-                                "iat": {
-                                    "type": "integer"
-                                },
-                                "sub": {
-                                    "type": "string"
-                                },
-                                "iss": {
-                                    "type": "string"
-                                },
-                                "aud": {
-                                    "type": "string"
-                                },
-                                "unique_name": {
-                                    "type": "string"
-                                },
-                                "app_id": {
-                                    "type": "string"
-                                },
-                                "scope": {
-                                    "type": "string"
-                                },
-                                "given_name": {
-                                    "type": "string"
-                                },
-                                "name": {
-                                    "type": "string"
-                                },
-                                "email": {
-                                    "type": "string"
-                                },
-                                "family_name": {
-                                    "type": "string"
-                                },
-                                "preferred_username": {
-                                    "type": "string"
-                                },
-                                "email_verified": {
-                                    "type": "boolean"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/widgetAssociatedApp/{widgetId}": {
-            "get": {
-                "tags": [
-                    "Authorization"
-                ],
-                "summary": "Gets the app key if its associated with the widgetId",
-                "description": "Gets the app key if its associated with the widgetId",
-                "produces": ["application/json"],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "widgetId",
-                        "description": "widgetId",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                }
-            }
-        },
-        "/appDetails/{appKey}/{authToken}": {
-            "get": {
-                "tags": [
-                    "Authorization"
-                ],
-                "summary": "Takes OIDC application key and returns the application details associated with it",
-                "description": "Takes OIDC application key and returns the application details associated with it",
-                "produces": ["application/json"],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "appKey",
-                        "description": "OIDC application key",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "in": "path",
-                        "name": "authToken",
-                        "description": "Token obtained after successful authentication",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "type": "object",
-                            "properties": {
-                                "ClientID": {
-                                    "type": "string"
-                                },
-                                "ClientSecret": {
-                                    "type": "string"
-                                },
-                                "AppID": {
-                                    "type": "string"
-                                },
-                                "Redirects": {
-                                    "type": "array",
-                                    "items": {
-                                        "type": "string"
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/Resource": {
-            "get": {
-                "tags": [
-                    "Authorization"
-                ],
-                "summary": "Resource application URL",
-                "description": "The endpoint is added in the OIDC application as Resource application URL which redirects to Authurl.",
-                "produces": ["application/json"],            
-                "responses": {                   
-                }     
-            }
-        },
-        "/RedirectResource": {
-            "get": {
-                "tags": [
-                    "Authorization"
-                ],
-                "summary": "Authorized Redirect URI",
-                "description": "This endpoint provides the access token & id token.",
-                "produces": ["application/json"],            
-                "responses": {                    
-                }        
-            }
-        },
-        "/settings": {
-            "get": {
-                "tags": [
-                    "Settings"
-                ],
-                "summary": "UI settings",
-                "description": "UI settings",
-                "produces": ["application/json"],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "$ref": "#/definitions/settings"
-                        }
-                    }
-                }
-            },
-            "put": {
-                "tags": [
-                    "Settings"
-                ],
-                "summary": "Updates the settings json file",
-                "description": "Updates the settings json file",
-                "produces": ["application/json"],
-                "parameters": [
-                    {
-                        "in": "body",
-                        "name": "body",
-                        "description": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/settings"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "type": "object",
-                            "properties": {
-                                "Result": {
-                                    "type": "string"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
+          }
         }
+      },
+      "/auth/advanceAuth": {
+        "post": {
+          "tags": ["Auth"],
+          "summary": "For simple text answer mechanisms",
+          "description": "For simple text answer mechanisms",
+          "produces": ["application/json"],
+          "consumes": ["application/json"],
+          "parameters": [
+            {
+              "in": "body",
+              "name": "body",
+              "description": "body",
+              "required": true,
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "mechanismId": {
+                    "type": "string"
+                  },
+                  "answer": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "successful operation",
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "success": {
+                    "type": "boolean"
+                  },
+                  "state": {
+                    "type": "string"
+                  },
+                  "mechanisms": {
+                    "type": "array",
+                    "items": {
+                      "type": "object"
+                    }
+                  },
+                  "message": {
+                    "type": "string"
+                  },
+                  "userInfo": {
+                    "type": "object",
+                    "properties": {
+                      "email": {
+                        "type": "string"
+                      },
+                      "name": {
+                        "type": "string"
+                      },
+                      "authToken": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/logout": {
+        "post": {
+          "tags": ["Auth"],
+          "summary": "Logout current authenticated user from the application",
+          "description": "Logout current authenticated user from the application",
+          "produces": ["application/json"],
+          "responses": {
+            "200": {
+              "description": "successful operation",
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "success": {
+                    "type": "boolean"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/users/changePassword": {
+        "post": {
+          "tags": ["Users"],
+          "summary": "Changes the logged in user's password",
+          "description": "Changes the logged in user's password",
+          "consumes": ["application/json"],
+          "parameters": [
+            {
+              "in": "body",
+              "name": "body",
+              "description": "body",
+              "required": true,
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "oldPassword": {
+                    "type": "string"
+                  },
+                  "newPassword": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "successful operation",
+              "schema": {
+                "$ref": "#/definitions/restResponse"
+              }
+            }
+          }
+        }
+      },
+      "/users/attributes/{id}": {
+        "get": {
+          "tags": ["Users"],
+          "summary": "Get user's attributes based on user's UUID or username",
+          "description": "Get user's attributes based on user's UUID or username",
+          "consumes": ["application/json"],
+          "parameters": [
+            {
+              "in": "path",
+              "name": "id",
+              "description": "username or user's UUID",
+              "required": true,
+              "schema": {
+                "type": "object"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "successful operation",
+              "schema": {
+                "$ref": "#/definitions/restResponse"
+              }
+            }
+          }
+        }
+      },
+
+      "/users/profile/": {
+        "put": {
+          "tags": ["Users"],
+          "summary": "Update the User's Profile",
+          "description": "Update the User's Profile",
+          "consumes": ["application/json"],
+          "parameters": [
+            {
+              "in": "body",
+              "name": "body",
+              "description": "body",
+              "required": true,
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "ID": {
+                    "type": "string"
+                  },
+                  "Name": {
+                    "type": "string"
+                  },
+                  "HomeNumber": {
+                    "type": "string"
+                  },
+                  "MobileNumber": {
+                    "type": "string"
+                  },
+                  "DisplayName": {
+                    "type": "string"
+                  },
+                  "Mail": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "successful operation",
+              "schema": {
+                "$ref": "#/definitions/restResponse"
+              }
+            }
+          }
+        }
+      },
+      "/users/getTotpQr": {
+        "get": {
+          "tags": ["Users"],
+          "summary": "Generates a TOTP QR",
+          "description": "Generates a TOTP QR",
+          "produces": ["application/json"],
+          "responses": {
+            "200": {
+              "description": "successful operation",
+              "schema": {
+                "$ref": "#/definitions/restResponse"
+              }
+            }
+          }
+        }
+      },
+      "/users/verifyTotp": {
+        "post": {
+          "tags": ["Users"],
+          "summary": "Verifies the TOTP provided by the user",
+          "description": "Verifies the TOTP provided by the user",
+          "consumes": ["application/json"],
+          "produces": ["application/json"],
+          "parameters": [
+            {
+              "in": "body",
+              "name": "body",
+              "description": "body",
+              "required": true,
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "uuid": {
+                    "type": "string"
+                  },
+                  "otpCode": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "successful operation",
+              "schema": {
+                "$ref": "#/definitions/restResponse"
+              }
+            }
+          }
+        }
+      },
+      "/pkceMetaData": {
+        "get": {
+          "tags": ["Authorization"],
+          "summary": "Generates a new code verifier and challenge pair",
+          "description": "Generates a new code verifier and challenge pair",
+          "produces": ["application/json"],
+          "responses": {
+            "200": {
+              "description": "successful operation",
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "code_verifier": {
+                    "type": "string"
+                  },
+                  "codeChallenge": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/buildAuthorizeURL": {
+        "post": {
+          "tags": ["Authorization"],
+          "summary": "Build's the authorization URL",
+          "description": "Build's the authorization URL",
+          "consumes": ["application/json"],
+          "produces": ["application/json"],
+          "parameters": [
+            {
+              "in": "body",
+              "name": "body",
+              "description": "body",
+              "required": true,
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "authFlow": {
+                    "type": "string",
+                    "enum": ["OIDC", "OAUTH"]
+                  },
+                  "appId": {
+                    "type": "string"
+                  },
+                  "clientId": {
+                    "type": "string"
+                  },
+                  "clientSecret": {
+                    "type": "string"
+                  },
+                  "redirect_uri": {
+                    "type": "string"
+                  },
+                  "scope": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "responseType": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "codeChallenge": {
+                    "type": "string"
+                  },
+                  "params": {
+                    "type": "object"
+                  }
+                }
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "successful operation",
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "authorizeUrl": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/tokenSet": {
+        "post": {
+          "tags": ["Authorization"],
+          "summary": "Returns token set",
+          "description": "Returns token set",
+          "consumes": ["application/json"],
+          "produces": ["application/json"],
+          "parameters": [
+            {
+              "in": "body",
+              "name": "body",
+              "description": "body",
+              "required": true,
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "appId": {
+                    "type": "string"
+                  },
+                  "client_id": {
+                    "type": "string"
+                  },
+                  "client_secret": {
+                    "type": "string"
+                  },
+                  "grant_type": {
+                    "type": "string",
+                    "enum": [
+                      "authorization_code",
+                      "client_credentials",
+                      "password"
+                    ]
+                  },
+                  "code_verifier": {
+                    "type": "string"
+                  },
+                  "redirect_uri": {
+                    "type": "string"
+                  },
+                  "code": {
+                    "type": "string"
+                  },
+                  "user_name": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  },
+                  "scope": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "successful operation",
+              "schema": {
+                "$ref": "#/definitions/tokenSet"
+              }
+            }
+          }
+        }
+      },
+      "/refreshToken": {
+        "post": {
+          "tags": ["Authorization"],
+          "summary": "Returns a fresh token set",
+          "description": "Returns a fresh token set",
+          "consumes": ["application/json"],
+          "produces": ["application/json"],
+          "parameters": [
+            {
+              "in": "body",
+              "name": "body",
+              "description": "body",
+              "required": true,
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "appId": {
+                    "type": "string"
+                  },
+                  "clientId": {
+                    "type": "string"
+                  },
+                  "clientSecret": {
+                    "type": "string"
+                  },
+                  "refresh_token": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "successful operation",
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "access_token": {
+                    "type": "string"
+                  },
+                  "token_type": {
+                    "type": "string"
+                  },
+                  "expires_in": {
+                    "type": "integer"
+                  },
+                  "scope": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/revokeToken": {
+        "post": {
+          "tags": ["Authorization"],
+          "summary": "Revokes the access token",
+          "description": "Revokes the access token",
+          "consumes": ["application/json"],
+          "parameters": [
+            {
+              "in": "body",
+              "name": "body",
+              "description": "body",
+              "required": true,
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "appId": {
+                    "type": "string"
+                  },
+                  "clientId": {
+                    "type": "string"
+                  },
+                  "clientSecret": {
+                    "type": "string"
+                  },
+                  "authResponseAccessToken": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "successful operation"
+            }
+          }
+        }
+      },
+      "/endSession": {
+        "post": {
+          "tags": ["Authorization"],
+          "summary": "Terminates an OIDC app session",
+          "description": "Terminates  an OIDC app session",
+          "consumes": ["application/json"],
+          "parameters": [
+            {
+              "in": "body",
+              "name": "body",
+              "description": "body",
+              "required": true,
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "appId": {
+                    "type": "string"
+                  },
+                  "clientId": {
+                    "type": "string"
+                  },
+                  "clientSecret": {
+                    "type": "string"
+                  },
+                  "postLogoutURL": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "successful operation",
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "success": {
+                    "type": "boolean"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/claims/{token}": {
+        "get": {
+          "tags": ["Authorization"],
+          "summary": "Decodes the access token",
+          "description": "Decodes the access token",
+          "produces": ["application/json"],
+          "parameters": [
+            {
+              "in": "path",
+              "name": "token",
+              "description": "Token to decode for claims",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "successful operation",
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "auth_time": {
+                    "type": "integer"
+                  },
+                  "iss": {
+                    "type": "string"
+                  },
+                  "iat": {
+                    "type": "integer"
+                  },
+                  "aud": {
+                    "type": "string"
+                  },
+                  "unique_name": {
+                    "type": "string"
+                  },
+                  "exp": {
+                    "type": "integer"
+                  },
+                  "sub": {
+                    "type": "string"
+                  },
+                  "scope": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/oidc/userInfo": {
+        "get": {
+          "tags": ["Authorization"],
+          "summary": "Gets the user information",
+          "description": "Gets the user information",
+          "produces": ["application/json"],
+          "parameters": [
+            {
+              "in": "query",
+              "name": "accessToken",
+              "description": "Access token",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "successful operation",
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "aud": {
+                    "type": "string"
+                  },
+                  "sub": {
+                    "type": "string"
+                  },
+                  "unique_name": {
+                    "type": "string"
+                  },
+                  "email_verified": {
+                    "type": "boolean"
+                  },
+                  "auth_time": {
+                    "type": "integer"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "preferred_username": {
+                    "type": "string"
+                  },
+                  "given_name": {
+                    "type": "string"
+                  },
+                  "family_name": {
+                    "type": "string"
+                  },
+                  "email": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/introspect/{accessToken}": {
+        "post": {
+          "tags": ["Authorization"],
+          "summary": "Checks the validity of access token",
+          "description": "Checks the validity of access token",
+          "consumes": ["application/json"],
+          "produces": ["application/json"],
+          "parameters": [
+            {
+              "in": "path",
+              "name": "accessToken",
+              "description": "Access token",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "in": "body",
+              "name": "body",
+              "description": "Application ID",
+              "required": true,
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "appId": {
+                    "type": "string"
+                  },
+                  "clientId": {
+                    "type": "string"
+                  },
+                  "clientSecret": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "successful operation",
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "active": {
+                    "type": "boolean"
+                  },
+                  "exp": {
+                    "type": "integer"
+                  },
+                  "auth_time": {
+                    "type": "integer"
+                  },
+                  "iat": {
+                    "type": "integer"
+                  },
+                  "sub": {
+                    "type": "string"
+                  },
+                  "iss": {
+                    "type": "string"
+                  },
+                  "aud": {
+                    "type": "string"
+                  },
+                  "unique_name": {
+                    "type": "string"
+                  },
+                  "app_id": {
+                    "type": "string"
+                  },
+                  "scope": {
+                    "type": "string"
+                  },
+                  "given_name": {
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "email": {
+                    "type": "string"
+                  },
+                  "family_name": {
+                    "type": "string"
+                  },
+                  "preferred_username": {
+                    "type": "string"
+                  },
+                  "email_verified": {
+                    "type": "boolean"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/widgetAssociatedApp/{widgetId}": {
+        "get": {
+          "tags": ["Authorization"],
+          "summary": "Gets the app key if its associated with the widgetId",
+          "description": "Gets the app key if its associated with the widgetId",
+          "produces": ["application/json"],
+          "parameters": [
+            {
+              "in": "path",
+              "name": "widgetId",
+              "description": "widgetId",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "successful operation",
+              "schema": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "/appDetails/{appKey}/{authToken}": {
+        "get": {
+          "tags": ["Authorization"],
+          "summary": "Takes OIDC application key and returns the application details associated with it",
+          "description": "Takes OIDC application key and returns the application details associated with it",
+          "produces": ["application/json"],
+          "parameters": [
+            {
+              "in": "path",
+              "name": "appKey",
+              "description": "OIDC application key",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "in": "path",
+              "name": "authToken",
+              "description": "Token obtained after successful authentication",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "successful operation",
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "ClientID": {
+                    "type": "string"
+                  },
+                  "ClientSecret": {
+                    "type": "string"
+                  },
+                  "AppID": {
+                    "type": "string"
+                  },
+                  "Redirects": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/Resource": {
+        "get": {
+          "tags": ["Authorization"],
+          "summary": "Resource application URL",
+          "description": "The endpoint is added in the OIDC application as Resource application URL which redirects to Authurl.",
+          "produces": ["application/json"],
+          "responses": {}
+        }
+      },
+      "/RedirectResource": {
+        "get": {
+          "tags": ["Authorization"],
+          "summary": "Authorized Redirect URI",
+          "description": "This endpoint provides the access token & id token.",
+          "produces": ["application/json"],
+          "responses": {}
+        }
+      },
+      "/settings": {
+        "get": {
+          "tags": ["Settings"],
+          "summary": "UI settings",
+          "description": "UI settings",
+          "produces": ["application/json"],
+          "responses": {
+            "200": {
+              "description": "successful operation",
+              "schema": {
+                "$ref": "#/definitions/settings"
+              }
+            }
+          }
+        },
+        "put": {
+          "tags": ["Settings"],
+          "summary": "Updates the settings json file",
+          "description": "Updates the settings json file",
+          "produces": ["application/json"],
+          "parameters": [
+            {
+              "in": "body",
+              "name": "body",
+              "description": "body",
+              "required": true,
+              "schema": {
+                "$ref": "#/definitions/settings"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "successful operation",
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "Result": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     },
     "definitions": {
         "restResponse": {

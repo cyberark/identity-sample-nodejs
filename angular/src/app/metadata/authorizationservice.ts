@@ -46,6 +46,7 @@ export class AuthorizationService {
         let head = this.getHeaders();
         return this.http.post<any>(EndpointsConnector.RefreshTokenEndPoint, tokenMetadataRequest, { headers: head, withCredentials: true })
     }
+    
     getIntrospect(accessToken : string){
         let head = this.getHeaders();
         return this.http.post<any>(EndpointsConnector.IntrospectEndPoint,null,{ headers:head, withCredentials: true,params: new HttpParams().set("accessToken", accessToken)})
