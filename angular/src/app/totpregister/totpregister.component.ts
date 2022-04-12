@@ -17,7 +17,7 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UserService } from '../user/user.service';
-import { HeartBeatService } from '../heartbeat/heartbeat.service'; 
+import { HeartBeatService } from '../heartbeat/heartbeat.service';
 import { validateAllFormFields } from '../utils';
 
 @Component({
@@ -56,20 +56,22 @@ export class TOTPRegisterComponent implements OnInit {
                         this.profileUuid = d.Result.ProfileUuid;
                     } else {
                         this.hasErrorOccurred = true;
-                        this.errorMessage = d.Message;
+                        this.errorMessage = d.Message || d.message;
+                        this.showError(this, { error: d });
                     }
                 },
                 error: (e) => {
                     this.loading = false;
                     this.hasErrorOccurred = true;
                     this.errorMessage = e.error.ErrorMessage;
+                    this.showError(this, e);
                 }
             }
         )
     }
 
-    verify(formData: any){
-        if(!validateAllFormFields(this.verifyCodeForm)) return;
+    verify(formData: any) {
+        if (!validateAllFormFields(this.verifyCodeForm)) return;
 
         let data = formData;
         data.uuid = this.profileUuid;
@@ -77,11 +79,11 @@ export class TOTPRegisterComponent implements OnInit {
         this.userService.verifyTotp(data).subscribe({
             next: d => {
                 this.loading = false;
-                if(d.success){
+                if (d.success) {
                     this.hasErrorOccurred = false;
                     this.errorMessage = "OATH OTP registration successful";
                 }
-                else{
+                else {
                     this.hasErrorOccurred = true;
                     this.errorMessage = d.Message;
                 }
@@ -95,7 +97,7 @@ export class TOTPRegisterComponent implements OnInit {
         })
     }
 
-    checkMessageType(){
+    checkMessageType() {
         return !this.hasErrorOccurred;
     }
 
@@ -103,5 +105,12 @@ export class TOTPRegisterComponent implements OnInit {
         let form = this.verifyCodeForm;
         let control = form.controls[controlName];
         return ((control.invalid && (control.dirty || control.touched)) && control.hasError(errorName));
+    }
+
+    showError(context, error) {
+        context.errorMessage = error.error.ErrorMessage || error.error.error_description || error.error.message;
+        if (this.errorMessage === 'Request failed with status code 401') {
+            context.errorMessage = 'You are not authorized to perform this action!'
+        }
     }
 }
