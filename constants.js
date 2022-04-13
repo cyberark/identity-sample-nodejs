@@ -25,6 +25,7 @@ const SYS_ADMIN_ROLE = 'System Administrator';
 const OIDC_REDIRECT_URI = 'http://localhost:2200/api/RedirectResource';
 const POSSIBLE_STR = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 const USERDATA_URL = "http://localhost:4200/userdata";
+const OIDC_DEFAULT_SCOPE = ['openid', 'email', 'profile', 'address', 'phone'];
 
 module.exports = {
     TENANT_URL,
@@ -33,5 +34,6 @@ module.exports = {
     SYS_ADMIN_ROLE,
     OIDC_REDIRECT_URI,
     POSSIBLE_STR,
-    USERDATA_URL
+    USERDATA_URL,
+    OIDC_DEFAULT_SCOPE
 }

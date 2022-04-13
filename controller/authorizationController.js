@@ -18,7 +18,7 @@ const authorizationController = require('express').Router();
 const { CyberArkIdentityOAuthClient, CyberArkIdentityOIDCClient, getWidgetAssociatedApp, getOIDCAppDetails } = require('@cyberark/identity-js-sdk');
 const crypto = require('crypto');
 
-const { AUTH_FLOW, OIDC_REDIRECT_URI, POSSIBLE_STR, USERDATA_URL } = require('../constants');
+const { AUTH_FLOW, OIDC_REDIRECT_URI, POSSIBLE_STR, USERDATA_URL, OIDC_DEFAULT_SCOPE } = require('../constants');
 
 const { tenantUrl: TENANT_URL,
         oauthAppId: OAUTH_APPID,
@@ -32,7 +32,7 @@ let pkce, OIDC_APP = {
     ClientID: '',
     ClientSecret: '',
     Redirects: '',
-    Scopes: ''
+    Scopes: []
 };
 
 
@@ -153,18 +153,29 @@ authorizationController.get('/Resource', async (req, res) => {
     try {
         const client = new CyberArkIdentityOAuthClient(TENANT_URL, OAUTH_APPID, OAUTH_USERNAME, OAUTH_PWD);
         const TOKEN = await client.requestToken('client_credentials', null, null, null, OAUTH_USERNAME, OAUTH_PWD, OAUTH_SCOPE.split(' '));
+
         const APPKEY = await getWidgetAssociatedApp(TENANT_URL, LOGIN_WIDGET_ID);
+        if (APPKEY === 'Invalid widgetId' || APPKEY === 'No application associated with the given widgetId') {
+            throw new Error(APPKEY);
+        }
+
         const appDetails = await getOIDCAppDetails(TENANT_URL, APPKEY, TOKEN.access_token);
+        if (typeof appDetails === 'string') {
+            throw new Error(appDetails);
+        }
+
         Object.assign(OIDC_APP, appDetails)
 
-        OIDC_APP.Scopes = 'openid email profile';
-        for (i = 0; i < appDetails.Scopes.length; i++) {
-            OIDC_APP.Scopes += ' ' + appDetails.Scopes[i].Scope;
+        OIDC_APP.Scopes = OIDC_DEFAULT_SCOPE;
+        if (appDetails.Scopes !== undefined) {
+            for (i = 0; i < appDetails.Scopes.length; i++) {
+                OIDC_APP.Scopes.push(appDetails.Scopes[i].Scope);
+            }
         }
 
         pkce = generatePKCEMetadata();
         const clientObj = new CyberArkIdentityOIDCClient(TENANT_URL, OIDC_APP.AppID, OIDC_APP.ClientID, OIDC_APP.ClientSecret);
-        const authURL = await clientObj.authorizeURL(OIDC_REDIRECT_URI, OIDC_APP.Scopes.split(' '), ['code'], pkce.codeChallenge);
+        const authURL = await clientObj.authorizeURL(OIDC_REDIRECT_URI, OIDC_APP.Scopes, ['code'], pkce.codeChallenge);
         res.redirect(authURL);
     } catch (error) {
         res.send(error);
@@ -175,7 +186,7 @@ authorizationController.get('/RedirectResource', async (req, res) => {
     try {
         const code = req.query.code;
         const clientObj = new CyberArkIdentityOIDCClient(TENANT_URL, OIDC_APP.AppID, OIDC_APP.ClientID);
-        const tokens = await clientObj.requestToken('authorization_code', pkce.code_verifier, OIDC_REDIRECT_URI, code, null, null, OIDC_APP.Scopes.split(' '));
+        const tokens = await clientObj.requestToken('authorization_code', pkce.code_verifier, OIDC_REDIRECT_URI, code, null, null, OIDC_APP.Scopes);
         res.cookie('sampleapp', tokens.access_token);
         res.redirect(302, USERDATA_URL);
     } catch (error) {

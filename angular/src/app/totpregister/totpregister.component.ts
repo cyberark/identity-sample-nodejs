@@ -110,7 +110,7 @@ export class TOTPRegisterComponent implements OnInit {
     showError(context, error) {
         context.errorMessage = error.error.ErrorMessage || error.error.error_description || error.error.message;
         if (this.errorMessage === 'Request failed with status code 401') {
-            context.errorMessage = 'You are not authorized to perform this action!'
+            context.errorMessage = 'You do not have access to this content. Please contact your system administrator for assistance.'
         }
     }
 }
