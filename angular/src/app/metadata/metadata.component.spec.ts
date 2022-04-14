@@ -21,6 +21,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { ErrorComponent } from '../components/error/error.component';
 import { HeaderComponent } from '../components/header/header.component';
 import { Metadata } from './metadata.component';
+import { CookieService } from 'ngx-cookie-service';
 
 describe('Metadata', () => {
   let component: Metadata;
@@ -29,7 +30,8 @@ describe('Metadata', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ Metadata, HeaderComponent, ErrorComponent ],
-      imports: [RouterTestingModule, HttpClientTestingModule, ReactiveFormsModule]
+      imports: [RouterTestingModule, HttpClientTestingModule, ReactiveFormsModule],
+      providers: [CookieService]
     })
     .compileComponents();
   }));

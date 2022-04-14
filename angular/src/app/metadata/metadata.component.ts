@@ -21,6 +21,7 @@ import { APIErrStr, AuthorizationFlow, getStorage, GrantType, OAuthFlow, OIDCTok
 import { AuthorizationService } from './authorizationservice';
 import { ajax, css } from "jquery";
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { CookieService } from 'ngx-cookie-service';
 
 @Component({
   selector: 'metadata',
@@ -53,6 +54,7 @@ export class Metadata implements OnInit {
     private router: Router,
     private authorizationService: AuthorizationService,
     private loginService: LoginService,
+    private cookieService: CookieService
   ) { }
 
   ngOnInit() {
@@ -78,7 +80,6 @@ export class Metadata implements OnInit {
           this.tokenSet = data.Result;
           this.hasRefreshToken = Object.keys(this.tokenSet).includes('refresh_token');
           this.getClaims(this.tokenSet['access_token']);
-          this.getUserInfo(this.tokenSet['access_token']);
           this.oidcTokens = JSON.parse(getStorage('oidcTokens'));
           if (this.oidcTokens) {
             this.oidcTokens.tokenResponseAccessToken = this.tokenSet['access_token'];
@@ -97,7 +98,6 @@ export class Metadata implements OnInit {
       this.loading = true;
       const token = this.isOauthFlow ? this.authResponse['access_token'] : this.authResponse['id_token'];
       this.getClaims(token);
-      this.getUserInfo(token);
       this.loading = false;
     }
   }
@@ -105,7 +105,7 @@ export class Metadata implements OnInit {
   getClaims(idToken: string) {
     this.authorizationService.getClaims(idToken).subscribe({
       next: data => {
-        if (data && data.Success) {
+        if (data) {
           this.claims = data.Result;
         }
       },
@@ -116,37 +116,27 @@ export class Metadata implements OnInit {
     });
   }
 
-  getUserInfo(accessToken: string) {
-    if (this.isOauthFlow) return;
-    this.authorizationService.getUserInfo(accessToken).subscribe({
-      next: data => {
-        if (data && data.Success) {
-          this.userInfo = data.Result;
-        }
-      },  
-      error: error => {
-        console.error(error);
-      }
-    });
-  }
-
   dataKeys(object: Object) { return Object.keys(object); }
 
   onTryAnotherFlow() {
-    if (getStorage('oidcTokens') && !this.isOauthFlow) {
-      revokeToken(JSON.parse(getStorage('oidcTokens')), this);
-    }
-    this.loginService.logout().subscribe({
-      next: data => {
-        if (data.success) {
-          localStorage.clear();
-          this.router.navigate(['home']);
+    const token = this.cookieService.get('sampleapp');
+    if (token != null) {
+      const oidcTokens = new OIDCTokens();
+      oidcTokens.authResponseAccessToken = token;
+      revokeToken(oidcTokens, this);
+
+      this.loginService.endSession().subscribe({
+        next: data => {
+          if (data.success) {
+            localStorage.clear();
+            this.router.navigate(['home']);
+          }
+        },
+        error: error => {
+          console.error(error);
         }
-      },
-      error: error => {
-        console.error(error);
-      }
-    });
+      });
+    }
   }
 
   showAccessTokenBtn(): boolean {
@@ -161,21 +151,20 @@ export class Metadata implements OnInit {
   }
   onIntrospect() {
     (<any>$('#introspectpopup')).modal();
-    let token=this.authResponse['access_token']
-    if(!token)
-    { 
-      token=this.tokenSet['access_token'];
+    let token = this.authResponse['access_token']
+    if (!token) {
+      token = this.tokenSet['access_token'];
     }
     this.authorizationService.getIntrospect(token).subscribe({
       next: data => {
         if (data && data.Success) {
           this.introspectPostCallBody = data.Result;
         }
-      },  
+      },
       error: error => {
         console.error(error);
       }
-      
+
     })
   }
   onProceed() {

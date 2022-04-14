@@ -42,6 +42,7 @@ export class HeaderComponent implements OnInit {
   @Input() isBackVisible: boolean = false;
   @Input() isFundTransferVisible: boolean = false;
   @Input() isEnrollFactorsVisible: boolean = false;
+  @Input() isOIDCFlowVisible: boolean = false;
 
   page = "home";
   name = "";
@@ -103,6 +104,7 @@ export class HeaderComponent implements OnInit {
       case "/updateprofile":
       case "/Back":
       case "/totpregister":
+      case "/oidcflow" :
         this.page = "userdata";
         break;
     }

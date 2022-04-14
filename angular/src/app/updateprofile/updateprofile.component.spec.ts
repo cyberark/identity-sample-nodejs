@@ -2,6 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { UpdateprofileComponent } from './updateprofile.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ReactiveFormsModule } from '@angular/forms';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('UpdateprofileComponent', () => {
   let component: UpdateprofileComponent;
@@ -10,7 +11,7 @@ describe('UpdateprofileComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [ UpdateprofileComponent ],
-      imports: [ReactiveFormsModule, HttpClientTestingModule]
+      imports: [ReactiveFormsModule, RouterTestingModule, HttpClientTestingModule]
     })
     .compileComponents();
   });

@@ -26,6 +26,7 @@ const OIDC_REDIRECT_URI = 'http://localhost:2200/api/RedirectResource';
 const POSSIBLE_STR = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 const USERDATA_URL = "http://localhost:4200/userdata";
 const OIDC_DEFAULT_SCOPE = ['openid', 'email', 'profile', 'address', 'phone'];
+const REDIRECT_URI = "http://localhost:4200/RedirectResource";
 
 module.exports = {
     TENANT_URL,
@@ -35,5 +36,6 @@ module.exports = {
     OIDC_REDIRECT_URI,
     POSSIBLE_STR,
     USERDATA_URL,
-    OIDC_DEFAULT_SCOPE
+    OIDC_DEFAULT_SCOPE,
+    REDIRECT_URI
 }

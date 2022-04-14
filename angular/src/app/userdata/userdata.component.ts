@@ -23,9 +23,9 @@ export class UserdataComponent implements OnInit {
     if (token != null) {
       this.authorizationService.getUserInfo(token).subscribe({
         next: data => {
-          this.decoded = data;
-          setStorage('preferred_username', data.preferred_username);
-          setStorage("userId", data.sub);
+          this.decoded = data.Result;
+          setStorage('preferred_username', data.Result.preferred_username);
+          setStorage("userId", data.Result.sub);
         },
         error: error => {
           console.error(error);

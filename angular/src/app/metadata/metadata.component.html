@@ -66,35 +66,7 @@
                 </table>
               </div>
             </div>
-          </div>
-          <div *ngIf="!hideAccordian && !isOauthFlow">
-            <div class="card-header" id="headingThree">
-              <h2 class="mb-0">
-                <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseThree"
-                  aria-expanded="true" aria-controls="collapseThree">
-                  User Info (/UserInfo Endpoint)
-                </button>
-              </h2>
-            </div>
-            <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
-              <div class="card-body">
-                <table class="table table-sm text-white">
-                  <tbody>
-                    <tr *ngFor="let key of dataKeys(userInfo)">
-                      <th class="col-sm-3" scope="row">{{key}}</th>
-                      <td #userinput>
-                        <div class="text-break text-truncate myDIV col-sm-10 horizontalDiv">{{userInfo[key]}}</div>
-                        <div class="hide col-sm-2 horizontalDiv">
-                          <i class="fa fa-clone btn btn-link" title="copy"
-                            (click)="copyToClipboard(userinput.textContent)"></i>
-                        </div>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
+          </div>          
           <div class="d-flex p-4">
             <button class="container btn btn-secondary align-self-center w-50" (click)="onTryAnotherFlow()">Try
               Another

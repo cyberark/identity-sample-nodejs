@@ -345,12 +345,17 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "code_verifier": {
-                    "type": "string"
-                  },
-                  "codeChallenge": {
-                    "type": "string"
-                  }
+                    "Result": {
+                        "type": "object",
+                        "properties": {
+                            "code_verifier": {
+                                "type": "string"
+                            },
+                            "codeChallenge": {
+                                "type": "string"
+                            }
+                        }
+                    }
                 }
               }
             }
@@ -417,9 +422,14 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "authorizeUrl": {
-                    "type": "string"
-                  }
+                    "Result": {
+                        "type": "object",
+                        "properties": {
+                            "authorizeUrl": {
+                                "type": "string"
+                            }
+                        }
+                    }
                 }
               }
             }
@@ -634,7 +644,7 @@
           }
         }
       },
-      "/claims/{token}": {
+      "/claims": {
         "get": {
           "tags": ["Authorization"],
           "summary": "Decodes the access token",
@@ -642,7 +652,7 @@
           "produces": ["application/json"],
           "parameters": [
             {
-              "in": "path",
+              "in": "query",
               "name": "token",
               "description": "Token to decode for claims",
               "required": true,
@@ -657,30 +667,35 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "auth_time": {
-                    "type": "integer"
-                  },
-                  "iss": {
-                    "type": "string"
-                  },
-                  "iat": {
-                    "type": "integer"
-                  },
-                  "aud": {
-                    "type": "string"
-                  },
-                  "unique_name": {
-                    "type": "string"
-                  },
-                  "exp": {
-                    "type": "integer"
-                  },
-                  "sub": {
-                    "type": "string"
-                  },
-                  "scope": {
-                    "type": "string"
-                  }
+                    "Result": {
+                        "type": "object",
+                        "properties": {
+                            "auth_time": {
+                                "type": "integer"
+                            },
+                            "iss": {
+                                "type": "string"
+                            },
+                            "iat": {
+                                "type": "integer"
+                            },
+                            "aud": {
+                                "type": "string"
+                            },
+                            "unique_name": {
+                                "type": "string"
+                            },
+                            "exp": {
+                                "type": "integer"
+                            },
+                            "sub": {
+                                "type": "string"
+                            },
+                            "scope": {
+                                "type": "string"
+                            }
+                        }
+                    }
                 }
               }
             }
@@ -710,36 +725,41 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "aud": {
-                    "type": "string"
-                  },
-                  "sub": {
-                    "type": "string"
-                  },
-                  "unique_name": {
-                    "type": "string"
-                  },
-                  "email_verified": {
-                    "type": "boolean"
-                  },
-                  "auth_time": {
-                    "type": "integer"
-                  },
-                  "name": {
-                    "type": "string"
-                  },
-                  "preferred_username": {
-                    "type": "string"
-                  },
-                  "given_name": {
-                    "type": "string"
-                  },
-                  "family_name": {
-                    "type": "string"
-                  },
-                  "email": {
-                    "type": "string"
-                  }
+                    "Result": {
+                        "type": "object",
+                        "properties": {
+                            "aud": {
+                                "type": "string"
+                            },
+                            "sub": {
+                                "type": "string"
+                            },
+                            "unique_name": {
+                                "type": "string"
+                            },
+                            "email_verified": {
+                                "type": "boolean"
+                            },
+                            "auth_time": {
+                                "type": "integer"
+                            },
+                            "name": {
+                                "type": "string"
+                            },
+                            "preferred_username": {
+                                "type": "string"
+                            },
+                            "given_name": {
+                                "type": "string"
+                            },
+                            "family_name": {
+                                "type": "string"
+                            },
+                            "email": {
+                                "type": "string"
+                            }
+                        }
+                    }
                 }
               }
             }
@@ -924,6 +944,54 @@
           }
         }
       },
+      "/tokenRequestPreview": {
+        "get": {
+          "tags": ["Authorization"],
+          "summary": "Token Request Preview API",
+          "description": "Token Request Preview API",
+          "produces": ["application/json"],
+          "responses": {
+            "200": {
+                "description": "successful operation",
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "Result": {
+                        "type": "object",
+                        "properties": {
+                            "apiEndPoint": {
+                                "type": "string"
+                            },
+                            "payload": {
+                                "type": "object",
+                                "properties": {
+                                     "authFlow": {
+                                        "type": "string"
+                                      },
+                                      "grant_type": {
+                                        "type": "string"
+                                      },
+                                      "code": {
+                                        "type": "string"
+                                      },
+                                      "code_verifier": {
+                                        "type": "string"
+                                      },
+                                      "client_id": {
+                                        "type": "string"
+                                      }
+
+                                }
+                            }
+
+                        }
+                    }
+                  }
+                }
+            }
+          }
+        }
+      },
       "/Resource": {
         "get": {
           "tags": ["Authorization"],
@@ -932,7 +1000,7 @@
           "produces": ["application/json"],
           "responses": {}
         }
-      },
+      },      
       "/RedirectResource": {
         "get": {
           "tags": ["Authorization"],

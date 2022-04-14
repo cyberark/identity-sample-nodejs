@@ -31,6 +31,10 @@
           <a class="nav-link text-white" [class.active]="this.checkSelectedTab('/user')" href="Back"
             (click)="onTabClick('userdata')">Back</a>
         </li>
+        <li class="nav-item" *ngIf="isOIDCFlowVisible">
+          <a class="nav-link text-white" [class.active]="this.checkSelectedTab('/oidcflow')" href="oidcflow"
+            (click)="onTabClick('oidcflow')">OIDC Flows</a>
+        </li>
         <li class="nav-item" *ngIf="isChangePasswordVisible">
           <a class="nav-link text-white" [class.active]="this.checkSelectedTab('/changepassword')" href="changepassword"
             (click)="onTabClick('changepassword')">Change Password</a>

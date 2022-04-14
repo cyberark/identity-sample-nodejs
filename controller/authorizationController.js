@@ -18,7 +18,7 @@ const authorizationController = require('express').Router();
 const { CyberArkIdentityOAuthClient, CyberArkIdentityOIDCClient, getWidgetAssociatedApp, getOIDCAppDetails } = require('@cyberark/identity-js-sdk');
 const crypto = require('crypto');
 
-const { AUTH_FLOW, OIDC_REDIRECT_URI, POSSIBLE_STR, USERDATA_URL, OIDC_DEFAULT_SCOPE } = require('../constants');
+const { AUTH_FLOW, OIDC_REDIRECT_URI, POSSIBLE_STR, USERDATA_URL, OIDC_DEFAULT_SCOPE, REDIRECT_URI } = require('../constants');
 
 const { tenantUrl: TENANT_URL,
         oauthAppId: OAUTH_APPID,
@@ -39,7 +39,7 @@ let pkce, OIDC_APP = {
 authorizationController.get('/pkceMetaData', async (req, res) => {
     try {
         const metadata = generatePKCEMetadata();
-        res.send(metadata);
+        res.send({ Result: metadata });
     } catch (error) {
         res.send(error);
     }
@@ -51,10 +51,10 @@ authorizationController.post('/buildAuthorizeURL', async (req, res) => {
         if (req.body.authFlow === AUTH_FLOW.OAUTH) {
             clientObj = new CyberArkIdentityOAuthClient(TENANT_URL, req.body.appId, req.body.clientId, req.body.clientSecret);
         } else {
-            clientObj = new CyberArkIdentityOIDCClient(TENANT_URL, req.body.appId, req.body.clientId, req.body.clientSecret);
+            clientObj = new CyberArkIdentityOIDCClient(TENANT_URL, OIDC_APP.AppID, OIDC_APP.ClientID, OIDC_APP.ClientSecret);
         }
-        const authURL = await clientObj.authorizeURL(req.body.redirect_uri, req.body.scope, req.body.responseType, req.body.codeChallenge, req.body.params);
-        res.send({ authorizeUrl: authURL });
+        const authURL = await clientObj.authorizeURL(REDIRECT_URI, OIDC_APP.Scopes, req.body.responseType.split(' '), req.body.codeChallenge, req.body.params);
+        res.send({ Result: { authorizeUrl: authURL } });
     } catch (error) {
         res.send(error);
     }
@@ -62,9 +62,9 @@ authorizationController.post('/buildAuthorizeURL', async (req, res) => {
 
 authorizationController.post('/tokenSet', async (req, res) => {
     try {
-        const clientObj = new CyberArkIdentityOAuthClient(TENANT_URL, req.body.appId, req.body.client_id, req.body.client_secret);
-        const tokens = await clientObj.requestToken(req.body.grant_type, req.body.code_verifier, req.body.redirect_uri, req.body.code, req.body.user_name, req.body.password, req.body.scope);
-        res.send(tokens);
+        const clientObj = new CyberArkIdentityOAuthClient(TENANT_URL, OIDC_APP.AppID, OIDC_APP.ClientID);
+        const tokens = await clientObj.requestToken(req.body.grant_type, req.body.code_verifier, REDIRECT_URI, req.body.code, null, null, OIDC_APP.Scopes);
+        res.send({Result: tokens});
     } catch (error) {
         res.send(error);
     }
@@ -101,11 +101,11 @@ authorizationController.post('/endSession', async (req, res) => {
     }
 });
 
-authorizationController.get('/claims/:token', async (req, res) => {
+authorizationController.get('/claims', async (req, res) => {
     try {
-        const clientObj = new CyberArkIdentityOAuthClient(TENANT_URL, req.body.appId, req.body.clientId, req.body.clientSecret);
-        const claims = await clientObj.claims(req.params.token);
-        res.send(claims);
+        const clientObj = new CyberArkIdentityOAuthClient(TENANT_URL, OIDC_APP.AppID, OIDC_APP.ClientID, OIDC_APP.ClientSecret);
+        const claims = await clientObj.claims(req.query.token);
+        res.send({Result : claims});
     } catch (error) {
         res.send(error);
     }
@@ -115,7 +115,7 @@ authorizationController.get('/oidc/userInfo', async (req, res) => {
     try {
         const clientObj = new CyberArkIdentityOIDCClient(TENANT_URL, OIDC_APP.AppID, OIDC_APP.ClientID, OIDC_APP.ClientSecret);
         const userInfo = await clientObj.getUserInfo(req.query.accessToken);
-        res.send(userInfo);
+        res.send({Result: userInfo});
     } catch (error) {
         res.send(error);
     }
@@ -144,6 +144,17 @@ authorizationController.get('/appDetails/:appKey/:accessToken', async (req, res)
     try {
         const result = await getOIDCAppDetails(TENANT_URL, req.params.appKey, req.params.accessToken);
         res.send(result);
+    } catch (error) {
+        res.send(error);
+    }
+});
+
+authorizationController.post('/tokenRequestPreview', async (req, res) => {
+    try {
+        let apiBody = {};
+        apiBody.payload = req.body;
+        apiBody.apiEndPoint = `${TENANT_URL}/OAuth2/Token/${OIDC_APP.AppID}`;
+        res.send({ Result: apiBody });
     } catch (error) {
         res.send(error);
     }
