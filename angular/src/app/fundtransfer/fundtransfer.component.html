@@ -2,7 +2,8 @@
   <div *ngIf="loading" class="loader-screen">
     <img alt="spinner" class="loader" src="../../assets/images/Spinner.svg">
   </div>
-  <app-header isLogoutVisible=true isBackVisible=true isFundTransferVisible=true></app-header>
+  <app-header isLogoutVisible=true isUserinfoVisible=true isEnrollFactorsVisible=true isFundTransferVisible=true
+        isUserProfileVisible=true  isOIDCFlowVisible=true ></app-header>
   <div class="app-page">
     <div *ngIf="showPage()" class="container h-100">
       <div class="h-100 row justify-content-center align-items-center">

@@ -95,6 +95,10 @@
   }
 }
 
+.a:hover {
+  background-color:#4DB7F2;
+}
+
 @media screen and (max-width: 576px) {
   .apidemo-header img {
     width: 100%;

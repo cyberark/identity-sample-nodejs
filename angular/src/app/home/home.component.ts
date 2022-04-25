@@ -31,7 +31,7 @@ export class HomeComponent implements OnInit {
 
   ngOnInit() {
     if (getStorage("userId") !== null) {
-      this.router.navigate(['user']);
+      this.router.navigate(['userdata']);
     }
   }
 

@@ -19,6 +19,7 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HeaderComponent } from '../components/header/header.component';
 import { HomeComponent } from './home.component';
+import { CookieService } from 'ngx-cookie-service';
 
 describe('HomeComponent', () => {
   let component: HomeComponent;
@@ -27,7 +28,8 @@ describe('HomeComponent', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ HomeComponent, HeaderComponent ],
-      imports: [RouterTestingModule, HttpClientTestingModule]
+      imports: [RouterTestingModule, HttpClientTestingModule],
+      providers: [CookieService]
     })
     .compileComponents();
   }));
