@@ -94,6 +94,11 @@ export class OIDCTokens {
   authResponseAccessToken: string;
   tokenResponseAccessToken: string;
 }
+export class TransactionData {
+  username: string;
+  transferAmount: string;
+  description: string;
+}
 
 /**
  * Fetches the authorization URL

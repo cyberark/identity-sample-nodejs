@@ -17,6 +17,11 @@
 const usersController = require('express').Router();
 const {tenantUrl: TENANT_URL} = require('../settings.json');
 const { changeUserPassword, userAttributes, getTotpQr, validateTotp, updateProfile, signUpWithCaptcha, signUpWithBearerToken } = require('@cyberark/identity-js-sdk');
+var dateTime = require('node-datetime');
+const sqlLite3 = require("sqlite3").verbose();
+const db = new sqlLite3.Database("./Database.db", sqlLite3.OPEN_READWRITE, (err) => {
+    if (err) return console.error(err.message);
+})
 
 usersController.post('/changePassword', async (req, res) => {
     try {
@@ -72,10 +77,33 @@ usersController.post('/signUpWithBearerToken', async (req, res) => {
     }
 });
 
+usersController.post('/fundtransfer', async (req, res) => {
+    try {        
+        let dt = dateTime.create();
+        let formatted = dt.format('Y-m-d H:M:S');
+        db.run(`INSERT INTO FundTransfer( username, transfer_amount, description, tranx_date_time) VALUES(?,?,?,?)`,
+            [req.body.username, req.body.transferAmount, req.body.description, formatted]
+        );
+        res.send({"success": true });
+        } catch (error) {
+        res.send(error);
+    }
+});
+
 usersController.post('/signupWithCaptcha', async (req, res) => {
     try {
         const result = await signUpWithCaptcha(TENANT_URL,req.body);
         res.send(result);
+    } catch (error) {
+        res.send(error);
+    }
+});
+
+usersController.get('/transactiondata/:username', async (req, res) => {
+    try {
+        db.all(`SELECT * FROM FundTransfer WHERE username=?`, [req.params.username], (error, rows) => {
+            res.send(rows);
+        });
     } catch (error) {
         res.send(error);
     }

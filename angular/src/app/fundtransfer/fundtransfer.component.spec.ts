@@ -21,6 +21,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { CookieService } from 'ngx-cookie-service';
 import { HeaderComponent } from '../components/header/header.component';
 import { FundTransferComponent } from './fundtransfer.component';
+import { UserService } from 'src/app/user/user.service';
 
 describe('FundTransferComponent', () => {
   let component: FundTransferComponent;
@@ -30,7 +31,7 @@ describe('FundTransferComponent', () => {
     TestBed.configureTestingModule({
       declarations: [ FundTransferComponent, HeaderComponent ],
       imports: [RouterTestingModule, HttpClientTestingModule, ReactiveFormsModule],
-      providers: [CookieService]
+      providers: [CookieService, UserService]
     })
     .compileComponents();
   }));

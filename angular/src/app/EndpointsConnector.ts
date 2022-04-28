@@ -47,5 +47,6 @@ export const EndpointsConnector = {
     EndSessionEndPoint : `${baseUrl}/endSession`,
     ChangePassword: `${baseUrl}/users/changePassword`,
     UpdateProfile: `${baseUrl}/users/profile`,
-    UserAttributes: `${baseUrl}/users/attributes/` 
+    UserAttributes: `${baseUrl}/users/attributes/`,
+    FundTransfer: `${baseUrl}/users/fundtransfer`,
   }

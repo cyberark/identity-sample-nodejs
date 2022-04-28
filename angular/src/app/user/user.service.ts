@@ -86,4 +86,9 @@ export class UserService {
     let head = new HttpHeaders().set('Content-Type', 'application/json');
     return this.http.put<any>(EndpointsConnector.UpdateProfile, body, { headers: head, withCredentials: true });
   }
+
+  getFundtransferdata(data: {}) {
+    let head = new HttpHeaders().set('Content-Type', 'application/json');
+    return this.http.post<any>(EndpointsConnector.FundTransfer, data, { headers: head, withCredentials: true });
+  }
 }

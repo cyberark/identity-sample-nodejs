@@ -19,8 +19,9 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
 import { HeaderComponent } from '../components/header/header.component';
 import { FormGroup, NgForm, FormControl, Validators } from '@angular/forms';
-import { validateAllFormFields } from '../utils';
-import { HeartBeatService } from '../heartbeat/heartbeat.service'; 
+import { validateAllFormFields, getStorage, TransactionData, setStorage } from '../utils';
+import { HeartBeatService } from '../heartbeat/heartbeat.service';
+import { UserService } from 'src/app/user/user.service';
 
 @Component({
     selector: 'app-fundtransfer',
@@ -44,7 +45,8 @@ export class FundTransferComponent implements OnInit {
         private router: Router,
         private route: ActivatedRoute,
         private heartBeatService: HeartBeatService,
-        private cookieService: CookieService
+        private cookieService: CookieService,
+        private userService: UserService
     ) { }
 
     ngOnInit() {
@@ -55,14 +57,25 @@ export class FundTransferComponent implements OnInit {
         this.fundTransferForm = new FormGroup({
             'amount': new FormControl(null, Validators.min(1)),
             'remarks': new FormControl(null)
-          });
+        });
 
         this.heartBeatService.checkHeartBeat(this);
 
         this.isFundTransferSuccessful = JSON.parse(this.route.snapshot.queryParamMap.get('isFundTransferSuccessful'));
 
         if (this.isFundTransferSuccessful) {
-            (<any>$('#errorPopup')).modal();
+            let data = new TransactionData();
+            data.username = getStorage('preferred_username');
+            data.transferAmount = getStorage('transferAmount');
+            data.description = getStorage('description');
+            this.userService.getFundtransferdata(data).subscribe({
+                next: data => {
+                    (<any>$('#errorPopup')).modal();
+                },
+                error: error => {
+                    console.error(error);
+                }
+            });
         }
     }
 
@@ -72,16 +85,18 @@ export class FundTransferComponent implements OnInit {
         }
         this.heartBeatService.checkHeartBeat(this);
         this.router.navigate(['mfawidget'], { queryParams: { fromFundTransfer: true } });
+        setStorage('transferAmount', this.fundTransferForm.get("amount").value);
+        setStorage('description', this.fundTransferForm.get("remarks").value);        
     }
 
     numberOnly(event): boolean {
         const charCode = (event.which) ? event.which : event.keyCode;
         if (charCode > 31 && (charCode < 48 || charCode > 57)) {
-          return false;
+            return false;
         }
         return true;
     }
-    
+
     hasError(controlName: string, errorName: string) {
         let form = this.fundTransferForm;
         let control = form.controls[controlName];
