@@ -51,7 +51,7 @@ export class UpdateprofileComponent implements OnInit {
             userControls.DisplayName.setValue(user.DisplayName);
             userControls.MobileNumber.setValue(user.MobileNumber);
           } else {
-            this.showInfo(this, { error: data.Message });
+            this.showInfo(this, { error: data });
           }
         },
         error: error => {
@@ -98,7 +98,7 @@ export class UpdateprofileComponent implements OnInit {
       context.popUpLabel = "OK";
     }
     else {
-      context.popUpMessage = info.error.ErrorMessage || info.error.error_description || info.error.Message;
+      context.popUpMessage = info.error.ErrorMessage || info.error.error_description || info.error.Message || info.error.message;
       context.popUpLabel = "OK";
     }
 

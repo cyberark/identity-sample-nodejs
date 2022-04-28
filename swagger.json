@@ -281,6 +281,103 @@
           }
         }
       },
+      "/users/signUpWithBearerToken": {
+        "post": {
+          "tags": ["Users"],
+          "summary": "Signup with Bearer Token",
+          "description": "Signup with Bearer Token",
+          "consumes": ["application/json"],
+          "parameters": [
+            {
+              "in": "body",
+              "name": "body",
+              "description": "body",
+              "required": true,
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "Name": {
+                    "type": "string"
+                  },
+                  "HomeNumber": {
+                    "type": "string"
+                  },
+                  "MobileNumber": {
+                    "type": "string"
+                  },
+                  "DisplayName": {
+                    "type": "string"
+                  },
+                  "Mail": {
+                    "type": "string"
+                  },
+                  "Password": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "successful operation",
+              "schema": {
+                "$ref": "#/definitions/restResponse"
+              }
+            }
+          }
+        }
+      },
+      "/users/signupWithCaptcha": {
+        "post": {
+          "tags": ["Users"],
+          "summary": "Signup with captcha",
+          "description": "Signup with captcha",
+          "consumes": ["application/json"],
+          "parameters": [
+            {
+              "in": "body",
+              "name": "body",
+              "description": "body",
+              "required": true,
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "Name": {
+                    "type": "string"
+                  },
+                  "HomeNumber": {
+                    "type": "string"
+                  },
+                  "MobileNumber": {
+                    "type": "string"
+                  },
+                  "DisplayName": {
+                    "type": "string"
+                  },
+                  "Mail": {
+                    "type": "string"
+                  },
+                  "Password": {
+                    "type": "string"
+                  },
+                  "ReCaptchaToken":{
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "successful operation",
+              "schema": {
+                "$ref": "#/definitions/restResponse"
+              }
+            }
+          }
+        }
+      },
       "/users/getTotpQr": {
         "get": {
           "tags": ["Users"],
