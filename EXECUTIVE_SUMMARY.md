@@ -4,7 +4,7 @@
 CyberArk Identity Sample NodeJS Server
 
 ## Functionality
-CyberArk Identity Sample NodeJS Server shows one of the possible usage of CyberArk Identity Products. This app uses NodeJS backend and React frontend.
+CyberArk Identity Sample NodeJS Server shows one of the possible usage of CyberArk Identity Products. This app uses NodeJS backend and Angular frontend.
 
 ## Business Purpose
 This is just to showcase the capabilities of the CyberArk Identity Products.
