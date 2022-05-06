@@ -16,8 +16,8 @@
 
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { UserService } from '../user/user.service';
 import { CookieService } from 'ngx-cookie-service';
+import { UserService } from '../user/user.service';
 import { setStorage } from '../utils';
 
 @Component({
@@ -80,7 +80,6 @@ export class LoginProtocolComponent implements OnInit {
   }
 
   onAuthLogin() {
-    document.cookie = 'flow=flow2';
     setStorage("showSignUpWidget", "false");
     this.router.navigate(['loginWidget'])
   }
@@ -92,5 +91,4 @@ export class LoginProtocolComponent implements OnInit {
   onLogin() {
     this.router.navigate(['login']);
   }
-
 }

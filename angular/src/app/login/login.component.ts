@@ -18,7 +18,9 @@ import { Component, OnInit, AfterContentChecked } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { LoginService } from './login.service';
 import { Router, ActivatedRoute } from '@angular/router';
-import { getStorage, setStorage, APIErrStr, getAppImgStr, setUserDetails } from '../utils';
+import { getStorage, setStorage, APIErrStr, getAppImgStr, setUserDetails, AuthorizationMetadataRequest, redirectOIDCAPI } from '../utils';
+import { AuthorizationService } from '../metadata/authorizationservice';
+
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -60,6 +62,7 @@ export class LoginComponent implements OnInit, AfterContentChecked {
   constructor(
     private formBuilder: FormBuilder,
     private loginService: LoginService,
+    private authorizationService: AuthorizationService,
     private router: Router,
     private route: ActivatedRoute
   ) { }
@@ -173,10 +176,8 @@ export class LoginComponent implements OnInit, AfterContentChecked {
         next: data => {
           this.loading = false;
           if (data.success) {
-            if (data.Result.Summary == "LoginSuccess") {
-              this.redirectToDashboard(data.Result);
-            } else if (data.success && data.Result.PodFqdn) {
-              this.onLoginError(`Update Tenant URL to \"${data.Result.PodFqdn}\" in <u><a href="/settings">settings page</a></u>.`);
+            if (data.state == "LoginSuccess") {
+              this.redirectToDashboard(data);
             } else {
               this.loginForm.get('username').disable();
               if (data.Result && data.Result.ClientHints && data.Result.ClientHints.AllowForgotPassword) {
@@ -185,7 +186,7 @@ export class LoginComponent implements OnInit, AfterContentChecked {
               this.runAuthSuccessFlow(data);
             }
           } else {
-            this.onLoginError(data.Message);
+            this.onLoginError(data.message);
           }
         },
         error: error => {
@@ -198,8 +199,8 @@ export class LoginComponent implements OnInit, AfterContentChecked {
         next: data => {
           this.loading = false;
           if (data.success) {
-            if (data.Result.Summary === "LoginSuccess") {
-              this.redirectToDashboard(data.Result);
+            if (data.state === "LoginSuccess") {
+              this.redirectToDashboard(data);
             } else if (data.success && data.Result.PodFqdn) {
               this.onLoginError(`Update Tenant URL to \"${data.Result.PodFqdn}\" in <u><a href="/settings">settings page</a></u>.`);
             } else {
@@ -210,12 +211,12 @@ export class LoginComponent implements OnInit, AfterContentChecked {
               this.runAuthSuccessFlow(data);
             }
           } else {
-            this.onLoginError(data.Message);
+            this.onLoginError(data.message);
           }
         },
         error: error => {
           console.error(error);
-          if (error.error.Result && error.error.Result.Summary === "CannotSatisfyChallenges") {
+          if (error.error.Result && error.error.state === "CannotSatisfyChallenges") {
             this.loading = false;
             this.errorMessage = error.error.Message;
             (<any>$('#errorPopup')).modal();
@@ -232,20 +233,20 @@ export class LoginComponent implements OnInit, AfterContentChecked {
       }
 
       this.loading = true;
-      this.loginService.advanceAuth(this.sessionId, this.tenantId, this.currentMechanism["MechanismId"], this.getAction(this.currentMechanism["AnswerType"]), this.formControls.answer.value).subscribe({
+      this.loginService.advanceAuth(this.currentMechanism["MechanismId"], this.formControls.answer.value).subscribe({
         next: data => {
           this.loading = false;
-          if (data.success == true) {
+          if (data.success) {
             if (this.pollChallenge) {
               this.pollChallenge.unsubscribe();
             }
-            if (data.Result.Summary == "LoginSuccess") {
-              this.redirectToDashboard(data.Result);
+            if (data.state == "LoginSuccess") {
+              this.redirectToDashboard(data);
             } else {
               this.runAuthSuccessFlow(data);
             }
           } else {
-            this.onLoginError(data.Message);
+            this.onLoginError(data.message);
           }
         },
         error: error => {
@@ -297,11 +298,8 @@ export class LoginComponent implements OnInit, AfterContentChecked {
     this.loginForm.controls["answer"].reset();
     switch (this.loginPage) {
       case "username":
-        this.sessionId = data.Result.SessionId;
-        this.tenantId = data.Result.TenantId;
-        this.challenges = data.Result.Challenges;
-        let challengeCount = this.challenges.length;
-        this.mechanisms = this.challenges[0]["Mechanisms"];
+        let challengeCount = data.mechanisms.length;
+        this.mechanisms = data.mechanisms;
         let firstMechanismsCount = Object.keys(this.mechanisms).length;
 
         if (challengeCount > 0 && firstMechanismsCount > 0) {
@@ -317,7 +315,7 @@ export class LoginComponent implements OnInit, AfterContentChecked {
           }
 
           if (challengeCount > 1) {
-            this.secondMechanisms = this.challenges[1]["Mechanisms"];
+            this.secondMechanisms = this.mechanisms[1];
           }
         }
         this.router.navigate(['login']);
@@ -328,24 +326,24 @@ export class LoginComponent implements OnInit, AfterContentChecked {
       case "secondChallenge":
       case "secondChallengeCode":
       case "reset":
-        if (data.Result.Summary == "OobPending") {
+        if (data.state == "OobPending") {
           this.textAnswer = true;
           this.answerLabel = this.currentMechanism["PromptMechChosen"];
           this.loginPage = "firstChallengeCode";
           this.pollChallenge = this.loginService.getPollingChallenge(this.sessionId, this.tenantId, this.currentMechanism["MechanismId"]).subscribe({
             next: data => {
-              if (data.success == true) {
-                if (data.Result.Summary == "OobPending") {
-                } else if (data.Result.Summary == "NewPackage" || data.Result.Summary == "StartNextChallenge") {
+              if (data.success) {
+                if (data.state == "OobPending") {
+                } else if (data.state == "NewPackage" || data.state == "StartNextChallenge") {
                   this.pollChallenge.unsubscribe();
                   this.redirectToNextPage(data);
-                } else if (data.Result.Summary == "LoginSuccess") {
+                } else if (data.state == "LoginSuccess") {
                   this.pollChallenge.unsubscribe();
-                  this.redirectToDashboard(data.Result);
+                  this.redirectToDashboard(data);
                 }
               } else {
                 if (this.router.url == '/login') {
-                  this.onLoginError(data.Message);
+                  this.onLoginError(data.message);
                 }
                 this.pollChallenge.unsubscribe();
               }
@@ -355,16 +353,16 @@ export class LoginComponent implements OnInit, AfterContentChecked {
             }
           });
           this.router.navigate(['login']);
-        } else if (data.Result.Summary == "NewPackage" || data.Result.Summary == "StartNextChallenge") {
+        } else if (data.state == "NewPackage" || data.state == "StartNextChallenge") {
           this.redirectToNextPage(data);
-        } else if (data.Result.Summary == "LoginSuccess") {
-          this.redirectToDashboard(data.Result);
-        } else if (data.Result.Summary == "NoncommitalSuccess") {
+        } else if (data.state == "LoginSuccess") {
+          this.redirectToDashboard(data);
+        } else if (data.state == "NoncommitalSuccess") {
           this.startOver();
           this.messageType = "info";
           this.authMessage = data.Result.ClientMessage;
         } else {
-          this.onLoginError(data.Message);
+          this.onLoginError(data.message);
         }
         break;
       default:
@@ -398,8 +396,8 @@ export class LoginComponent implements OnInit, AfterContentChecked {
   }
   redirectToNextPage(data) {
     this.loginForm.controls["answer"].reset();
-    if (data.Result.Summary === "StartNextChallenge") {
-      this.mechanisms = this.secondMechanisms;
+    if (data.state === "StartNextChallenge") {
+      this.mechanisms = data.mechanisms;
     } else {
       this.mechanisms = data.Result.Challenges[0]["Mechanisms"];
     }
@@ -447,10 +445,10 @@ export class LoginComponent implements OnInit, AfterContentChecked {
     this.authMessage = "";
     this.textAnswer = false;
     this.loading = true;
-    this.loginService.advanceAuth(this.sessionId, this.tenantId, "", "", "").subscribe({
+    this.loginService.advanceAuth("", "").subscribe({
       next: data => {
         this.loading = false;
-        if (data.success == true) {
+        if (data.success) {
           this.sessionId = data.Result.SessionId;
           this.tenantId = data.Result.TenantId;
           this.challenges = data.Result.Challenges;
@@ -458,7 +456,7 @@ export class LoginComponent implements OnInit, AfterContentChecked {
           this.loginPage = "firstChallenge";
           this.router.navigate(['login']);
         } else {
-          this.onLoginError(data.Message);
+          this.onLoginError(data.message);
         }
       },
       error: error => {
@@ -484,13 +482,25 @@ export class LoginComponent implements OnInit, AfterContentChecked {
       this.router.navigate(['settings']);
       return;
     }
+    this.authorizationService.getPKCEMetadata().subscribe({
+      next: data => {
+        let authMetadataReq = new AuthorizationMetadataRequest();
+        authMetadataReq.codeChallenge = data.Result.codeChallenge;
+        authMetadataReq.redirect_uri = redirectOIDCAPI;
+        this.authorizationService.buildAuthorizeURL(authMetadataReq).subscribe({
+          next: data => {
+            window.location.href = `${data.Result.authorizeUrl}&AUTH=${result.userInfo.authToken}`;
+          },
+          error: error => {
+            this.onLoginError('build auth URL failed');
+          }
+        })
+      },
+      error: error => {
+        this.onLoginError('pkce metadata failed');
+      }
+    })
     setUserDetails(result);
-    if (getStorage('challengeStateID')) {
-      setStorage('challengeStateID', null);
-      this.router.navigate(['oidcflow']);
-    } else {
-      this.router.navigate(['loginprotocols']);
-    }
   }
 
   onOk() {

@@ -42,21 +42,9 @@ export class LoginService {
       }));
   }
 
-  advanceAuth(SessionId: string, TenantId: string, MechanismId: string, Action: string, Answer: string) {
+  advanceAuth(mechanismId: string, answer: string) {
     let head = new HttpHeaders().set('Content-Type', 'application/json');
-
-    if (!MechanismId || MechanismId == "") {
-      return this.http.post<any>(EndpointsConnector.AdvanceAuthEndPoint, { SessionId, TenantId, Action: "ForgotPassword" }, { headers: head, withCredentials: true, })
-        .pipe(map(user => {
-          return user;
-        }));
-    } else if (!Answer || Answer == "") {
-      return this.http.post<any>(EndpointsConnector.AdvanceAuthEndPoint, { SessionId, TenantId, MechanismId, Action }, { headers: head, withCredentials: true, })
-        .pipe(map(user => {
-          return user;
-        }));
-    }
-    return this.http.post<any>(EndpointsConnector.AdvanceAuthEndPoint, { SessionId, TenantId, MechanismId, Action: "Answer", Answer }, { headers: head, withCredentials: true, }) /*observe: 'response' */
+    return this.http.post<any>(EndpointsConnector.AdvanceAuthEndPoint, { mechanismId, answer }, { headers: head, withCredentials: true, })
       .pipe(map(user => {
         return user;
       }));

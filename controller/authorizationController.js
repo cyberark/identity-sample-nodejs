@@ -25,6 +25,9 @@ const { tenantUrl: TENANT_URL,
         oauthServiceUserName: OAUTH_USERNAME,
         oauthServiceUserPassword: OAUTH_PWD,
         oauthScopesSupported: OAUTH_SCOPE,
+        oidcAppId: OIDC_APP_ID,
+        oidcClientId: OIDC_CLIENT_ID,
+        oidcScopesSupported: OIDC_SCOPES,
         loginWidgetId: LOGIN_WIDGET_ID } = require('../settings.json');
 
 let pkce, OIDC_APP = {
@@ -38,8 +41,8 @@ let pkce, OIDC_APP = {
 
 authorizationController.get('/pkceMetaData', async (req, res) => {
     try {
-        const metadata = generatePKCEMetadata();
-        res.send({ Result: metadata });
+        pkce = generatePKCEMetadata();
+        res.send({ Result: pkce });
     } catch (error) {
         res.send(error);
     }
@@ -47,13 +50,25 @@ authorizationController.get('/pkceMetaData', async (req, res) => {
 
 authorizationController.post('/buildAuthorizeURL', async (req, res) => {
     try {
+        const isFlow1 = checkFlow1(req);
         let clientObj;
         if (req.body.authFlow === AUTH_FLOW.OAUTH) {
             clientObj = new CyberArkIdentityOAuthClient(TENANT_URL, req.body.appId, req.body.clientId, req.body.clientSecret);
         } else {
-            clientObj = new CyberArkIdentityOIDCClient(TENANT_URL, OIDC_APP.AppID, OIDC_APP.ClientID, OIDC_APP.ClientSecret);
+            clientObj = new CyberArkIdentityOIDCClient(
+                TENANT_URL, 
+                isFlow1 ? OIDC_APP_ID : OIDC_APP.AppID, 
+                isFlow1 ? OIDC_CLIENT_ID : OIDC_APP.ClientID, 
+                OIDC_APP.ClientSecret
+            );
         }
-        const authURL = await clientObj.authorizeURL(REDIRECT_URI, OIDC_APP.Scopes, req.body.responseType.split(' '), req.body.codeChallenge, req.body.params);
+        const authURL = await clientObj.authorizeURL(
+            req.body.redirect_uri,
+            isFlow1 ? OIDC_SCOPES.split(' ') : OIDC_APP.Scopes,
+            req.body.responseType.split(' '),
+            req.body.codeChallenge,
+            req.body.params
+        );
         res.send({ Result: { authorizeUrl: authURL } });
     } catch (error) {
         res.send(error);
@@ -179,7 +194,7 @@ authorizationController.get('/Resource', async (req, res) => {
 
         OIDC_APP.Scopes = OIDC_DEFAULT_SCOPE;
         if (appDetails.Scopes !== undefined) {
-            for (i = 0; i < appDetails.Scopes.length; i++) {
+            for (let i = 0; i < appDetails.Scopes.length; i++) {
                 OIDC_APP.Scopes.push(appDetails.Scopes[i].Scope);
             }
         }
@@ -195,9 +210,22 @@ authorizationController.get('/Resource', async (req, res) => {
 
 authorizationController.get('/RedirectResource', async (req, res) => {
     try {
+        const isFlow1 = checkFlow1(req);
         const code = req.query.code;
-        const clientObj = new CyberArkIdentityOIDCClient(TENANT_URL, OIDC_APP.AppID, OIDC_APP.ClientID);
-        const tokens = await clientObj.requestToken('authorization_code', pkce.code_verifier, OIDC_REDIRECT_URI, code, null, null, OIDC_APP.Scopes);
+        const clientObj = new CyberArkIdentityOIDCClient(
+            TENANT_URL, 
+            isFlow1 ? OIDC_APP_ID : OIDC_APP.AppID, 
+            isFlow1 ? OIDC_CLIENT_ID : OIDC_APP.ClientID
+        );
+        const tokens = await clientObj.requestToken(
+            'authorization_code', 
+            pkce.code_verifier,
+            OIDC_REDIRECT_URI, 
+            code, 
+            null, 
+            null, 
+            isFlow1 ? OIDC_SCOPES.split(' ') : OIDC_APP.Scopes
+        );
         res.cookie('sampleapp', tokens.access_token);
         res.redirect(302, USERDATA_URL);
     } catch (error) {
@@ -219,6 +247,10 @@ function generatePKCEMetadata() {
     const digest = crypto.createHash('sha256').update(text, 'ascii').digest();
     metadata.codeChallenge = Buffer.from(digest).toString('base64url');
     return metadata;
+}
+
+function checkFlow1(req) {
+    return req.cookies.flow === 'flow1';
 }
 
 module.exports = authorizationController;

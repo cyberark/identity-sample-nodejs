@@ -51,6 +51,7 @@ export class OidcFlowComponent implements OnInit {
   onBuildAuthUrl() {
     this.loading = true;
     let authRequest = new AuthorizationMetadataRequest();
+    authRequest.redirect_uri = "http://localhost:4200/RedirectResource";
     if (this.oidcFlow === OidcFlow.implicit) {
       authRequest.responseType = this.responseTypes.join(' ');
       buildAuthorizeURL(authRequest, this);

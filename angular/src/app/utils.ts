@@ -21,6 +21,7 @@ export const defaultErrStr = "Oops, something went wrong. Please try again later
 export const APIErrStr = "Oops, Something went wrong. Verify App configuration and user permissions.";
 export const defaultTitle = "Error";
 export const defaultLabel = "Retry";
+export const redirectOIDCAPI = "http://localhost:2200/api/RedirectResource";
 export enum AuthorizationFlow {
   OAUTH = "OAUTH",
   OIDC = "OIDC"
@@ -76,6 +77,7 @@ export class AuthorizationMetadataRequest extends PKCEMetaData {
   clientId: string;
   clientSecret: string;
   responseType: string = "code";
+  redirect_uri: string;
 }
 
 export class TokenMetadataRequest extends PKCEMetaData {
@@ -229,7 +231,7 @@ export const getCaptchaStatus = () => {
 export const setUserDetails = (result: any) => {
   setStorage("userId", result.UserId);
   setStorage("username", result.User);
-  setStorage("displayName", result.DisplayName);
+  setStorage("displayName", result.name);
   setStorage("tenant", result.PodFqdn);
   setStorage("customerId", result.CustomerID);
   setStorage("custom", result.Custom);
