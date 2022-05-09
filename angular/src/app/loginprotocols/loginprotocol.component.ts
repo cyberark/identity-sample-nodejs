@@ -17,6 +17,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { UserService } from '../user/user.service';
+import { CookieService } from 'ngx-cookie-service';
 import { setStorage } from '../utils';
 
 @Component({
@@ -28,13 +29,16 @@ export class LoginProtocolComponent implements OnInit {
   loading = false;
   messageType = "error";
   errorMessage = "";
+  isFlow1=true;
 
   constructor(
     private router: Router,
-    private userService: UserService
+    private userService: UserService,
+    private cookieService: CookieService
   ) { }
 
   ngOnInit() {
+    this.isFlow1 = this.cookieService.get('flow') === 'flow1';
   }
 
   onApiOnlyClick() {
@@ -62,7 +66,7 @@ export class LoginProtocolComponent implements OnInit {
       }
     });
   }
-
+  
   onApiOAuthClick(){
     this.router.navigate(['oauthflow']);
   }
@@ -79,6 +83,14 @@ export class LoginProtocolComponent implements OnInit {
     document.cookie = 'flow=flow2';
     setStorage("showSignUpWidget", "false");
     this.router.navigate(['loginWidget'])
+  }
+
+  onSignUp() {
+    this.router.navigate(['register']);
+  }
+
+  onLogin() {
+    this.router.navigate(['login']);
   }
 
 }

@@ -17,6 +17,7 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
+import { CookieService } from 'ngx-cookie-service';
 import { HeaderComponent } from '../components/header/header.component';
 import { LoginProtocolComponent } from './loginprotocol.component';
 
@@ -27,7 +28,8 @@ describe('LoginProtocolComponent', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ LoginProtocolComponent, HeaderComponent ],
-      imports: [RouterTestingModule, HttpClientTestingModule]
+      imports: [RouterTestingModule, HttpClientTestingModule],
+      providers: [CookieService]
     })
     .compileComponents();
   }));

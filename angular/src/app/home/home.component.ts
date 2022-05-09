@@ -40,9 +40,9 @@ export class HomeComponent implements OnInit {
     this.router.navigate(['login'])
   }
 
-  onFlow1Signup() {
+  onFlow1GetStarted() {
     document.cookie = 'flow=flow1';
-    this.router.navigate(['register'])
+    this.router.navigate(['loginprotocols'])
   }
 
   onFlow2Login() {
@@ -68,6 +68,7 @@ export class HomeComponent implements OnInit {
   }
 
   onGetStarted() {
+    document.cookie = 'flow=flow2';
     this.router.navigate(['loginprotocols'])
   }
 
