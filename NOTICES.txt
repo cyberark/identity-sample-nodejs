@@ -28,8 +28,6 @@ Section 3: MIT
 >>> https://github.com/expressjs/express
 >>> https://github.com/helmetjs/helmet
 >>> https://github.com/scottie1984/swagger-ui-express
-
-Section 4: Generic License
 >>> https://github.com/voltrue2/node-datetime
 >>> https://github.com/yairEO/tagify/
 
@@ -465,8 +463,6 @@ The MIT License (MIT)
   LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
   THE SOFTWARE.
-
-Section 4: Generic License
 
 >>> https://github.com/voltrue2/node-datetime
 
