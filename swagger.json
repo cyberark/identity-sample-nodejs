@@ -473,23 +473,12 @@
           }
         }
       },
-      "/users/transactiondata/{username}": {
+      "/users/transactiondata": {
         "get": {
           "tags": ["Users"],
           "summary": "Gets all the transaction details for the user",
           "description": "Gets all the transaction details for the user",
-          "consumes": ["application/json"],
-          "parameters": [
-            {
-              "in": "path",
-              "name": "username",
-              "description": "username",
-              "required": true,
-              "schema": {
-                "type": "string"
-              }
-            }
-          ],
+          "produces": ["application/json"],          
           "responses": {
             "200": {
               "description": "successful operation",

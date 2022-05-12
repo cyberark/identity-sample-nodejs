@@ -36,6 +36,7 @@ import { IntroComponent } from './intro/intro.component';
 import { UserdataComponent } from './userdata/userdata.component';
 import { ChangepasswordComponent } from './changepassword/changepassword.component';
 import { UpdateprofileComponent } from './updateprofile/updateprofile.component';
+import { TransactionSummaryComponent } from './transaction-summary/transaction-summary.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/', pathMatch: 'full' },
@@ -59,7 +60,8 @@ const routes: Routes = [
   { path: 'totpregister', component: TOTPRegisterComponent },
   { path: 'userdata', component: UserdataComponent},
   { path: 'changepassword', component: ChangepasswordComponent }, 
-  { path: 'updateprofile', component: UpdateprofileComponent }, 
+  { path: 'updateprofile', component: UpdateprofileComponent },
+  { path: 'transactionSummary', component: TransactionSummaryComponent }, 
 ];
 
 @NgModule({

@@ -68,7 +68,7 @@ export class FundTransferComponent implements OnInit {
             data.username = getStorage('preferred_username');
             data.transferAmount = getStorage('transferAmount');
             data.description = getStorage('description');
-            this.userService.getFundtransferdata(data).subscribe({
+            this.userService.addFundtransferdata(data).subscribe({
                 next: data => {
                     (<any>$('#errorPopup')).modal();
                 },

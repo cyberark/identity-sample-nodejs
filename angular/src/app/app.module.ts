@@ -46,6 +46,7 @@ import { RecaptchaModule } from 'ng-recaptcha';
 import { UserdataComponent } from './userdata/userdata.component';
 import { ChangepasswordComponent } from './changepassword/changepassword.component';
 import { UpdateprofileComponent } from './updateprofile/updateprofile.component';
+import { TransactionSummaryComponent } from './transaction-summary/transaction-summary.component';
 
 @NgModule({
   declarations: [
@@ -71,6 +72,7 @@ import { UpdateprofileComponent } from './updateprofile/updateprofile.component'
     UserdataComponent,
     ChangepasswordComponent,
     UpdateprofileComponent,
+    TransactionSummaryComponent,
   ],
   imports: [
     BrowserModule,

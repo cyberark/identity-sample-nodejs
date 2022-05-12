@@ -42,19 +42,22 @@
         <li class="nav-item" *ngIf="isTOTPVisible">
           <a class="nav-link text-white" [class.active]="this.checkSelectedTab('/totpregister')" href="totpregister"
             (click)="onTabClick('totpregister')">Register TOTP</a>
-        </li>
-        <li class="nav-item" *ngIf="isFundTransferVisible">
-          <a class="nav-link text-white" [class.active]="this.checkSelectedTab('/fundtransfer')" href="fundtransfer"
-            (click)="onTabClick('fundtransfer')">Fund Transfer</a>
+        </li> 
+        <li class="nav-item dropdown" *ngIf="isFundTransferVisible">
+          <a class="nav-link dropdown-toggle"  class="nav-link text-white" [class.active]="this.checkSelectedTab('/fundtransfer')" href="fundtransfer"
+          id="navbarDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" (click)="onTabClick('fundtransfer')">Fund Transfer</a>
+          <div class="dropdown-menu bg-primary" aria-labelledby="navbarDropdown">
+            <a class="dropdown-item text-white a" href="transactionSummary" (click)="onTabClick('transactionSummary')">Transaction Summary</a>
+          </div>
         </li>
         <li class="nav-item" *ngIf="isUserinfoVisible">
           <a class="nav-link text-white" [class.active]="this.checkSelectedTab('/userdata')" href="userdata"
             (click)="onTabClick('userdata')">User Info</a>
-        </li>
-        <li class="nav-item dropdown" *ngIf="isEnrollFactorsVisible">
-          <a class="nav-link dropdown-toggle"  class="nav-link text-white" [class.active]="this.checkSelectedTab('/changepassword')" [class.active]="this.checkSelectedTab('/totpregister')"  href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            Enroll Factors
-          </a>
+          </li>
+          <li class="nav-item dropdown" *ngIf="isEnrollFactorsVisible">
+            <a class="nav-link dropdown-toggle"  class="nav-link text-white" [class.active]="this.checkSelectedTab('/changepassword')" [class.active]="this.checkSelectedTab('/totpregister')"  href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Enroll Factors
+            </a>
           <div class="dropdown-menu bg-primary" aria-labelledby="navbarDropdown">
             <a class="dropdown-item text-white a" href="changepassword" (click)="onTabClick('changepassword')">Change Password</a>
             <div class="dropdown-divider"></div>
@@ -64,7 +67,7 @@
         <li class="nav-item" *ngIf="isUserProfileVisible">
           <a class="nav-link text-white" [class.active]="this.checkSelectedTab('/updateprofile')" href="updateprofile"
             (click)="onTabClick('updateprofile')">User Profile</a>
-        </li>
+        </li>        
         <li class="nav-item" *ngIf="isLogoutVisible">
           <div class="nav-link text-white" (click)="logout()" style="cursor: pointer;">Logout</div>
         </li>

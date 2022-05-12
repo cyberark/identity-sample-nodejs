@@ -49,4 +49,5 @@ export const EndpointsConnector = {
     UpdateProfile: `${baseUrl}/users/profile`,
     UserAttributes: `${baseUrl}/users/attributes/`,
     FundTransfer: `${baseUrl}/users/fundtransfer`,
+    TransactionSummary: `${baseUrl}/users/transactiondata`,
   }

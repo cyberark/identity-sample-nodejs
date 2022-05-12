@@ -1,0 +1,36 @@
+<div class="container-fluid">
+    <app-header isBackVisible=true isTransactionSummaryVisible=true></app-header>
+    <div class="app-page">
+        <div class="container py-3">
+            <div class="card-deck">
+                <div class="card bg-primary text-white">
+                    <div class="card-body">
+                        <h3 class="card-title text-center">Transaction Summary</h3>
+                        <div *ngIf="record">
+                            <div class="card-body">
+                                <table class="table table-sm text-white">
+                                    <tbody>
+                                         <tr>
+                                            <th>Time stamp</th>
+                                            <th>Description</th>
+                                            <th>Amount</th>
+                                          </tr>
+                                          <tr #tranxData *ngFor="let key of dataKeys(tranx_data)">
+                                            <td class="col-sm-10">{{tranx_data[key].tranx_date_time}}</td>
+                                            <td class="text-truncate col-sm-10">{{tranx_data[key].description}}</td>
+                                            <td class="col-sm-10">{{tranx_data[key].transfer_amount}}</td>                                            
+                                          </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div *ngIf="!record" class="card-body text-white">
+                            <h4>No transactions in your history yet.</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <app-error [btnClick]="onOk" [body]="popUpMessage" [title]="popUptitle" [btnLabel]="popUpLabel"></app-error>
+    </div>
+</div>
