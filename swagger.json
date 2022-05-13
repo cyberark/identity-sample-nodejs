@@ -299,19 +299,19 @@
                   "Name": {
                     "type": "string"
                   },
-                  "HomeNumber": {
-                    "type": "string"
-                  },
-                  "MobileNumber": {
+                  "Mail": {
                     "type": "string"
                   },
                   "DisplayName": {
                     "type": "string"
                   },
-                  "Mail": {
+                  "Password": {
                     "type": "string"
                   },
-                  "Password": {
+                  "ConfirmPassword": {
+                    "type": "string"
+                  },
+                  "MobileNumber": {
                     "type": "string"
                   }
                 }

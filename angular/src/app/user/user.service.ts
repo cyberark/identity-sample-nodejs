@@ -96,4 +96,14 @@ export class UserService {
     let head = new HttpHeaders().set('Content-Type', 'application/json');
     return this.http.get<any>(EndpointsConnector.TransactionSummary, { headers: head, withCredentials: true });
   }
+  
+  signupBearerToken(user: User) {
+    let head = new HttpHeaders().set('Content-Type', 'application/json');
+    return this.http.post<any>(EndpointsConnector.SignupBearerToken, user, { headers: head, withCredentials: true });
+  }
+
+  signupCaptcha(user: User) {
+    let head = new HttpHeaders().set('Content-Type', 'application/json');
+    return this.http.post<any>(EndpointsConnector.SignupCaptcha, user, { headers: head, withCredentials: true });
+  }
 }

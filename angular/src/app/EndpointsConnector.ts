@@ -50,4 +50,6 @@ export const EndpointsConnector = {
     UserAttributes: `${baseUrl}/users/attributes/`,
     FundTransfer: `${baseUrl}/users/fundtransfer`,
     TransactionSummary: `${baseUrl}/users/transactiondata`,
+    SignupBearerToken: `${baseUrl}/users/signUpWithBearerToken`,
+    SignupCaptcha: `${baseUrl}/users/signupWithCaptcha`
   }

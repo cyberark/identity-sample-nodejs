@@ -20,12 +20,13 @@ import { Router } from '@angular/router';
 
 import { UserService } from '../user/user.service';
 import { HeaderComponent } from '../components/header/header.component';
-import { getStorage, setStorage, validateAllFormFields, APIErrStr, getAppImgStr, getSiteKey, getCaptchaStatus } from '../utils';
+import { getStorage, setStorage, validateAllFormFields, APIErrStr, getAppImgStr, getSiteKey, getCaptchaStatus,defaultLabel, defaultTitle } from '../utils';
 import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
 import { HttpStatusCode } from '@angular/common/http';
 import { AuthorizationService } from '../metadata/authorizationservice';
 import { BasicLoginService } from '../basiclogin/basiclogin.service';
 import { HeartBeatService } from '../heartbeat/heartbeat.service'; 
+import { User } from '../user/user';
 
 @Component({
   selector: 'app-root',
@@ -51,6 +52,10 @@ export class RegisterComponent implements OnInit {
   siteKey: string = "";
   isCaptchaEnabled: boolean;
   disableSignUp: boolean;
+  popUpMessage: string = APIErrStr;
+  popUptitle: string = defaultTitle;
+  popUpLabel: string = defaultLabel;
+  btnLabel: string = "";
 
   @ViewChild('divToScroll', { static: true }) divToScroll: ElementRef;
  
@@ -87,7 +92,6 @@ export class RegisterComponent implements OnInit {
       
       "ConfirmPassword": ['', Validators.required],
       "MobileNumber": ['',Validators.pattern("^\\+[0-9() +-]{4}[0-9() +-]{5,10}$")],
-      "MFA": [false],
     }, { updateOn: 'blur' });
 
     this.appImage = getAppImgStr();
@@ -121,10 +125,7 @@ export class RegisterComponent implements OnInit {
           this.setMessage("error", errorMessage); 
         }
       });
-      this.update = true;
-      this.submitButtonText = "Update";
     } else {
-      this.update = false;
       this.submitButtonText = "Sign up";
       this.registerForm.reset();
     }
@@ -153,13 +154,7 @@ export class RegisterComponent implements OnInit {
   }
 
   validateRegisterForm(form: NgForm) {
-    if (this.update) {
-      let fieldArray = ["Name", "Mail", "DisplayName", "MobileNumber", "MFA"];
-      if (!this.validateFormFields(fieldArray)) {
-        this.divToScroll.nativeElement.scrollTop = 0;
-        return;
-      }
-    } else {
+    {
       const isValid = validateAllFormFields(this.registerForm);
       this.matchPasswords();
       if (!isValid || !this.matchPasswordsCheck) {
@@ -167,12 +162,7 @@ export class RegisterComponent implements OnInit {
         return;
       }
     }
-
-    if (this.registerForm.controls.MFA.value && !this.update) {
-      return this.toggleUserConsentDialog();
-    } else {
-      this.registerUser(form);
-    }
+       this.registerUser(form);
   }
 
   public resolved(captchaResponseToken: string) {
@@ -184,103 +174,48 @@ export class RegisterComponent implements OnInit {
     this.disableSignUp = true;
   }
 
-  registerUser(form: NgForm) {
+  registerUser(formData: any) {
     let user;
     this.loading = true;
 
-    if (this.update) {
-      let fieldArray = ["Name", "Mail", "DisplayName", "MobileNumber", "MFA"];
+    if (!this.isCaptchaEnabled) {
+      let fieldArray = ["Name", "Mail", "DisplayName", "MobileNumber", "Password", "ConfirmPassword"];
 
-      user = this.pick(form, fieldArray)
-      this.userService.update(user, getStorage("userId")).subscribe({
-        next: data => {
+      user = this.pick(formData, fieldArray)
+      this.userService.signupBearerToken(user).subscribe({
+        next: user => {
           this.loading = false;
-          if (data.success == true) {
-            setStorage("mfaUsername", data.UserName);
-            this.setMessage("info", "User information updated successfully");
-            this.router.navigate(['/user']);
+          if (user && user.success) {
+            this.showInfo(this, user.success);
           } else {
-            this.setMessage("error", data.Message);
+            this.showInfo(this, { error: user });
           }
         },
         error: error => {
-          let errorMessage = APIErrStr;
-          if (error.status == HttpStatusCode.Forbidden && error.error) {
-            errorMessage = error.error.ErrorMessage;
-          }
+          this.showInfo(this, error);
           console.error(error);
-          this.setMessage("error", errorMessage); 
         }
       });
     } else {
-      user = Object.assign({}, form);
+      user = Object.assign({}, formData);
       user.ReCaptchaToken = this.reCaptchaToken;
-      this.userService.getClientIP().subscribe({
-        next: ipData => {
-          this.userService.register(user, ipData.ip).subscribe({
-            next: data => {
+          this.userService.signupCaptcha(user).subscribe({
+            next: user => {
               this.loading = false;
-              if (data.success == true) {
-                if (data.Result != null && data.Result.IntegrationResult != null && data.Result.IntegrationResult.IsManualApprovalTriggered == true) {
-                  setStorage("registerMessageType", "error");
-                  setStorage("registerMessage", "Your account sign-up request is pending approval. You will receive an email once it’s approved, and then you will be able to login.")
-                } else {
-                  setStorage("registerMessageType", "info");
-                  setStorage("registerMessage", "User " + user.Name + " registered successfully. Enter your credentials here to proceed.")
-                }
-                if(data.Result.Auth) {
-                  this.authorizationService.getPKCEMetadata().subscribe({
-                    next: d => {
-                      this.loginService.authorize(data.Result.Auth, data.Result.UserId, d.Result.codeChallenge).subscribe({
-                        next: auth => {
-                          this.loginService.setAuthCookie("", auth.Result.AuthorizationCode, data.Result.UserId, d.Result.code_verifier).subscribe({
-                            next: res => {
-                              setStorage("loginUserId", data.Result.UserId);
-                              setStorage("mfaUsername", res.Result.mfaUsername);
-                              setStorage("sessionUuid", res.Result.SessionUuid);
-                              setStorage("userId", data.Result.UserId);
-                              if (document.cookie.includes('flow1'))
-                                this.router.navigate(['/loginprotocols']);
-                              else
-                                this.router.navigate(['/user']);
-                            },
-                            error: e => {
-                              console.error(e);
-                            }
-                          })
-                        },
-                        error: e => {
-                          console.error(e);
-                        }
-                      })
-                    },
-                    error: e => {
-                      console.error(e);
-                    }
-                  })
-                } else {
-                  if (document.cookie.includes('flow1'))
-                    this.router.navigate(['/login']);
-                  else
-                    this.router.navigate(['/basiclogin']);
-                }
+              if (user && user.success) {
+                this.showInfo(this, user.success);
               } else {
-                this.setMessage("error", data.Message);
+                this.showInfo(this, { error: user });
               }
             },
             error: error => {
+              this.showInfo(this, error);
               console.error(error);
-              this.setMessage("error", APIErrStr); 
             }
           });
-        },
-        error: error => {
-          console.error(error);
-          this.setMessage("error", error.message);
-        }
-      });
-    }
+
   }
+}
 
   setMessage(messageType: string, message: string) {
     this.loading = false;
@@ -298,6 +233,36 @@ export class RegisterComponent implements OnInit {
     }
   }
 
+  public hasError = (controlName: string, errorName: string) => {
+    let form = this.registerForm;
+    let control = form.controls[controlName];
+    return ((control.invalid && (control.dirty || control.touched)) && control.hasError(errorName));
+  }
+
+  showInfo(context, info) {
+    if (info === true) {
+      context.popUpMessage = "User has been successfully created";
+      context.popUptitle = "Success";
+      context.popUpLabel = "OK";
+    }
+    else {
+      context.popUpMessage = info.error.ErrorMessage || info.error.error_description || info.error.Message || info.error.message;
+      context.popUpLabel = "Cancel";
+    }
+
+    (<any>$('#errorPopup')).modal();
+  }
+
+  onOk(): void {
+    if (this.btnLabel === "OK") {
+      this.router.navigate(['/login']);
+    }
+    else {
+      this.router.navigateByUrl('register');
+      window.location.reload();
+    }
+  }
+  
   checkScenario3() {
     return !this.update && document.cookie.includes('flow3');
   }
@@ -320,12 +285,5 @@ export class RegisterComponent implements OnInit {
       }
     }
     return valid;
-  }
-
-  // #TODO Move in common util
-  public hasError = (controlName: string, errorName: string) => {
-    let form = this.registerForm;
-    let control = form.controls[controlName];
-    return ((control.invalid && (control.dirty || control.touched)) && control.hasError(errorName));
   }
 }

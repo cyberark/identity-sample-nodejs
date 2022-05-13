@@ -15,7 +15,13 @@
 */
 const jwt_decode = require('jwt-decode');
 const usersController = require('express').Router();
-const { tenantUrl: TENANT_URL } = require('../settings.json');
+const { CyberArkIdentityOAuthClient} = require('@cyberark/identity-js-sdk');
+const {tenantUrl: TENANT_URL,
+    oauthAppId: OAUTH_APPID,
+    oauthServiceUserName: OAUTH_USERNAME,
+    oauthServiceUserPassword: OAUTH_PWD,
+    oauthScopesSupported: OAUTH_SCOPE,
+    loginWidgetId: LOGIN_WIDGET_ID} = require('../settings.json');
 const { changeUserPassword, userAttributes, getTotpQr, validateTotp, updateProfile, signUpWithCaptcha, signUpWithBearerToken } = require('@cyberark/identity-js-sdk');
 var dateTime = require('node-datetime');
 const sqlLite3 = require("sqlite3").verbose();
@@ -70,7 +76,9 @@ usersController.put('/profile', async (req, res) => {
 
 usersController.post('/signUpWithBearerToken', async (req, res) => {
     try {
-        const result = await signUpWithBearerToken(TENANT_URL, req.body, req.cookies.sampleapp);
+        const client = new CyberArkIdentityOAuthClient(TENANT_URL, OAUTH_APPID, OAUTH_USERNAME, OAUTH_PWD);
+        const TOKEN = await client.requestToken('client_credentials', null, null, null, OAUTH_USERNAME, OAUTH_PWD, OAUTH_SCOPE.split(' '));
+        const result = await signUpWithBearerToken(TENANT_URL,req.body,TOKEN.access_token);
         res.send(result);
     } catch (error) {
         res.send(error);
