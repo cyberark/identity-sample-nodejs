@@ -128,7 +128,13 @@ authorizationController.get('/claims', async (req, res) => {
 
 authorizationController.get('/oidc/userInfo', async (req, res) => {
     try {
-        const clientObj = new CyberArkIdentityOIDCClient(TENANT_URL, OIDC_APP.AppID, OIDC_APP.ClientID, OIDC_APP.ClientSecret);
+        const isFlow1 = checkFlow1(req);
+        const clientObj = new CyberArkIdentityOIDCClient(
+            TENANT_URL, 
+            isFlow1 ? OIDC_APP_ID : OIDC_APP.AppID, 
+            isFlow1 ? OIDC_CLIENT_ID : OIDC_APP.ClientID, 
+            OIDC_APP.ClientSecret
+        );
         const userInfo = await clientObj.getUserInfo(req.query.accessToken);
         res.send({Result: userInfo});
     } catch (error) {
