@@ -198,7 +198,7 @@ authorizationController.get('/Resource', async (req, res) => {
 
         Object.assign(OIDC_APP, appDetails)
 
-        OIDC_APP.Scopes = OIDC_DEFAULT_SCOPE;
+        OIDC_APP.Scopes = [...OIDC_DEFAULT_SCOPE];
         if (appDetails.Scopes !== undefined) {
             for (let i = 0; i < appDetails.Scopes.length; i++) {
                 OIDC_APP.Scopes.push(appDetails.Scopes[i].Scope);
