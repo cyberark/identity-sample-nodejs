@@ -52,13 +52,13 @@
                     </div>
                     <div class="form-group">
                       <label class="required label">Enter your username:</label>
-                      <input class="form-control" formControlName="username" required>
+                      <input class="form-control input" formControlName="username" type="text" required>
                       <span *ngIf="hasError('username', 'required')">Required</span>
                       <span *ngIf="hasError('username', 'email')">Username pattern does not match</span>
                     </div>
                     <div *ngIf="showLoginComponent('challenge')" class="form-group">
                       <label class="required label">Authentication Method</label>
-                      <select class="form-control" formControlName="authMethod" (change)="authMethodChange()"
+                      <select class="form-control input" formControlName="authMethod" (change)="authMethodChange()"
                         [value]="0" required>
                         <option *ngFor="let mechanism of mechanisms; let i = index" [value]="i">
                           {{mechanism.PromptSelectMech}}
@@ -68,7 +68,7 @@
                     </div>
                     <div *ngIf="textAnswer" class="form-group">
                       <label class="required label">{{answerLabel}}:</label>
-                      <input *ngIf="!showQRCode && !isPhoneCall" class="form-control" formControlName="answer"
+                      <input *ngIf="!showQRCode && !isPhoneCall" class="form-control input" formControlName="answer"
                         type="password" required>
                       <div *ngIf="showQRCode" id="idQRCode"><img class="mx-auto d-block" [attr.src]="QRImageSource"
                           alt="QR Code"></div>
@@ -76,7 +76,7 @@
                     </div>
                     <div *ngIf="showLoginComponent('reset')" class="form-group">
                       <label class="required label">Confirm New Password</label>
-                      <input class="form-control" formControlName="confirmPassword" (blur)="matchPasswords()"
+                      <input class="form-control input" formControlName="confirmPassword" (blur)="matchPasswords()"
                         type="password" required>
                       <span *ngIf="hasError('confirmPassword', 'required')">Required</span>
                       <span *ngIf="!matchPasswordsCheck">Confirm Password must match with the Password</span>

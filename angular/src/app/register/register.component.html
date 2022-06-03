@@ -91,24 +91,24 @@
               </div>
               <div class="form-group">
                 <label class="label required">Username:</label>
-                <input class="form-control" formControlName="Name" required>
+                <input class="form-control input" formControlName="Name" type="text" required>
                 <div class="label"></div>
                 <span style="display:block;" *ngIf="hasError('Name', 'required')">Required</span>
               </div>
               <div class="form-group">
                 <label class="label required">Email Address:</label>
-                <input class="form-control" formControlName="Mail" type="email" required>
+                <input class="form-control input" formControlName="Mail" type="email" required>
                 <span *ngIf="hasError('Mail', 'required')">Required</span>
                 <span *ngIf="hasError('Mail', 'pattern')">Must be valid email. EXAMPLE@YOURDOMAIN.COM</span>
               </div>
               <div class="form-group">
                 <label class="label required">Display Name:</label>
-                <input class="form-control" formControlName="DisplayName" required>
+                <input class="form-control input" formControlName="DisplayName" type="text" required>
                 <span *ngIf="hasError('DisplayName', 'required')">Required</span>
               </div>
               <div *ngIf="!update" class="form-group">
                 <label class="label required">Password:</label>
-                <input class="form-control" formControlName="Password" type="password" (blur)="matchPasswords()"
+                <input class="form-control input" formControlName="Password" type="password" (blur)="matchPasswords()"
                   required>
                 <span *ngIf="hasError('Password', 'required')">Required</span>
                 <span *ngIf="hasError('Password', 'pattern')">
@@ -118,14 +118,14 @@
               </div>
               <div *ngIf="!update" class="form-group">
                 <label class="label required">Confirm Password:</label>
-                <input class="form-control" formControlName="ConfirmPassword" type="password" (blur)="matchPasswords()"
+                <input class="form-control input" formControlName="ConfirmPassword" type="password" (blur)="matchPasswords()"
                   required>
                 <span *ngIf="hasError('ConfirmPassword', 'required')">Required</span>
                 <span *ngIf="!matchPasswordsCheck">Confirm Password must match with the Password</span>
               </div>
               <div class="form-group">
                 <label class="label">Phone Number:</label>
-                <input class="form-control" formControlName="MobileNumber" name="mobileNumber">
+                <input class="form-control input" formControlName="MobileNumber" type="text" name="mobileNumber">
                 <span *ngIf="hasError('MobileNumber', 'pattern')">Must be valid phonenumber(+CCNNNNNNNNNN)</span>
               </div>
               <div class="form-group text-center" *ngIf="isCaptchaEnabled && !update">

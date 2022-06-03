@@ -225,11 +225,11 @@ label.required::after {
 }
 
 /*input field customization */
-.input[type="text"],.input[type="password"] {
+.input {
   width: 100%;
-  padding: 10px 10px;
+  padding: 5px 12px;
   margin: 8px 0;
-  color: white;
+  color: white !important;
   box-sizing: border-box;
   border: none;
   background-color: #192436 !important;
