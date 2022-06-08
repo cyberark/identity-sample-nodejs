@@ -77,8 +77,13 @@ authorizationController.post('/buildAuthorizeURL', async (req, res) => {
 
 authorizationController.post('/tokenSet', async (req, res) => {
     try {
-        const clientObj = new CyberArkIdentityOAuthClient(TENANT_URL, OIDC_APP.AppID, OIDC_APP.ClientID);
-        const tokens = await clientObj.requestToken(req.body.grant_type, req.body.code_verifier, REDIRECT_URI, req.body.code, null, null, OIDC_APP.Scopes);
+        const isFlow1 = checkFlow1(req);
+        const appId = isFlow1 ? OIDC_APP_ID : OIDC_APP.AppID;
+        const clientId = isFlow1 ? OIDC_CLIENT_ID : OIDC_APP.ClientID;
+        const scopes = isFlow1 ? OIDC_SCOPES : OIDC_APP.Scopes;
+
+        const clientObj = new CyberArkIdentityOAuthClient(TENANT_URL, appId, clientId);
+        const tokens = await clientObj.requestToken(req.body.grant_type, req.body.code_verifier, REDIRECT_URI, req.body.code, null, null, scopes);
         res.send({Result: tokens});
     } catch (error) {
         res.send(error);
@@ -172,43 +177,12 @@ authorizationController.get('/appDetails/:appKey/:accessToken', async (req, res)
 
 authorizationController.post('/tokenRequestPreview', async (req, res) => {
     try {
+        const isFlow1 = checkFlow1(req);
+        const appId = isFlow1 ? OIDC_APP_ID : OIDC_APP.AppID;
         let apiBody = {};
         apiBody.payload = req.body;
-        apiBody.apiEndPoint = `${TENANT_URL}/OAuth2/Token/${OIDC_APP.AppID}`;
+        apiBody.apiEndPoint = `${TENANT_URL}/OAuth2/Token/${appId}`;
         res.send({ Result: apiBody });
-    } catch (error) {
-        res.send(error);
-    }
-});
-
-authorizationController.get('/Resource', async (req, res) => {
-    try {
-        const client = new CyberArkIdentityOAuthClient(TENANT_URL, OAUTH_APPID, OAUTH_USERNAME, OAUTH_PWD);
-        const TOKEN = await client.requestToken('client_credentials', null, null, null, OAUTH_USERNAME, OAUTH_PWD, OAUTH_SCOPE.split(' '));
-
-        const APPKEY = await getWidgetAssociatedApp(TENANT_URL, LOGIN_WIDGET_ID);
-        if (APPKEY === 'Invalid widgetId' || APPKEY === 'No application associated with the given widgetId') {
-            throw new Error(APPKEY);
-        }
-
-        const appDetails = await getOIDCAppDetails(TENANT_URL, APPKEY, TOKEN.access_token);
-        if (typeof appDetails === 'string') {
-            throw new Error(appDetails);
-        }
-
-        Object.assign(OIDC_APP, appDetails)
-
-        OIDC_APP.Scopes = [...OIDC_DEFAULT_SCOPE];
-        if (appDetails.Scopes !== undefined) {
-            for (let i = 0; i < appDetails.Scopes.length; i++) {
-                OIDC_APP.Scopes.push(appDetails.Scopes[i].Scope);
-            }
-        }
-
-        pkce = generatePKCEMetadata();
-        const clientObj = new CyberArkIdentityOIDCClient(TENANT_URL, OIDC_APP.AppID, OIDC_APP.ClientID, OIDC_APP.ClientSecret);
-        const authURL = await clientObj.authorizeURL(OIDC_REDIRECT_URI, OIDC_APP.Scopes, ['code'], pkce.codeChallenge);
-        res.redirect(authURL);
     } catch (error) {
         res.send(error);
     }
@@ -217,6 +191,31 @@ authorizationController.get('/Resource', async (req, res) => {
 authorizationController.get('/RedirectResource', async (req, res) => {
     try {
         const isFlow1 = checkFlow1(req);
+
+        if (!isFlow1) {
+            const client = new CyberArkIdentityOAuthClient(TENANT_URL, OAUTH_APPID, OAUTH_USERNAME, OAUTH_PWD);
+            const TOKEN = await client.requestToken('client_credentials', null, null, null, OAUTH_USERNAME, OAUTH_PWD, OAUTH_SCOPE.split(' '));
+
+            const APPKEY = await getWidgetAssociatedApp(TENANT_URL, LOGIN_WIDGET_ID);
+            if (APPKEY === 'Invalid widgetId' || APPKEY === 'No application associated with the given widgetId') {
+                throw new Error(APPKEY);
+            }
+
+            const appDetails = await getOIDCAppDetails(TENANT_URL, APPKEY, TOKEN.access_token);
+            if (typeof appDetails === 'string') {
+                throw new Error(appDetails);
+            }
+
+            Object.assign(OIDC_APP, appDetails);
+
+            OIDC_APP.Scopes = [...OIDC_DEFAULT_SCOPE];
+            if (appDetails.Scopes !== undefined) {
+                for (const element of appDetails.Scopes) {
+                    OIDC_APP.Scopes.push(element.Scope);
+                }
+            }
+        }
+
         const code = req.query.code;
         const clientObj = new CyberArkIdentityOIDCClient(
             TENANT_URL, 

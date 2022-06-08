@@ -1169,15 +1169,6 @@
           }
         }
       },
-      "/Resource": {
-        "get": {
-          "tags": ["Authorization"],
-          "summary": "Resource application URL",
-          "description": "The endpoint is added in the OIDC application as Resource application URL which redirects to Authurl.",
-          "produces": ["application/json"],
-          "responses": {}
-        }
-      },      
       "/RedirectResource": {
         "get": {
           "tags": ["Authorization"],

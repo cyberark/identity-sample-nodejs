@@ -22,6 +22,8 @@ export const APIErrStr = "Oops, Something went wrong. Verify App configuration a
 export const defaultTitle = "Error";
 export const defaultLabel = "Retry";
 export const redirectOIDCAPI = "http://localhost:2200/api/RedirectResource";
+export const codeChallengeMethod = "S256";
+export const oidcDefaultScopes = "openid email profile address phone";
 export enum AuthorizationFlow {
   OAUTH = "OAUTH",
   OIDC = "OIDC"

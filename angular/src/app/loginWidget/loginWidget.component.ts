@@ -18,7 +18,7 @@ import { Component, OnInit } from '@angular/core';
 import { BasicLoginService } from '../basiclogin/basiclogin.service';
 import { AuthorizationService } from '../metadata/authorizationservice';
 import { ActivatedRoute, Router } from '@angular/router';
-import { getStorage, APIErrStr, Settings, addChildNodes } from '../utils';
+import { getStorage, APIErrStr, Settings, addChildNodes, redirectOIDCAPI, codeChallengeMethod, oidcDefaultScopes } from '../utils';
 import { ajax, css } from "jquery";
 import { UserService } from '../user/user.service';
 declare let LaunchLoginView: any;
@@ -35,11 +35,7 @@ export class LoginWidgetComponent implements OnInit {
   showSignUpWidget = false;
 
   constructor(
-    private router: Router,
-    private route: ActivatedRoute,
-    private loginService: BasicLoginService,
-    private authorizationService: AuthorizationService,
-    private userService: UserService
+    private authorizationService: AuthorizationService
   ) { }
 
   ngOnInit() {
@@ -59,9 +55,20 @@ export class LoginWidgetComponent implements OnInit {
     };
 
     if (!this.showSignUpWidget) {
-      const username = getStorage('username');
-      config["username"] = username;
-      config["autoSubmitUsername"] = username ? true : false;
+      this.authorizationService.getPKCEMetadata().subscribe({
+        next: pkce => {
+          const username = getStorage('username');
+          config["username"] = username;
+          config["autoSubmitUsername"] = username ? true : false;
+          config["redirect_uri"] = redirectOIDCAPI;
+          config["scope"] = oidcDefaultScopes;
+          config["code_challenge"] = pkce.Result.codeChallenge;
+          config["code_challenge_method"] = codeChallengeMethod;
+        },
+        error: err => {
+          this.showError(this, err);
+        }
+      });
     }
 
     addChildNodes(settings, () => {
