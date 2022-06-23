@@ -469,6 +469,20 @@
                   }
                 }
               }
+            },
+            "400": {
+              "description": "Invalid data",
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "error": {
+                    "type": "array",
+                    "items": {
+                      "type": "object"
+                    }
+                  }
+                }
+              }
             }
           }
         }
@@ -1176,6 +1190,25 @@
           "description": "This endpoint provides the access token & id token.",
           "produces": ["application/json"],
           "responses": {}
+        }
+      },
+      "/oidcAppScopes": {
+        "get": {
+          "tags": ["Authorization"],
+          "summary": "Gets the OIDC app scopes linked to the authorization widget",
+          "description": "Gets the OIDC app scopes linked to the authorization widget",
+          "produces": ["application/json"],
+          "responses": {
+            "200": {
+              "description": "successful operation",
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          }
         }
       },
       "/settings": {

@@ -32,6 +32,7 @@ export const EndpointsConnector = {
     IntrospectEndPoint : `${baseUrl}/introspect`,
     TokenRequestPreviewEndPoint : `${baseUrl}/tokenRequestPreview`,
     ClaimsEndPoint : `${baseUrl}/claims`,
+    OIDCAppScopes : `${baseUrl}/oidcAppScopes`,
     OIDCUserInfoEndPoint : `${baseUrl}/oidc/userInfo`,
     GetSettingsEndpoint: `${baseUrl}/settings/`,
     GetUISettingsEndpoint: `${baseUrl}/settings`,

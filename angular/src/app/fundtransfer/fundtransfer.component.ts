@@ -38,8 +38,10 @@ export class FundTransferComponent implements OnInit {
     fundTransferForm: FormGroup;
     messageType = "error";
     errorMessage = "";
-    popUpBody = "Your funds were transferred successfully";
-    iconSrc = "../../assets/images/green_check.png";
+    popUpTitle = "";
+    popUpBtn = "";
+    popUpBody = "";
+    iconSrc = "";
 
     constructor(
         private router: Router,
@@ -70,9 +72,17 @@ export class FundTransferComponent implements OnInit {
             data.description = getStorage('description');
             this.userService.addFundtransferdata(data).subscribe({
                 next: data => {
+                    this.popUpTitle = "Fund transferred";
+                    this.popUpBody = "Your funds were transferred successfully";
+                    this.iconSrc = "../../assets/images/green_check.png";
+                    this.popUpBtn = "Done";
                     (<any>$('#errorPopup')).modal();
                 },
                 error: error => {
+                    this.popUpTitle = "UnAuthorized";
+                    this.popUpBody = "You are not authorized to do the transaction.";
+                    this.popUpBtn = "Ok";
+                    (<any>$('#errorPopup')).modal();
                     console.error(error);
                 }
             });
@@ -86,7 +96,7 @@ export class FundTransferComponent implements OnInit {
         this.heartBeatService.checkHeartBeat(this);
         this.router.navigate(['mfawidget'], { queryParams: { fromFundTransfer: true } });
         setStorage('transferAmount', this.fundTransferForm.get("amount").value);
-        setStorage('description', this.fundTransferForm.get("remarks").value);        
+        setStorage('description', this.fundTransferForm.get("remarks").value);
     }
 
     numberOnly(event): boolean {
@@ -113,7 +123,7 @@ export class FundTransferComponent implements OnInit {
         }
     }
 
-    showPage(){
+    showPage() {
         return !this.router.url.includes('isFundTransferSuccessful');
     }
 

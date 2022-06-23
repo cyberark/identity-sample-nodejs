@@ -192,30 +192,6 @@ authorizationController.get('/RedirectResource', async (req, res) => {
     try {
         const isFlow1 = checkFlow1(req);
 
-        if (!isFlow1) {
-            const client = new CyberArkIdentityOAuthClient(TENANT_URL, OAUTH_APPID, OAUTH_USERNAME, OAUTH_PWD);
-            const TOKEN = await client.requestToken('client_credentials', null, null, null, OAUTH_USERNAME, OAUTH_PWD, OAUTH_SCOPE.split(' '));
-
-            const APPKEY = await getWidgetAssociatedApp(TENANT_URL, LOGIN_WIDGET_ID);
-            if (APPKEY === 'Invalid widgetId' || APPKEY === 'No application associated with the given widgetId') {
-                throw new Error(APPKEY);
-            }
-
-            const appDetails = await getOIDCAppDetails(TENANT_URL, APPKEY, TOKEN.access_token);
-            if (typeof appDetails === 'string') {
-                throw new Error(appDetails);
-            }
-
-            Object.assign(OIDC_APP, appDetails);
-
-            OIDC_APP.Scopes = [...OIDC_DEFAULT_SCOPE];
-            if (appDetails.Scopes !== undefined) {
-                for (const element of appDetails.Scopes) {
-                    OIDC_APP.Scopes.push(element.Scope);
-                }
-            }
-        }
-
         const code = req.query.code;
         const clientObj = new CyberArkIdentityOIDCClient(
             TENANT_URL, 
@@ -237,6 +213,35 @@ authorizationController.get('/RedirectResource', async (req, res) => {
         res.send(error);
     }
 });
+
+authorizationController.get('/oidcAppScopes', async (req, res) => {
+    try {
+        const client = new CyberArkIdentityOAuthClient(TENANT_URL, OAUTH_APPID, OAUTH_USERNAME, OAUTH_PWD);
+        const TOKEN = await client.requestToken('client_credentials', null, null, null, OAUTH_USERNAME, OAUTH_PWD, OAUTH_SCOPE.split(' '));
+        
+        const APPKEY = await getWidgetAssociatedApp(TENANT_URL, LOGIN_WIDGET_ID);
+        if (APPKEY === 'Invalid widgetId' || APPKEY === 'No application associated with the given widgetId') {
+            throw new Error(APPKEY);
+        }
+        
+        const appDetails = await getOIDCAppDetails(TENANT_URL, APPKEY, TOKEN.access_token);
+        if (typeof appDetails === 'string') {
+            throw new Error(appDetails);
+        }
+        
+        Object.assign(OIDC_APP, appDetails);
+        
+        OIDC_APP.Scopes = [...OIDC_DEFAULT_SCOPE];
+        if (appDetails.Scopes !== undefined) {
+            for (const element of appDetails.Scopes) {
+                OIDC_APP.Scopes.push(element.Scope);
+            }
+        }
+        res.send(OIDC_APP.Scopes);
+    } catch (error) {
+        res.send(error);
+    }
+})
 
 function generatePKCEMetadata() {
     let metadata = {

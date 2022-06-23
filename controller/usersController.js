@@ -13,18 +13,19 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 */
-const jwt_decode = require('jwt-decode');
 const usersController = require('express').Router();
-const { CyberArkIdentityOAuthClient} = require('@cyberark/identity-js-sdk');
-const {tenantUrl: TENANT_URL,
+const { CyberArkIdentityOAuthClient } = require('@cyberark/identity-js-sdk');
+const { tenantUrl: TENANT_URL,
     oauthAppId: OAUTH_APPID,
     oauthServiceUserName: OAUTH_USERNAME,
     oauthServiceUserPassword: OAUTH_PWD,
     oauthScopesSupported: OAUTH_SCOPE,
-    loginWidgetId: LOGIN_WIDGET_ID} = require('../settings.json');
+    loginWidgetId: LOGIN_WIDGET_ID } = require('../settings.json');
 const { changeUserPassword, userAttributes, getTotpQr, validateTotp, updateProfile, signUpWithCaptcha, signUpWithBearerToken } = require('@cyberark/identity-js-sdk');
 var dateTime = require('node-datetime');
 const sqlLite3 = require("sqlite3").verbose();
+const { body, validationResult } = require('express-validator');
+
 const db = new sqlLite3.Database("./Database.db", sqlLite3.OPEN_READWRITE, (err) => {
     if (err) return console.error(err.message);
 })
@@ -78,21 +79,34 @@ usersController.post('/signUpWithBearerToken', async (req, res) => {
     try {
         const client = new CyberArkIdentityOAuthClient(TENANT_URL, OAUTH_APPID, OAUTH_USERNAME, OAUTH_PWD);
         const TOKEN = await client.requestToken('client_credentials', null, null, null, OAUTH_USERNAME, OAUTH_PWD, OAUTH_SCOPE.split(' '));
-        const result = await signUpWithBearerToken(TENANT_URL,req.body,TOKEN.access_token);
+        const result = await signUpWithBearerToken(TENANT_URL, req.body, TOKEN.access_token);
         res.send(result);
     } catch (error) {
         res.send(error);
     }
 });
 
-usersController.post('/fundtransfer', async (req, res) => {
+usersController.post('/fundtransfer', 
+    body('username').not().isEmpty().trim().escape(),
+    body('transferAmount').isNumeric().trim().escape(),
+    body('description').trim().escape(),
+    async (req, res) => {
     try {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
+        }
         let dt = dateTime.create();
         let formatted = dt.format('Y-m-d H:M:S');
-        db.run(`INSERT INTO FundTransfer( username, transfer_amount, description, tranx_date_time) VALUES(?,?,?,?)`,
-            [req.body.username, req.body.transferAmount, req.body.description, formatted]
-        );
-        res.send({ "success": true });
+        var decoded = jwtDecode(req.cookies.sampleapp);
+        if (decoded.scope.includes("TransferFunds")) {
+            db.run(`INSERT INTO FundTransfer( username, transfer_amount, description, tranx_date_time) VALUES(?,?,?,?)`,
+                [req.body.username, req.body.transferAmount, req.body.description, formatted]
+            );
+            res.send({ "success": true });
+        } else {
+            res.status(401).send({ message: 'You are not authorized.' });
+        }
     } catch (error) {
         res.send(error);
     }
@@ -109,18 +123,27 @@ usersController.post('/signupWithCaptcha', async (req, res) => {
 
 usersController.get('/transactiondata', async (req, res) => {
     try {
-        var decoded = jwt_decode(req.cookies.sampleapp);
+        var decoded = jwtDecode(req.cookies.sampleapp);
         if (decoded.scope.includes("TransferSummaryData")) {
             db.all(`SELECT * FROM FundTransfer WHERE username=?`, [decoded.unique_name], (error, rows) => {
                 res.send(rows);
             });
         }
         else {
-            res.status(401).send({message: 'You are not authorized to view the transaction summary.'});
+            res.status(401).send({ message: 'You are not authorized to view the transaction summary.' });
         }
     } catch (error) {
         res.send(error);
     }
 });
+
+function jwtDecode(token) {
+    const base64Url = token.split('.')[1];
+    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    const jsonPayload = decodeURIComponent(atob(base64).split('').map(function (c) {
+        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+    }).join(''));
+    return JSON.parse(jsonPayload);
+}
 
 module.exports = usersController;

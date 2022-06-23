@@ -67,6 +67,11 @@ export class AuthorizationService {
         return this.http.get<any>(EndpointsConnector.ClaimsEndPoint, { headers: head, withCredentials: true, params: new HttpParams().set("token", token) })
     }
 
+    getOIDCAppScopes(){
+        const head = this.getHeaders();
+        return this.http.get<any>(EndpointsConnector.OIDCAppScopes, { headers: head, withCredentials: true })
+    }
+
     getUserInfo(accessToken : string){
         let head = this.getHeaders();
         return this.http.get<any>(EndpointsConnector.OIDCUserInfoEndPoint, { headers: head, withCredentials: true, params: new HttpParams().set("accessToken", accessToken) })
