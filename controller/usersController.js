@@ -99,8 +99,9 @@ usersController.post('/fundtransfer',
         let dt = dateTime.create();
         let formatted = dt.format('Y-m-d H:M:S');
         var decoded = jwtDecode(req.cookies.sampleapp);
-        if (decoded.scope.includes("TransferFunds")) {
-            db.run(`INSERT INTO FundTransfer( username, transfer_amount, description, tranx_date_time) VALUES(?,?,?,?)`,
+        const scopes = decoded.scope.split(" ");
+        if (scopes.includes("TransferFunds")) {
+                db.run(`INSERT INTO FundTransfer( username, transfer_amount, description, tranx_date_time) VALUES(?,?,?,?)`,
                 [req.body.username, req.body.transferAmount, req.body.description, formatted]
             );
             res.send({ "success": true });
@@ -124,8 +125,9 @@ usersController.post('/signupWithCaptcha', async (req, res) => {
 usersController.get('/transactiondata', async (req, res) => {
     try {
         var decoded = jwtDecode(req.cookies.sampleapp);
-        if (decoded.scope.includes("TransferSummaryData")) {
-            db.all(`SELECT * FROM FundTransfer WHERE username=?`, [decoded.unique_name], (error, rows) => {
+        const scopes = decoded.scope.split(" ");
+        if (scopes.includes("TransferSummaryData")) {
+                db.all(`SELECT * FROM FundTransfer WHERE username=?`, [decoded.unique_name], (error, rows) => {
                 res.send(rows);
             });
         }
